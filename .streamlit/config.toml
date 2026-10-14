@@ -1,0 +1,17 @@
+[server]
+headless = true
+fileWatcherType = "none"
+
+[browser]
+gatherUsageStats = false
+
+[client]
+showErrorDetails = "none"
+toolbarMode = "minimal"
+
+[theme]
+primaryColor = "#22577A"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F3F6F8"
+textColor = "#172B3A"
+font = "sans serif"

@@ -1,0 +1,54 @@
+{
+  "expected": 10,
+  "attempted": 10,
+  "successful": 10,
+  "failed_ids": [],
+  "missing_ids": [],
+  "retrieval_hit_at_3": {
+    "passed": 8,
+    "total": 8,
+    "rate": 1.0
+  },
+  "multi_document_coverage": {
+    "passed": 2,
+    "total": 2,
+    "rate": 1.0
+  },
+  "all_required_quotes_retrieved": {
+    "passed": 8,
+    "total": 8,
+    "rate": 1.0
+  },
+  "answerability_agreement": {
+    "passed": 10,
+    "total": 10,
+    "rate": 1.0
+  },
+  "abstention_contract": {
+    "passed": 2,
+    "total": 2,
+    "rate": 1.0
+  },
+  "latency_ms": {
+    "all_ten_success_mean": 3326.96,
+    "successful_mean": 3326.96,
+    "attempted_mean_including_failures": 3326.96,
+    "successful_min": 1071.48,
+    "successful_max": 7021.95
+  },
+  "review": {
+    "status": "complete",
+    "reviewer_kind": "agent",
+    "reviewer": "Codex agent; independent human review pending",
+    "correctness": {
+      "passed": 9,
+      "total": 10,
+      "rate": 0.9
+    },
+    "grounding": {
+      "passed": 10,
+      "total": 10,
+      "rate": 1.0
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "report_sha256": "9e7623a8e6907b40f8ea11a47cb4181cd66851d61f66fb125d41b4899319d821",
+  "reviewer_kind": "agent",
+  "reviewer": "Codex agent; independent human review pending",
+  "reviewed_at": "2026-10-14T01:17:54.106139+00:00",
+  "method": "Read each generated answer and its quoted passages against every grading criterion. No keyword or expected-answer string matching used.",
+  "items": [
+    {
+      "id": "q01",
+      "correct": true,
+      "grounded": true,
+      "notes": "02_approval_budget.pdf 1쪽 S3의 100만원 이하·팀장 표와 경계값 규칙에 부합한다. 정확히 100만원을 초과 구간에 넣지 않았다."
+    },
+    {
+      "id": "q02",
+      "correct": true,
+      "grounded": true,
+      "notes": "01_purchase_process.pdf 2쪽 S1의 300만원 이상·유효 견적 2부 이상과 단독 공급 예외의 사유서·구매운영팀 승인 기록을 모두 반영했다."
+    },
+    {
+      "id": "q03",
+      "correct": true,
+      "grounded": true,
+      "notes": "01_purchase_process.pdf 3쪽 S1 및 04_contract_settlement.pdf 2쪽 S2의 납품/수령 후 3영업일을 정확히 답했다. 5영업일 업무와 혼동하지 않았다. 두 주장이 중복되는 점은 표현 개선 여지다."
+    },
+    {
+      "id": "q04",
+      "correct": true,
+      "grounded": true,
+      "notes": "03_it_security.pdf 1쪽 S2와 3쪽 S1에 따라 무료 체험도 고객정보 사용 전 검토가 필요하다고 답했다. 개인 계정 우회를 허용하지 않았고 추가 설명도 원문에 있다."
+    },
+    {
+      "id": "q05",
+      "correct": true,
+      "grounded": true,
+      "notes": "03_it_security.pdf 2쪽 S1의 높은 위험도 5영업일, 서류 완비 시점 시작, 보완 요청 시 연장 가능성을 모두 보존했다."
+    },
+    {
+      "id": "q06",
+      "correct": true,
+      "grounded": true,
+      "notes": "04_contract_settlement.pdf 3쪽 S1의 5일 마감·휴무일 다음 영업일, 서류 완비 건의 같은 달 25일 지급 예정, 이월·변경 가능성을 모두 반영했다."
+    },
+    {
+      "id": "q07",
+      "correct": true,
+      "grounded": true,
+      "notes": "02_approval_budget.pdf 1쪽 S1에서 부서장, 03_it_security.pdf 1쪽 S3에서 금액과 무관한 발주 전 보안검토를 확인했다. 두 근거를 각각 인용했다."
+    },
+    {
+      "id": "q08",
+      "correct": false,
+      "grounded": true,
+      "notes": "02_approval_budget.pdf 3쪽 S2의 CFO와 04_contract_settlement.pdf 1쪽 S1의 720만원·12개월 사례로 핵심 결론은 뒷받침된다. 그러나 채점 기준이 요구하는 일반적인 금액/기간 충족 기준과 계약 체결 전 시점을 충분히 설명하지 않았다. 기준 문단이 상위 3개에 없어 조건을 지어내지는 않았으며, 엄격한 전체 기준 판정은 미충족이다."
+    },
+    {
+      "id": "q09",
+      "correct": true,
+      "grounded": true,
+      "notes": "문서에 직원 식당의 채식 메뉴 제공 횟수가 없음을 고정 보류 문구로 처리했고 관련 없는 검색 문서를 인용하지 않았다."
+    },
+    {
+      "id": "q10",
+      "correct": true,
+      "grounded": true,
+      "notes": "문서에 일본 출장 숙박비 상한이 없음을 고정 보류 문구로 처리했고 금액을 추정하거나 문서를 인용하지 않았다."
+    }
+  ]
+}

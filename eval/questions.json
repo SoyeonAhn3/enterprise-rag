@@ -1,0 +1,333 @@
+[
+  {
+    "id": "q01",
+    "category": "single_document",
+    "question": "부가세 제외 구매 금액이 정확히 100만원이라면 최종 결재권자는 누구인가요?",
+    "expected_answer": "100만원 이하는 팀장 최종 결재 대상입니다.",
+    "evidence_groups": [
+      {
+        "id": "approval_authority",
+        "claim": "공급가액 100만원의 최종 결재권자는 팀장이다.",
+        "any_of": [
+          {
+            "document": "02_approval_budget.pdf",
+            "page": 1,
+            "quote": "100만원 이하 팀장 공급가액 100만원"
+          }
+        ]
+      }
+    ],
+    "answerable": true,
+    "answer_keywords": [
+      "팀장"
+    ],
+    "grading_criteria": [
+      "정확히 100만원을 '100만원 이하' 구간에 포함하고 팀장으로 답한다.",
+      "부서장 등 다른 직책을 최종 결재권자로 제시하지 않는다."
+    ]
+  },
+  {
+    "id": "q02",
+    "category": "single_document",
+    "question": "공급가액 360만원의 외부 서비스를 구매할 때 비교견적은 몇 부 필요한가요?",
+    "expected_answer": "300만원 이상 구매이므로 서로 다른 공급업체의 유효 견적 2부 이상이 원칙입니다. 단독 공급 예외는 사유서와 구매운영팀 승인 기록이 필요합니다.",
+    "evidence_groups": [
+      {
+        "id": "comparison_quotes",
+        "claim": "360만원 구매는 원칙적으로 서로 다른 공급업체의 유효 견적 2부 이상이 필요하다.",
+        "any_of": [
+          {
+            "document": "01_purchase_process.pdf",
+            "page": 2,
+            "quote": "300만원 이상 서로 다른 공급업체의 유효 견적 2부 이상을 원칙으로 비교"
+          },
+          {
+            "document": "01_purchase_process.pdf",
+            "page": 2,
+            "quote": "사례 부가세 제외 360만원의 외부 서비스 구매에는 유효한 비교견적 2부가 필요하다."
+          }
+        ]
+      }
+    ],
+    "answerable": true,
+    "answer_keywords": [
+      "2부",
+      "300만원"
+    ],
+    "grading_criteria": [
+      "원칙적으로 서로 다른 공급업체의 유효 견적 2부 이상이 필요하다고 답한다.",
+      "단독 공급 예외를 설명하는 경우 사유서와 구매운영팀 승인 기록이 필요함을 명시하며, 견적 1부만으로 자동 면제된다고 설명하지 않는다."
+    ]
+  },
+  {
+    "id": "q03",
+    "category": "single_document",
+    "question": "업무용 장비가 납품되면 요청 부서는 언제까지 검수를 등록해야 하나요?",
+    "expected_answer": "납품 또는 수령 후 3영업일 이내에 검수 결과를 등록해야 합니다.",
+    "evidence_groups": [
+      {
+        "id": "inspection_deadline",
+        "claim": "요청 부서는 납품 또는 수령 후 3영업일 이내에 검수 결과를 등록한다.",
+        "any_of": [
+          {
+            "document": "04_contract_settlement.pdf",
+            "page": 2,
+            "quote": "물품은 납품일, 용역은 계약상 산출물 제출일을 기준으로 요청 부서가 3영업일 이내 검수 결과를 등록한다."
+          },
+          {
+            "document": "01_purchase_process.pdf",
+            "page": 3,
+            "quote": "제품 또는 서비스가 제공되면 요청 부서는 납품·완료 사실을 확인하고, 수령 후 3영업일 이내에 검수 결과를 등록한다."
+          }
+        ]
+      }
+    ],
+    "answerable": true,
+    "answer_keywords": [
+      "3영업일",
+      "검수"
+    ],
+    "grading_criteria": [
+      "요청 부서가 납품 또는 수령 후 3영업일 이내에 검수 결과를 등록해야 한다고 답한다.",
+      "달력 기준 3일, IT 자산 등록 기한 5영업일, 정산 서류 제출 기한 5영업일과 혼동하지 않는다."
+    ]
+  },
+  {
+    "id": "q04",
+    "category": "single_document",
+    "question": "고객정보를 입력하는 무료 SaaS 체험은 보안검토 없이 시작해도 되나요?",
+    "expected_answer": "아니요. 고객정보 등 회사 데이터를 사용하는 무료 SaaS는 체험 시작 전에 정보보안팀 사전 보안검토가 필요합니다.",
+    "evidence_groups": [
+      {
+        "id": "security_review",
+        "claim": "고객정보를 사용하는 무료 SaaS도 사용 전에 보안검토가 필요하다.",
+        "any_of": [
+          {
+            "document": "03_it_security.pdf",
+            "page": 1,
+            "quote": "무료 SaaS라도 고객정보·임직원 개인정보·회사 내부자료를 입력하거나 저장하려는 경우에는 무료 체험 시작 전 사전 보안검토가 필요하다."
+          },
+          {
+            "document": "03_it_security.pdf",
+            "page": 2,
+            "quote": "실무 예시 외부 SaaS에 고객 이메일과 상담이력을 저장한다면 유료·무료와 관계없이 보안 사전검토 대상이며, 일반적으로 높은 위험도 검토가 필요하다."
+          },
+          {
+            "document": "03_it_security.pdf",
+            "page": 3,
+            "quote": "무료 체험이라도 회사 자료나 고객 데이터가 사용되는 경우에는 사전에 보안검토를 신청한다."
+          }
+        ]
+      }
+    ],
+    "answerable": true,
+    "answer_keywords": [
+      "무료",
+      "사전",
+      "보안검토"
+    ],
+    "grading_criteria": [
+      "고객정보를 사용하는 무료 SaaS 체험에도 시작 전 보안검토가 필요하다고 답한다.",
+      "무료이거나 개인 계정을 사용한다는 이유로 검토를 생략할 수 있다고 설명하지 않는다."
+    ]
+  },
+  {
+    "id": "q05",
+    "category": "single_document",
+    "question": "높은 위험도로 분류된 IT 서비스의 표준 보안 검토 예상 기간은 얼마인가요?",
+    "expected_answer": "서류가 완비된 시점부터 5영업일이 표준 예상 기간이며 보완 요청 시 길어질 수 있습니다.",
+    "evidence_groups": [
+      {
+        "id": "security_review_duration",
+        "claim": "높은 위험도 검토는 서류 완비부터 5영업일이 표준 예상 기간이며 보완 시 늘어날 수 있다.",
+        "any_of": [
+          {
+            "document": "03_it_security.pdf",
+            "page": 2,
+            "quote": "높음 개인정보 처리 또는 외부 관리자 접근 5영업일 상기 기간은 접수 서류가 완비된 시점부터 계산하는 표준 예상 기간이며, 보완 요청이 있는 경우 늘어날 수 있다."
+          }
+        ]
+      }
+    ],
+    "answerable": true,
+    "answer_keywords": [
+      "5영업일"
+    ],
+    "grading_criteria": [
+      "높은 위험도의 표준 예상 기간을 5영업일로 답하고 계산 시작점이 서류 완비 시점임을 설명한다.",
+      "보완 요청에 따라 연장될 수 있음을 알리며 확정 처리 기한이나 승인 보장으로 표현하지 않는다."
+    ]
+  },
+  {
+    "id": "q06",
+    "category": "single_document",
+    "question": "정산 서류 접수 마감일과 정기 지급 예정일은 각각 언제인가요?",
+    "expected_answer": "정산 서류 접수 마감은 매월 5일이며, 휴무일이면 다음 영업일입니다. 마감일까지 서류가 완비된 건은 같은 달 25일 지급 예정입니다. 마감 이후 접수 건은 다음 월 지급 회차로 이월될 수 있고, 지급 예정일은 서류의 적정성·계약조건·금융기관 운영 상황에 따라 변경될 수 있습니다.",
+    "evidence_groups": [
+      {
+        "id": "settlement_cutoff",
+        "claim": "월 정기 접수 마감은 매월 5일이며 휴무일이면 다음 영업일이다.",
+        "any_of": [
+          {
+            "document": "04_contract_settlement.pdf",
+            "page": 3,
+            "quote": "월 정기 접수 마감 매월 5일 (휴무일이면 다음 영업일)"
+          }
+        ]
+      },
+      {
+        "id": "payment_schedule",
+        "claim": "마감일까지 서류가 완비된 건은 해당 월 25일 지급 예정이며 지연 또는 변경될 수 있다.",
+        "any_of": [
+          {
+            "document": "04_contract_settlement.pdf",
+            "page": 3,
+            "quote": "정기 지급 예정일 마감일까지 서류가 완비된 건은 해당 월 25일 지급 예정 마감 이후 접수 다음 월 지급 회차로 이월될 수 있음 지급 예정일은 서류의 적정성·계약조건·금융기관 운영 상황에 따라 변경될 수 있다."
+          }
+        ]
+      }
+    ],
+    "answerable": true,
+    "answer_keywords": [
+      "5일",
+      "25일"
+    ],
+    "grading_criteria": [
+      "접수 마감일을 매월 5일로 답하고 휴무일에는 다음 영업일임을 설명한다.",
+      "마감일까지 서류가 완비된 건의 지급 예정일이 해당 월 25일임을 명시한다.",
+      "마감 이후 접수나 서류 미비 건까지 같은 달 25일에 반드시 지급된다고 설명하지 않는다."
+    ]
+  },
+  {
+    "id": "q07",
+    "category": "multi_document",
+    "question": "공급가액 180만원인 업무용 노트북을 구매할 때 최종 결재권자와 사전 보안검토 필요 여부를 알려주세요.",
+    "expected_answer": "180만원 구매는 부서장 최종 결재 대상입니다. 업무용 노트북은 금액과 관계없이 발주 전에 정보보안팀 사전 보안검토를 받아야 합니다.",
+    "evidence_groups": [
+      {
+        "id": "approval_authority",
+        "claim": "공급가액 180만원의 최종 결재권자는 부서장이다.",
+        "any_of": [
+          {
+            "document": "02_approval_budget.pdf",
+            "page": 1,
+            "quote": "100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원"
+          },
+          {
+            "document": "02_approval_budget.pdf",
+            "page": 1,
+            "quote": "업무 예시 노트북 공급가액이 180만원이라면 최종 결재권자는 부서장이다."
+          }
+        ]
+      },
+      {
+        "id": "security_review",
+        "claim": "업무용 노트북은 금액과 관계없이 발주 전에 보안검토가 필요하다.",
+        "any_of": [
+          {
+            "document": "03_it_security.pdf",
+            "page": 1,
+            "quote": "가온비즈에서 회사 업무용으로 구매하는 노트북·데스크톱·서버·네트워크 장비, 신규 유료 SaaS, 회사 명의의 외부 IT 서비스 계약은 금액과 관계없이 발주·계약 전에 정보보안팀 검토를 받아야 한다."
+          },
+          {
+            "document": "03_it_security.pdf",
+            "page": 3,
+            "quote": "노트북 1대만 구매해도 보안 검토하나요? 예. 업무용 IT 장비는 금액과 수량에 관계없이 사전 검토합니다."
+          }
+        ]
+      }
+    ],
+    "answerable": true,
+    "answer_keywords": [
+      "부서장",
+      "보안검토"
+    ],
+    "grading_criteria": [
+      "최종 결재권자를 부서장으로 답한다.",
+      "업무용 노트북은 금액과 관계없이 발주 전 보안검토가 필요하다고 답한다.",
+      "결재권자와 보안검토 필요 여부 두 정보를 모두 답하고 각각 검색된 근거로 뒷받침한다."
+    ]
+  },
+  {
+    "id": "q08",
+    "category": "multi_document",
+    "question": "공급가액 720만원이고 계약기간이 12개월인 SaaS 계약의 최종 결재권자와 법무 검토 여부는 어떻게 되나요?",
+    "expected_answer": "720만원은 CFO 최종 결재 대상입니다. 계약 체결 전 법무지원팀 사전검토도 필요합니다. 법무 검토는 공급가액 500만원 이상, 계약기간 12개월 이상, 고객·직원 개인정보 처리 위탁 중 하나라도 해당하면 필요합니다. 이 계약은 금액과 기간 기준에 각각 해당하며, 두 조건을 동시에 충족해야만 하는 것은 아닙니다.",
+    "evidence_groups": [
+      {
+        "id": "approval_authority",
+        "claim": "공급가액 720만원의 최종 결재권자는 CFO이다.",
+        "any_of": [
+          {
+            "document": "02_approval_budget.pdf",
+            "page": 1,
+            "quote": "500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원"
+          },
+          {
+            "document": "02_approval_budget.pdf",
+            "page": 3,
+            "quote": "월 60만원, 계약기간 12개월 총 720만원으로 계산하여 CFO 최종 결재"
+          }
+        ]
+      },
+      {
+        "id": "legal_review",
+        "claim": "720만원·12개월 SaaS 계약은 계약 체결 전 법무 검토 대상이다.",
+        "any_of": [
+          {
+            "document": "04_contract_settlement.pdf",
+            "page": 1,
+            "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토"
+          },
+          {
+            "document": "04_contract_settlement.pdf",
+            "page": 1,
+            "quote": "사례 공급가액 720만원의 12개월 SaaS 계약은 금액과 계약기간 기준 모두 법무 사전검토 대상이다."
+          },
+          {
+            "document": "04_contract_settlement.pdf",
+            "page": 4,
+            "quote": "정확히 500만원 계약도 법무 검토하나요? 예. 법무 사전검토는 공급가액 500만원 이상부터 적용됩니다."
+          }
+        ]
+      }
+    ],
+    "answerable": true,
+    "answer_keywords": [
+      "CFO",
+      "법무"
+    ],
+    "grading_criteria": [
+      "최종 결재권자를 CFO로 답한다.",
+      "계약 체결 전 법무 사전검토가 필요하다고 답하고 금액 또는 기간 중 적어도 하나의 충족 기준을 설명한다.",
+      "법무 검토에 금액과 기간 조건의 동시 충족이 필요하다고 설명하지 않는다.",
+      "결재권자와 법무 검토 필요 여부 두 정보를 모두 답하고 각각 검색된 근거로 뒷받침한다."
+    ]
+  },
+  {
+    "id": "q09",
+    "category": "unanswerable",
+    "question": "가온비즈 직원 식당에서 채식 메뉴는 매주 몇 번 제공하나요?",
+    "expected_answer": "등록된 문서에는 직원 식당 채식 메뉴 제공 횟수에 대한 정보가 없습니다.",
+    "evidence_groups": [],
+    "answerable": false,
+    "answer_keywords": [],
+    "grading_criteria": [
+      "등록된 문서에서 채식 메뉴 제공 횟수를 확인할 수 없다고 답변을 보류한다.",
+      "주당 횟수나 식당 운영 기준을 추정하지 않고, 관련 없는 문서를 정답 근거로 인용하지 않는다."
+    ]
+  },
+  {
+    "id": "q10",
+    "category": "unanswerable",
+    "question": "가온비즈 해외 출장 시 일본 숙박비 1박 상한은 얼마인가요?",
+    "expected_answer": "등록된 문서에는 해외 출장 숙박비 상한에 대한 정보가 없습니다.",
+    "evidence_groups": [],
+    "answerable": false,
+    "answer_keywords": [],
+    "grading_criteria": [
+      "등록된 문서에서 일본 출장 숙박비 상한을 확인할 수 없다고 답변을 보류한다.",
+      "숙박비 금액이나 일반적인 출장비 규정을 추정하지 않고, 관련 없는 문서를 정답 근거로 인용하지 않는다."
+    ]
+  }
+]

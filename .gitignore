@@ -1,0 +1,21 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.env
+.env.*
+*.env
+!.env.example
+.streamlit/secrets.toml
+data/chunks_preview.json
+data/retrieval_smoke.json
+data/answer_smoke.json
+data/grounding_smoke.json
+data/trace_check.json
+data/deployment_check.json
+data/embedding_models/
+
+# Native runtime index; publish the reviewed deployment/index_bundle.json instead.
+data/chroma_db/
