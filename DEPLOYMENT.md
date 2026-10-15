@@ -2,7 +2,7 @@
 
 ## English
 
-Target repository: [SoyeonAhn3/enterprise-rag](https://github.com/SoyeonAhn3/enterprise-rag). The owner confirmed that the GitHub account is connected to Streamlit. **No public demo URL has been deployed or verified yet.** The repository initially contained only its title README; publishing uses a separate clean checkout so the parent workspace's unrelated Git remote is preserved.
+Target repository: [SoyeonAhn3/enterprise-rag](https://github.com/SoyeonAhn3/enterprise-rag), branch `main`. The owner confirmed that the GitHub account is connected to Streamlit. **No public demo URL has been deployed or verified yet.** The repository contains the application and deployment setup. Updates are prepared in a separate clean checkout, preserving the parent workspace's unrelated Git remote.
 
 The local environment is Python **3.12.10** with the pinned `requirements.txt`. Local browser checks passed for two answerable questions and one unanswerable question. Evidence: [home screen](docs/evidence/local-home.png), [answers and source excerpts](docs/evidence/local-chat.png). These are local screenshots, not proof of a public deployment.
 
@@ -44,7 +44,7 @@ This makes one Claude call, then reads the root and retrieval/generation child r
 
 ## 한국어
 
-배포 대상은 [SoyeonAhn3/enterprise-rag](https://github.com/SoyeonAhn3/enterprise-rag)이며 사용자가 Streamlit과 GitHub 계정 연결을 확인했다. **실제 공개 URL 배포·검증은 아직 하지 않았다.** 원격 저장소에는 제목 README만 있었으며, 상위 작업 폴더의 다른 Git 원격을 유지하기 위해 분리된 체크아웃에서 게시를 준비한다.
+배포 대상은 [SoyeonAhn3/enterprise-rag](https://github.com/SoyeonAhn3/enterprise-rag)의 `main`이며 사용자가 Streamlit과 GitHub 계정 연결을 확인했다. **실제 공개 URL 배포·검증은 아직 하지 않았다.** 저장소에는 앱과 배포 설정이 있으며, 상위 작업 폴더의 다른 Git 원격을 유지하도록 분리된 체크아웃에서 변경 사항을 준비한다.
 
 로컬은 Python **3.12.10**과 버전 고정한 `requirements.txt`로 검증했다. 실제 브라우저에서 답변 가능 2문항·불가능 1문항을 확인했다. 증빙: [초기 화면](docs/evidence/local-home.png), [답변 및 출처 발췌](docs/evidence/local-chat.png). 공개 배포 화면이 아닌 로컬 화면이다.
 

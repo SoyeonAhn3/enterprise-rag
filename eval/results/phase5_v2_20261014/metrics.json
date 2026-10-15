@@ -1,0 +1,324 @@
+{
+  "report_sha256": "d27d38285fbbf47d058ca856c761c817b46dce3ee560c6ca2ad68a01ded9119e",
+  "reviewer_kind": "ai",
+  "human_review_completed": false,
+  "selected_alternative": "B",
+  "splits": {
+    "dev": {
+      "A": {
+        "page_hit_at_k": {
+          "passed": 32,
+          "total": 32,
+          "rate": 1.0
+        },
+        "complete_quote_coverage": {
+          "passed": 24,
+          "total": 32,
+          "rate": 0.75
+        },
+        "evidence_group_recall": {
+          "passed": 37,
+          "total": 50,
+          "rate": 0.74
+        },
+        "multi_page_coverage": {
+          "passed": 7,
+          "total": 12,
+          "rate": 0.5833333333333334
+        },
+        "expected": 40,
+        "attempted": 40,
+        "successful": 40,
+        "rag_errors": [],
+        "missing": [],
+        "judge_errors": [],
+        "ai_correctness": {
+          "passed": 35,
+          "total": 40,
+          "rate": 0.875
+        },
+        "ai_answerable_correctness": {
+          "passed": 27,
+          "total": 32,
+          "rate": 0.84375
+        },
+        "ai_grounding_substantive": {
+          "passed": 27,
+          "total": 27,
+          "rate": 1.0
+        },
+        "abstention_contract": {
+          "passed": 8,
+          "total": 8,
+          "rate": 1.0
+        },
+        "answerable_abstentions": [
+          "q27",
+          "q29",
+          "q30",
+          "q31",
+          "q32"
+        ],
+        "latency_ms": {
+          "successful_mean": 2998.241,
+          "p50": 3111.2250000000004,
+          "p95": 4349.38
+        },
+        "generation_tokens": {
+          "input_tokens": 133049,
+          "output_tokens": 11232,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0
+        },
+        "judge_tokens": {
+          "input_tokens": 201554,
+          "output_tokens": 12577,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0
+        }
+      },
+      "B": {
+        "page_hit_at_k": {
+          "passed": 32,
+          "total": 32,
+          "rate": 1.0
+        },
+        "complete_quote_coverage": {
+          "passed": 26,
+          "total": 32,
+          "rate": 0.8125
+        },
+        "evidence_group_recall": {
+          "passed": 43,
+          "total": 50,
+          "rate": 0.86
+        },
+        "multi_page_coverage": {
+          "passed": 10,
+          "total": 12,
+          "rate": 0.8333333333333334
+        },
+        "expected": 40,
+        "attempted": 40,
+        "successful": 40,
+        "rag_errors": [],
+        "missing": [],
+        "judge_errors": [],
+        "ai_correctness": {
+          "passed": 39,
+          "total": 40,
+          "rate": 0.975
+        },
+        "ai_answerable_correctness": {
+          "passed": 31,
+          "total": 32,
+          "rate": 0.96875
+        },
+        "ai_grounding_substantive": {
+          "passed": 31,
+          "total": 31,
+          "rate": 1.0
+        },
+        "abstention_contract": {
+          "passed": 8,
+          "total": 8,
+          "rate": 1.0
+        },
+        "answerable_abstentions": [
+          "q31"
+        ],
+        "latency_ms": {
+          "successful_mean": 3442.18225,
+          "p50": 3228.375,
+          "p95": 6090.29
+        },
+        "generation_tokens": {
+          "input_tokens": 185176,
+          "output_tokens": 14702,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0
+        },
+        "judge_tokens": {
+          "input_tokens": 264596,
+          "output_tokens": 11331,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0
+        }
+      }
+    },
+    "final": {
+      "A": {
+        "page_hit_at_k": {
+          "passed": 13,
+          "total": 16,
+          "rate": 0.8125
+        },
+        "complete_quote_coverage": {
+          "passed": 9,
+          "total": 16,
+          "rate": 0.5625
+        },
+        "evidence_group_recall": {
+          "passed": 14,
+          "total": 25,
+          "rate": 0.56
+        },
+        "multi_page_coverage": {
+          "passed": 1,
+          "total": 6,
+          "rate": 0.16666666666666666
+        },
+        "expected": 20,
+        "attempted": 20,
+        "successful": 20,
+        "rag_errors": [],
+        "missing": [],
+        "judge_errors": [],
+        "ai_correctness": {
+          "passed": 13,
+          "total": 20,
+          "rate": 0.65
+        },
+        "ai_answerable_correctness": {
+          "passed": 9,
+          "total": 16,
+          "rate": 0.5625
+        },
+        "ai_grounding_substantive": {
+          "passed": 11,
+          "total": 11,
+          "rate": 1.0
+        },
+        "abstention_contract": {
+          "passed": 4,
+          "total": 4,
+          "rate": 1.0
+        },
+        "answerable_abstentions": [
+          "q51",
+          "q52",
+          "q53",
+          "q55",
+          "q56"
+        ],
+        "latency_ms": {
+          "successful_mean": 3049.2,
+          "p50": 2673.4799999999996,
+          "p95": 5381.01
+        },
+        "generation_tokens": {
+          "input_tokens": 67066,
+          "output_tokens": 5626,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0
+        },
+        "judge_tokens": {
+          "input_tokens": 98808,
+          "output_tokens": 8242,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0
+        }
+      },
+      "B": {
+        "page_hit_at_k": {
+          "passed": 16,
+          "total": 16,
+          "rate": 1.0
+        },
+        "complete_quote_coverage": {
+          "passed": 11,
+          "total": 16,
+          "rate": 0.6875
+        },
+        "evidence_group_recall": {
+          "passed": 19,
+          "total": 25,
+          "rate": 0.76
+        },
+        "multi_page_coverage": {
+          "passed": 3,
+          "total": 6,
+          "rate": 0.5
+        },
+        "expected": 20,
+        "attempted": 20,
+        "successful": 20,
+        "rag_errors": [],
+        "missing": [],
+        "judge_errors": [],
+        "ai_correctness": {
+          "passed": 15,
+          "total": 20,
+          "rate": 0.75
+        },
+        "ai_answerable_correctness": {
+          "passed": 11,
+          "total": 16,
+          "rate": 0.6875
+        },
+        "ai_grounding_substantive": {
+          "passed": 12,
+          "total": 12,
+          "rate": 1.0
+        },
+        "abstention_contract": {
+          "passed": 4,
+          "total": 4,
+          "rate": 1.0
+        },
+        "answerable_abstentions": [
+          "q51",
+          "q53",
+          "q55",
+          "q56"
+        ],
+        "latency_ms": {
+          "successful_mean": 2879.288,
+          "p50": 2468.99,
+          "p95": 5262.31
+        },
+        "generation_tokens": {
+          "input_tokens": 92816,
+          "output_tokens": 6563,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0
+        },
+        "judge_tokens": {
+          "input_tokens": 129690,
+          "output_tokens": 6870,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0
+        }
+      }
+    }
+  },
+  "paired": {
+    "dev": {
+      "improved_ids": [
+        "q27",
+        "q29",
+        "q30",
+        "q32"
+      ],
+      "regressed_ids": [],
+      "both_correct": 35,
+      "both_not_correct": 1
+    },
+    "final": {
+      "improved_ids": [
+        "q49",
+        "q52"
+      ],
+      "regressed_ids": [],
+      "both_correct": 13,
+      "both_not_correct": 5
+    }
+  },
+  "review_queue": {
+    "entries": 34,
+    "flagged_entries": 26,
+    "sampled_passes": 8,
+    "unique_questions": 23
+  },
+  "sha256": "7faecdbec67445ebeb6303717eddb37445b7ff09c93b9602aef04155b1b6aa2a"
+}

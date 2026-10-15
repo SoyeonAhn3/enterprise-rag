@@ -9,6 +9,7 @@ from grounding import AnswerValidationError
 from index_store import IndexErrorBase
 from llm import ClaudeError
 from rag import RetrievalError, validate_question
+from source_display import excerpt_html
 
 
 @st.cache_resource(show_spinner=False)
@@ -29,7 +30,7 @@ def render_answer(result: dict):
     st.markdown(result["answer"])
     for source in result["sources"]:
         with st.expander(f"[{source['source_id']}] {source['document']} · {source['page']}쪽"):
-            st.text(source["excerpt"])
+            st.html(excerpt_html(source["excerpt"]))
     st.caption(f"응답 시간 {result['latency_ms'] / 1000:.2f}초")
 
 

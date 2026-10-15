@@ -1,4 +1,6 @@
 from dataclasses import replace
+from copy import deepcopy
+import json
 
 import pytest
 import streamlit as st
@@ -45,7 +47,7 @@ def test_chat_examples_sources_and_cached_resources_across_reruns(ui):
     assert not app.exception
     assert len(app.chat_message) == 2
     assert any("approval.pdf · 2쪽" in expander.label for expander in app.expander)
-    assert any("100만원 이하 팀장" in node.value for node in app.text)
+    assert any("100만원 이하 팀장" in node.proto.body for node in app.get("html"))
     app.chat_input[0].set_value("다른 업무 질문").run()
     assert not app.exception
     assert calls["created"] == 1
@@ -91,3 +93,18 @@ def test_blank_or_overlong_input_is_rejected_before_api_usage(ui):
     app.chat_input[0].set_value("가" * 501).run()
     assert not calls["questions"]
     assert app.session_state["question_count"] == 0
+
+
+def test_real_pdf_split_word_is_repaired_in_existing_chat_without_changing_evidence(ui):
+    app, calls = ui
+    report = json.loads((PROJECT_ROOT / "eval/results/phase5_baseline.json").read_text(encoding="utf-8"))
+    result = next(item for item in report["results"] if item["id"] == "q07")
+    original = deepcopy(result)
+    assert any("금\n액과" in source["excerpt"] for source in result["sources"])
+    app.session_state["messages"] = [{"question": result["question"], "result": result}]
+    app.run()
+    assert not app.exception
+    assert any("계약은 금액과 관계없이" in node.proto.body for node in app.get("html"))
+    assert all("금\n액과" not in node.proto.body for node in app.get("html"))
+    assert app.session_state["messages"][0]["result"] == original
+    assert not calls["questions"]  # Reformatting old chat incurs no model call.

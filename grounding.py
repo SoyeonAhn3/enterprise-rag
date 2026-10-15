@@ -6,6 +6,7 @@ on the answer model and must be reviewed against the passages during evaluation.
 
 import json
 import re
+from copy import deepcopy
 
 from config import TOP_K
 
@@ -64,9 +65,17 @@ class AnswerValidationError(RuntimeError):
     """The model output cannot be accepted; this is not a successful abstention."""
 
 
-def source_map(chunks: list[dict]) -> dict[str, dict]:
+def answer_schema(source_count: int = TOP_K) -> dict:
+    schema = deepcopy(ANSWER_SCHEMA)
+    schema["properties"]["claims"]["items"]["properties"]["evidence"]["items"]["properties"]["source_id"]["enum"] = [
+        f"S{i}" for i in range(1, source_count + 1)
+    ]
+    return schema
+
+
+def source_map(chunks: list[dict], *, max_sources: int = TOP_K) -> dict[str, dict]:
     """Validate the retrieval handoff before sending or accepting evidence."""
-    if not isinstance(chunks, list) or len(chunks) > TOP_K:
+    if not isinstance(chunks, list) or len(chunks) > max_sources:
         raise AnswerValidationError("Invalid retrieved context; no answer was accepted.")
     mapped = {}
     for position, chunk in enumerate(chunks, start=1):
@@ -79,8 +88,8 @@ def source_map(chunks: list[dict]) -> dict[str, dict]:
     return mapped
 
 
-def build_prompt(question: str, chunks: list[dict]) -> str:
-    mapped = source_map(chunks)
+def build_prompt(question: str, chunks: list[dict], *, max_sources: int = TOP_K) -> str:
+    mapped = source_map(chunks, max_sources=max_sources)
     return json.dumps({
         "question": question,
         "sources": [{"source_id": key, "text": chunk["text"]} for key, chunk in mapped.items()],
@@ -123,9 +132,9 @@ def _original_quote(quote: str, text: str) -> str:
     return text[positions[start]:positions[start + len(needle) - 1] + 1]
 
 
-def validate_answer(raw: str, chunks: list[dict]) -> dict:
+def validate_answer(raw: str, chunks: list[dict], *, max_sources: int = TOP_K) -> dict:
     """Fail closed on malformed/uncited output; never repair or retry it silently."""
-    mapped = source_map(chunks)
+    mapped = source_map(chunks, max_sources=max_sources)
     if not isinstance(raw, str) or len(raw) > MAX_RESPONSE_CHARS:
         raise AnswerValidationError("Claude returned an invalid response size; no answer was accepted.")
     try:

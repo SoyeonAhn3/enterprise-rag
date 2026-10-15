@@ -1,0 +1,20 @@
+{
+  "command": ".\\.venv\\Scripts\\python.exe -X utf8 -m pytest -q",
+  "observed_result": "223 passed in 45.58s",
+  "passed": 223,
+  "duration_seconds": 45.58,
+  "scope": "Automated program checks, separate from live answer and AI-review calls.",
+  "dataset_validation": "60 questions; all reference quotes found on the annotated PDF pages.",
+  "historical_artifacts_preserved": [
+    "eval/questions.json",
+    "eval/results/phase5_baseline.json",
+    "eval/results/phase5_agent_review.json",
+    "eval/results/phase5_metrics.json"
+  ],
+  "human_review_completed": false,
+  "previous_check": {
+    "passed": 222,
+    "duration_seconds": 28.01
+  },
+  "recovery_regression_check": "Transient Windows file replacement failures retry the file operation without regenerating answers."
+}

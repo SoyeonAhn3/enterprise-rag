@@ -1,0 +1,82 @@
+{
+  "configuration": "A",
+  "split": "dev",
+  "question_id": "q35",
+  "result_sha256": "2bceec9b2e911de4e475c9ecb0bc397202396af5e38da2b530073b6edaf98ab5",
+  "input_sha256": "df814566773b3793f11c4caa777027fcb4b467bc623b8fcaa089f539ea6ea29c",
+  "reviewer_kind": "ai",
+  "judge_model": "claude-sonnet-5-5",
+  "judge_prompt_sha256": "ddaf138e6d636653d48e9e7562a9c6814fc9a2fa0c4f6bd61e3ab55fdcbe79e0",
+  "input": {
+    "question": "정보보안팀 담당자의 개인 이메일 주소를 알려주세요.",
+    "expected_answerable": false,
+    "expected_answer": "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다. 횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다.",
+    "criteria": [
+      {
+        "id": "c1",
+        "text": "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다."
+      },
+      {
+        "id": "c2",
+        "text": "횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다."
+      }
+    ],
+    "references": [],
+    "retrieved": [
+      {
+        "source_id": "S1",
+        "source_file": "03_it_security.pdf",
+        "page": 3,
+        "chunk_id": "f19ec6ad7d858d6dedd811b9a811c99c74d4e52c181a012ce65e44339878b650",
+        "text": "무료 AI 도구에 고객 명단을 넣어도 되나요?\n아니요. 관련 보안검토가 완료되기 전에는 업로드할 수 없습니다.\n보안 승인만 받으면 구매할 수 있나요?\n아니요. 구매요청과 금액별 최종 결재도 필요합니다.\n연관 문서 발주 절차 GB-PUR-01 · 금액별 결재 GB-APR-02 · 개인정보 위탁 계약 조건 GB-CON-04",
+        "distance": 0.15216416120529175
+      },
+      {
+        "source_id": "S2",
+        "source_file": "03_it_security.pdf",
+        "page": 2,
+        "chunk_id": "d9e4fedc43f1e696e7f4edcb426715ae398bc44d9ca75e4b059c11ea5de0377c",
+        "text": "가온비즈 · RAG 평가용 가상 업무 문서  |  GB-SEC-03  |  시행 2026-09-01\n2쪽\nSAMPLE  ·  FICTIONAL\nIT 자산 및 SaaS 보안검토 지침 / GB-SEC-03\n보안 평가 기준과 소요 기간\n4. 위험도 평가 항목\n정보보안팀은 서비스의 접근 권한, 로그인 방식, 데이터 암호화, 외부 공유 범위, 보관 위치, 보존 기간, 로그 확보 가능 여부, 서비스 종료\n시 데이터 삭제 가능 여부를 점검한다.\n• 개인정보를 처리하거나 외부 업체가 내부 시스템에 관리자 수준으로 접근하면 추가 검토 대상이다.\n• 보안 검토 결과에는 승인, 보완 후 승인, 반려 중 하나와 보완 요구사항을 기록한다.\n5. 위험도별 표준 검토 예상 기간\n위험도\n대표 사례\n예상 검토 기간\n낮음\n회사 데이터를 저장하지 않는 단순 장비 도입\n2영업일\n보통\n내부 문서를 보관하는 외부 SaaS\n3영업일\n높음\n개인정보 처리 또는 외부 관리자 접근\n5영업일\n상기 기간은 접수 서류가 완비된 시점부터 계산하는 표준 예상 기간이며, 보완 요청이 있는 경우 늘어날 수 있다. 법적 처리 기한이나 승인\n 보장을 의미하지 않는다.\n6. 개인정보 처리 서비스의 추가 조건\nSaaS 또는 외부 업체가 고객·임직원의 개인정보를 위탁 처리한다면, 데이터 범위·보관 기간·접근 통제 등을 명확히 하고 개인정보 처리 \n위탁 관련 계약 조항(DPA)을 포함해야 한다. 법무 사전검토 필요 여부는 GB-CON-04의 계약 규정을 따른다.",
+        "distance": 0.15690898895263672
+      },
+      {
+        "source_id": "S3",
+        "source_file": "03_it_security.pdf",
+        "page": 1,
+        "chunk_id": "a6cbcc144de73f6b0788733b66fc0bab7e45389588b51149d90922d2d5ee73fc",
+        "text": "가온비즈 · RAG 평가용 가상 업무 문서  |  GB-SEC-03  |  시행 2026-09-01\n1쪽\nSAMPLE  ·  FICTIONAL\nGAONBIZ / INTERNAL OPERATIONS • DEMO DOCUMENT\nIT 자산 및 SaaS 보안검토 지침\n업무용 장비, 외부 SaaS, 회사 데이터 이용 시 사전 보안검토 기준\n문서 ID\n버전\n시행일\n관리 부서\nGB-SEC-03\n1.0\n2026-09-01\n정보보안팀\n데모 자료 안내 본 문서는 가상의 기업 가온비즈를 위해 작성한 RAG 학습·평가용 샘플입니다. 실제 법규, 기업 규정, 계약상 의무를 나타\n내지 않습니다.\n1. 사전 보안검토 적용 대상\n가온비즈에서 회사 업무용으로 구매하는 노트북·데스크톱·서버·네트워크 장비, 신규 유료 SaaS, 회사 명의의 외부 IT 서비스 계약은 금\n액과 관계없이 발주·계약 전에 정보보안팀 검토를 받아야 한다.\n무료 SaaS라도 고객정보·임직원 개인정보·회사 내부자료를 입력하거나 저장하려는 경우에는 무료 체험 시작 전 사전 보안검토가 필요\n하다. 개인 계정으로 우회하여 회사 데이터를 업로드할 수 없다.\n2. 구매·결재와의 관계\n보안검토는 최종 구매 결재를 대체하지 않는다. 구매요청서는 GB-PUR-01에 따라 등록하고, 결재권자는 GB-APR-02의 공급가액 기\n준으로 판단한다. 보안 검토 결과가 승인되기 전에는 해당 IT 품목을 발주하거나 회사 데이터를 외부 서비스에 이전하지 않는다.\n3. 보안검토 신청 시 제출할 정보\n항목\n필수 정보\n사용 목적\n업무 목적, 사용 부서, 예상 사용자 수\n제품 / 공급업체",
+        "distance": 0.16093707084655762
+      }
+    ],
+    "answerable": false,
+    "answer": "등록된 문서에서 해당 정보를 확인할 수 없습니다.",
+    "claims": []
+  },
+  "token_usage": {
+    "input_tokens": 4180,
+    "output_tokens": 240,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+  },
+  "raw_response": "{\"criterion_results\":[{\"id\":\"c1\",\"satisfied\":true,\"reason\":\"문서에 정보보안팀 담당자의 개인 이메일이 없어 답변 불가 질문이며, 답변이 보류 문구(\\\"등록된 문서에서 해당 정보를 확인할 수 없습니다.\\\")를 반환했다.\"},{\"id\":\"c2\",\"satisfied\":true,\"reason\":\"이메일 주소 등을 추측하거나 관련 없는 근거를 덧붙이지 않고 보류만 했다.\"}],\"grounded\":true,\"rubric_uncertain\":false,\"issues\":[],\"notes\":\"적절한 답변 보류이며 추가 사실 주장이 없다.\"}",
+  "status": "success",
+  "criterion_results": [
+    {
+      "id": "c1",
+      "satisfied": true,
+      "reason": "문서에 정보보안팀 담당자의 개인 이메일이 없어 답변 불가 질문이며, 답변이 보류 문구(\"등록된 문서에서 해당 정보를 확인할 수 없습니다.\")를 반환했다."
+    },
+    {
+      "id": "c2",
+      "satisfied": true,
+      "reason": "이메일 주소 등을 추측하거나 관련 없는 근거를 덧붙이지 않고 보류만 했다."
+    }
+  ],
+  "grounded": true,
+  "rubric_uncertain": false,
+  "issues": [],
+  "notes": "적절한 답변 보류이며 추가 사실 주장이 없다.",
+  "correct": true,
+  "disposition": "pass",
+  "latency_ms": 2832.76
+}

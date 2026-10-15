@@ -15,6 +15,7 @@ class LangSmithTracer:
     def __init__(self, settings: Settings, *, client=None):
         self.project = settings.langsmith_project
         self.model = settings.chat_model
+        self.top_k = settings.top_k
         self.client = None
         self.status = "disabled"
         if not settings.langsmith_tracing:
@@ -74,7 +75,7 @@ class TraceRun:
                 self.tracer.client.create_run, id=self.id, name="enterprise_rag", run_type="chain",
                 inputs={"question": self.question}, project_name=self.tracer.project,
                 start_time=self.started, trace_id=self.id, dotted_order=self.order,
-                extra={"metadata": {"model": self.tracer.model, "top_k": 3}},
+                extra={"metadata": {"model": self.tracer.model, "top_k": self.tracer.top_k}},
             )
         return self
 

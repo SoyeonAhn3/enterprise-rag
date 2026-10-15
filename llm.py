@@ -20,6 +20,7 @@ class ClaudeError(RuntimeError):
 class ClaudeClient:
     def __init__(self, settings: Settings, *, http_client=None):
         self.settings = settings
+        self.last_usage = None
         self.client = Anthropic(
             api_key=settings.require_anthropic_key(),
             base_url="https://api.anthropic.com", timeout=settings.api_timeout_seconds,
@@ -45,6 +46,7 @@ class ClaudeClient:
         return {"provider": "anthropic", "model": model.id, "status": "available"}
 
     def generate(self, prompt: str, *, system: str, response_schema: dict | None = None) -> str:
+        self.last_usage = None
         if not isinstance(prompt, str) or not prompt.strip() or not isinstance(system, str) or not system.strip():
             raise ValueError("Claude prompt and system instruction must not be empty.")
         options = {}
@@ -55,6 +57,10 @@ class ClaudeClient:
             model=self.settings.chat_model, max_tokens=self.settings.chat_max_tokens,
             system=system, messages=[{"role": "user", "content": prompt}], **options,
         )
+        self.last_usage = {
+            key: getattr(message.usage, key, 0) or 0
+            for key in ("input_tokens", "output_tokens", "cache_creation_input_tokens", "cache_read_input_tokens")
+        }
         if message.stop_reason != "end_turn":
             raise ClaudeError("Claude did not return a complete text response; no answer was accepted.")
         text = "\n".join(block.text for block in message.content if block.type == "text").strip()

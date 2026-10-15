@@ -1,0 +1,82 @@
+{
+  "configuration": "A",
+  "split": "final",
+  "question_id": "q59",
+  "result_sha256": "60153f0c87b61dfdaded1ad91d0dff3621930cef38d70d34f0888759fde07be0",
+  "input_sha256": "c02070229494249d876773937bf665e24b55ac3f1735f46d493188c071006c2b",
+  "reviewer_kind": "ai",
+  "judge_model": "claude-sonnet-5-5",
+  "judge_prompt_sha256": "ddaf138e6d636653d48e9e7562a9c6814fc9a2fa0c4f6bd61e3ab55fdcbe79e0",
+  "input": {
+    "question": "우리 회사가 어제 취소한 계약의 실제 환급액은 얼마인가요?",
+    "expected_answerable": false,
+    "expected_answer": "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다. 횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다.",
+    "criteria": [
+      {
+        "id": "c1",
+        "text": "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다."
+      },
+      {
+        "id": "c2",
+        "text": "횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다."
+      }
+    ],
+    "references": [],
+    "retrieved": [
+      {
+        "source_id": "S1",
+        "source_file": "04_contract_settlement.pdf",
+        "page": 4,
+        "chunk_id": "96867ddc1e65fee78db8b60841ab353b8b33f380715e0adc92d81afaf6608d76",
+        "text": "가온비즈 · RAG 평가용 가상 업무 문서  |  GB-CON-04  |  시행 2026-09-01\n4쪽\nSAMPLE  ·  FICTIONAL\n계약 검토·검수·정산 업무가이드 / GB-CON-04\n계약 변경·반품·실무 질문\n9. 계약 변경과 재승인\n계약금액, 기간, 주요 산출물, 개인정보 처리 범위가 변경되면 변경 계약서를 작성한다. 변경 후 계약금액이 상위 결재권자의 구간을 넘는\n 경우 재결재하며, 법무 검토 조건이 새로 충족되면 법무지원팀의 사전 검토를 받는다.\n10. 취소·반품 및 환급\n검수 전 계약을 취소하거나 반품을 진행할 때는 공급업체의 회수 확인, 위약금 또는 취소수수료, 환급액을 기록한다. 완료된 계약을 해지\n하려면 계약서의 해지조건과 미지급 정산 내역을 먼저 확인한다.\n11. 실무 FAQ\n질문\n답변\n세금계산서를 받으면 즉시 지급되나요?\n아니요. 계약조건 충족·검수완료·정산 증빙 확인 후 지급됩니다.\n정확히 500만원 계약도 법무 검토하나요?\n예. 법무 사전검토는 공급가액 500만원 이상부터 적용됩니다.\n3개월짜리 200만원 개인정보 처리 계약은요?\n개인정보 처리 위탁 자체가 법무 검토 조건이며 DPA 검토도 필요합니다.\n검수가 늦어지면?\n요청 부서가 보류 또는 지연 사유를 남기고 구매운영팀에 공유합니다.\n12. 업무별 관련 문서\n• 구매요청·비교견적·발주: GB-PUR-01\n• 최종 구매 결재권자·예산 사전검토: GB-APR-02\n• IT 자산·SaaS·개인정보 처리 전 보안검토: GB-SEC-03",
+        "distance": 0.15525251626968384
+      },
+      {
+        "source_id": "S2",
+        "source_file": "02_approval_budget.pdf",
+        "page": 1,
+        "chunk_id": "7688f1cff77f77934fb304e71aee8cc466261bdfc8500e9c48728b3d64f95747",
+        "text": "• 공급가액 총액(VAT 제외)을 사용하며, 운송·설치비 등 구매에 필수적인 비용이 계약에 포함되면 합산한다.\n• 월 구독처럼 주기적으로 지급하는 계약은 최초 약정한 총 계약기간 비용으로 판단한다.\n• 결재권자는 최종 승인자이며, 필요한 예산·보안·법무의 사전검토를 대신하지 않는다.\n업무 예시 노트북 공급가액이 180만원이라면 최종 결재권자는 부서장이다. IT 보안 검토 필요 여부는 별도로 확인한다.",
+        "distance": 0.1565108299255371
+      },
+      {
+        "source_id": "S3",
+        "source_file": "04_contract_settlement.pdf",
+        "page": 1,
+        "chunk_id": "21a20dd4416ba44fdd7ab31465c53e9038e0e3f1e949893e81203f65ca73fd97",
+        "text": "계약 총금액은 VAT 제외 기준이며, 정기 구독 서비스는 약정 기간 전체 금액으로 계산한다. 법무 사전검토가 필요 없더라도 회사 표준 계\n약서를 사용하고 구매 절차는 준수한다.\n3. 계약 체결 전에 확인할 항목\n• 계약 상대방, 납기, 계약기간, 대금 지급조건, 검수 기준, 유지보수·해지 조건을 명시한다.\n• 해당하는 보안·예산 사전검토 및 금액별 결재가 끝난 뒤 정식 서명·발주를 진행한다.\n사례 공급가액 720만원의 12개월 SaaS 계약은 금액과 계약기간 기준 모두 법무 사전검토 대상이다. 최종 구매 결재권자는 \nGB-APR-02에서 확인한다.",
+        "distance": 0.1582878828048706
+      }
+    ],
+    "answerable": false,
+    "answer": "등록된 문서에서 해당 정보를 확인할 수 없습니다.",
+    "claims": []
+  },
+  "token_usage": {
+    "input_tokens": 3750,
+    "output_tokens": 235,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+  },
+  "raw_response": "{\"criterion_results\":[{\"id\":\"c1\",\"satisfied\":true,\"reason\":\"질문은 특정 회사의 어제 취소 계약에 대한 실제 환급액을 묻는데, 문서에는 해당 정보가 없습니다. 답변은 정해진 보류 문구로 적절히 보류했습니다.\"},{\"id\":\"c2\",\"satisfied\":true,\"reason\":\"금액, 횟수 등을 추측하지 않았고 관련 없는 근거도 붙이지 않았습니다.\"}],\"grounded\":true,\"rubric_uncertain\":false,\"issues\":[],\"notes\":\"추가 사실 주장 없이 적절히 답변을 보류했습니다.\"}",
+  "status": "success",
+  "criterion_results": [
+    {
+      "id": "c1",
+      "satisfied": true,
+      "reason": "질문은 특정 회사의 어제 취소 계약에 대한 실제 환급액을 묻는데, 문서에는 해당 정보가 없습니다. 답변은 정해진 보류 문구로 적절히 보류했습니다."
+    },
+    {
+      "id": "c2",
+      "satisfied": true,
+      "reason": "금액, 횟수 등을 추측하지 않았고 관련 없는 근거도 붙이지 않았습니다."
+    }
+  ],
+  "grounded": true,
+  "rubric_uncertain": false,
+  "issues": [],
+  "notes": "추가 사실 주장 없이 적절히 답변을 보류했습니다.",
+  "correct": true,
+  "disposition": "pass",
+  "latency_ms": 2754.78
+}

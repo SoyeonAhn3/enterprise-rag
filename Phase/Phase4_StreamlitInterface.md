@@ -29,6 +29,14 @@ Implemented files: [app.py](../app.py), [app_runtime.py](../app_runtime.py), [.s
 
 Browser evidence: [home](../docs/evidence/local-home.png), [answers, excerpts, and abstention](../docs/evidence/local-chat.png). The three real requests took approximately 3.00, 3.82, and 1.43 seconds after RAG initialization. Public Cloud operation is a separate Phase 5 gate.
 
+### Source excerpt line wrapping — 2026-10-14
+
+The security PDF itself splits `금액과` across two physical lines. `ingest.py` preserves the extracted `금\n액과`; `grounding.py` restores the original quote; the old `st.text` display retained that forced break. The PDF, portable index, and saved q07 result all reproduce it.
+
+[source_display.py](../source_display.py) reconnects a split Korean word only when its complete form appears unbroken in the fixed PDFs. Existing spaces, paragraph/list boundaries, and unknown splits remain intact. The four small PDFs are read once per process, with no additional API call. HTML-escaped excerpts use scoped `word-break: keep-all` styling and allow unusually long tokens to wrap. Retrieved text, quotes, PDFs, vectors, and recorded evaluation results remain unchanged. References: [CSS word wrapping](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/word-break), [Streamlit HTML API](https://docs.streamlit.io/develop/api-reference/text/st.html).
+
+The full suite passed **209 tests in 62.00 seconds**, including the actual PDF regression, existing-chat redisplay without generation, evidence preservation, boundaries, and escaped markup. Edge verified `금액과` stays on one line at viewport widths 320/375/768/1200 px and 19 additional excerpt widths. Screenshots of the saved answer: [desktop](../docs/evidence/source-excerpt-fixed-desktop.png), [mobile](../docs/evidence/source-excerpt-fixed-mobile.png).
+
 ## Decisions and dependencies
 
 - `st.cache_resource` shares caller-owned resources, with idempotent shutdown cleanup. Existing indexes load normally; a fresh deployment imports the reviewed precomputed-vector bundle. It does not re-embed documents at startup.
@@ -42,6 +50,7 @@ Browser evidence: [home](../docs/evidence/local-home.png), [answers, excerpts, a
 | --- | --- |
 | 2026-10-13 | Created the UI, resource reuse, settings, and usage-control outline; implementation is pending. |
 | 2026-10-14 | Implemented the missing local UI prerequisite during Phase 5 work; AppTest and three live browser questions passed, screenshots saved, bilingual documentation updated. Separate dev-log unavailable. |
+| 2026-10-14 | Fixed the reported PDF-split source word with conservative display formatting and Korean word wrapping. Original evidence preserved; 209 tests and browser layout checks passed. Separate dev-log unavailable. |
 
 ---
 
@@ -76,6 +85,14 @@ Browser evidence: [home](../docs/evidence/local-home.png), [answers, excerpts, a
 
 브라우저 증빙: [초기 화면](../docs/evidence/local-home.png), [답변·발췌·보류](../docs/evidence/local-chat.png). 실제 3회 요청의 RAG 초기화 후 처리 시간은 약 3.00초·3.82초·1.43초였다. 공개 Cloud 동작은 별도의 Phase 5 완료 조건이다.
 
+### 출처 발췌 줄바꿈 수정 — 2026-10-14
+
+보안 PDF 자체에서 `금액과`가 두 물리적 줄로 나뉜다. `ingest.py`가 추출한 `금\n액과`를 보존하고, `grounding.py`가 원문 인용을 복원하며, 기존 `st.text` 화면이 강제 줄바꿈까지 표시한 것이 원인이다. PDF·배포 인덱스·저장된 q07 결과에서 재현했다.
+
+[source_display.py](../source_display.py)는 고정 PDF에 붙여 쓴 전체 단어가 확인될 때만 끊긴 한글 단어를 연결한다. 기존 공백·문단·목록 경계와 판단할 수 없는 줄바꿈은 유지한다. 작은 PDF 4개를 프로세스당 한 번 읽고 API를 추가 호출하지 않는다. 발췌를 HTML 이스케이프한 뒤 해당 영역에만 `word-break: keep-all`을 적용하며, 화면보다 긴 단어에는 넘침 줄바꿈을 허용한다. 검색 원문·인용·PDF·벡터·기록된 평가 결과는 보존한다. 참고: [CSS 단어 줄바꿈](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/word-break), [Streamlit HTML API](https://docs.streamlit.io/develop/api-reference/text/st.html).
+
+실제 PDF 회귀 검사, 생성 없는 기존 대화 재표시, 원문 보존, 경계 유지, HTML 이스케이프를 포함해 전체 테스트 **209개가 62.00초에 통과**했다. Edge에서 화면 폭 320·375·768·1200 px와 발췌 영역 폭 19개를 추가 검사해 `금액과`가 한 줄에 유지됨을 확인했다. 저장된 답변의 수정 화면: [데스크톱](../docs/evidence/source-excerpt-fixed-desktop.png), [모바일](../docs/evidence/source-excerpt-fixed-mobile.png).
+
 ## 결정 사항 및 의존성
 
 - `st.cache_resource`로 리소스를 공유하고 종료 시 중복 정리를 방지한다. 기존 인덱스를 로드하며 신규 배포는 검토한 사전 계산 벡터 번들을 가져온다. 시작 시 문서를 다시 임베딩하지 않는다.
@@ -89,3 +106,4 @@ Browser evidence: [home](../docs/evidence/local-home.png), [answers, excerpts, a
 | --- | --- |
 | 2026-10-13 | 화면·리소스 재사용·설정·사용량 제한의 개요 신규 작성. 구현은 후속 진행 대상으로 기록함. |
 | 2026-10-14 | Phase 5 중 누락된 로컬 화면 선행 조건 구현. AppTest·실제 브라우저 3문항 통과, 스크린샷 보존, 영문·국문 문서 갱신. 별도 dev-log 미설치. |
+| 2026-10-14 | 제보된 출처 단어 끊김을 보수적인 표시 보정·한국어 단어 줄바꿈으로 수정. 원문 증빙 보존, 테스트 209개·브라우저 배치 검사 통과. 별도 dev-log 미설치. |

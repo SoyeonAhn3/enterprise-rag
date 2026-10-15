@@ -1,0 +1,50 @@
+{
+  "verified_at": "2026-10-15T00:27:51.410592+00:00",
+  "command": ".\\.venv\\Scripts\\python.exe -X utf8 -m pytest -q",
+  "observed_result": "243 passed in 20.25s",
+  "passed": 243,
+  "duration_seconds": 20.25,
+  "new_regression_tests": 20,
+  "scope": "Offline artifact/reporting regression checks and the full local suite; not a new model evaluation.",
+  "artifact_verification": {
+    "status": "verified_artifacts",
+    "report_sha256": "d27d38285fbbf47d058ca856c761c817b46dce3ee560c6ca2ad68a01ded9119e",
+    "questions": 60,
+    "answers": 120,
+    "reviews": 120,
+    "selected_alternative": "B",
+    "rag_errors": 0,
+    "missing_answers": 0,
+    "judge_errors_or_missing": 0,
+    "review_queue_entries": 34,
+    "human_review_completed": false
+  },
+  "generation_or_judge_api_calls_in_this_update": 0,
+  "historical_files_preserved_sha256": {
+    "eval/questions.json": "ecf7e6e9c4f2f0a379794420705063d7f77b4af05a6cb9fd4a9ca80a8ec6a9e4",
+    "eval/questions_v2.json": "ff234a02aee97d9bb49288eba4364565d57081c1b5c3f8094686bce0f76d9b54",
+    "eval/results/phase5_baseline.json": "ccc2932b4adab0c1cae51a845fda0e048a075be776fd84a7fd4eb30543e4dc6f",
+    "eval/results/phase5_agent_review.json": "a1f63a4a9d0c7d05ae1c555778c1097fe19f9b568a5fd0104ea5324395c2dee7",
+    "eval/results/phase5_metrics.json": "8e570fc0964cdcb030fb581eb9a3a0ce747c9efaaba9c0a814790e5b2ce58318",
+    "eval/results/phase5_v2_20261014/answers.json": "cb47e59ff607e8744ebfa5db89f9e7eb9c41594a452fd6ae8c7d5b495a3e3a57",
+    "eval/results/phase5_v2_20261014/retrieval_dev.json": "7e72c0c5505146da077fcbb5c67481616c3605357977a74b281b298e84e0d02e",
+    "eval/results/phase5_v2_20261014/pilot.json": "065bbe3eb809bbaa68845cc3153fad79404969bd188ec22546a06cc2d0cca716",
+    "eval/results/phase5_v2_20261014/metrics.json": "f110bb96045abe5b365eed2366959f5ad72cfc2ce45b14faea0c1ffacf5e14dd",
+    "eval/results/phase5_v2_20261014/review_queue.json": "cdf52862e937908476b3f022c3e202f28a50a5e1eec2ad7a3470322d4ac0785b",
+    "eval/results/phase5_v2_20261014/review_notes.json": "4729ee1f23cbe4ffc4504e359afc55071e9e12b43d4f9e4a3ec56c5e3c02eb92",
+    "eval/results/phase5_v2_20261014/verification.json": "1d7bc9bdeb2910040a34eb1a98607d6ea3e59ef6eb8095a424b1b3f5b26537af"
+  },
+  "verification_source_sha256": {
+    "eval/benchmark.py": "0eef4e0c0465154358a8ca890dc65b739b8d4a7374a480a386e5e676fda54a7b",
+    "eval/render_report.py": "b0429d73ea7e660d90e3b72f909dae4bc086f58132a01f7f7fc7f0cf2175604f",
+    "tests/test_benchmark_artifacts.py": "052a08081ada12b961444029c2b1f0fea05aef765d38910038461d8a1136bb65"
+  },
+  "deployment_bundle": {
+    "status": "valid",
+    "chunk_count": 22,
+    "sha256": "8170f81077f0e4950001d39be86bb3f855830a5bbcfb04ab0670eae2f83bd96b"
+  },
+  "remote_trace": "Unverified: LANGSMITH_TRACING is false and no LangSmith key is configured; checker stopped before generation.",
+  "linux_cloud_execution": "Unverified: Docker Linux engine named pipe unavailable; no public URL verified.",
+  "human_review_completed": false
+}

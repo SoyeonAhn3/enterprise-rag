@@ -12,7 +12,7 @@ from langchain_core.embeddings import Embeddings
 from config import ConfigurationError, DOCUMENTS_DIR, INDEX_DIR, MAX_QUESTION_LENGTH, Settings, TOP_K, load_settings
 from embeddings import EmbeddingError
 from index_store import IndexErrorBase, load_index
-from grounding import ANSWER_SCHEMA, SYSTEM_PROMPT, AnswerValidationError, abstention, build_prompt, validate_answer
+from grounding import SYSTEM_PROMPT, AnswerValidationError, abstention, answer_schema, build_prompt, validate_answer
 from llm import ClaudeClient, ClaudeError
 from tracing import LangSmithTracer
 
@@ -45,13 +45,14 @@ class Retriever:
         self, settings: Settings, *, index_dir: Path = INDEX_DIR,
         documents_dir: Path = DOCUMENTS_DIR, embeddings: Embeddings | None = None,
     ):
+        self.top_k = settings.top_k
         self.index = load_index(index_dir, documents_dir, settings, embeddings=embeddings)
 
     def retrieve(self, question: str) -> dict:
         question = validate_question(question)
         started = perf_counter()
         try:
-            matches = self.index.store.similarity_search_with_score(question, k=TOP_K)
+            matches = self.index.store.similarity_search_with_score(question, k=self.top_k)
         except EmbeddingError:
             raise
         except Exception:
@@ -102,26 +103,29 @@ class RAGAssistant:
                 record.update(retrieval)
                 chunks = retrieval["retrieved_chunks"]
                 record["stage"] = "prompt"
-                prompt = build_prompt(question, chunks)
+                top_k = getattr(self.retriever, "top_k", TOP_K)
+                prompt = build_prompt(question, chunks, max_sources=top_k)
                 generation_ms = 0.0
                 if chunks:
                     record["stage"] = "generation"
                     generation_started = perf_counter()
                     try:
                         with trace.stage("generation", {"system": SYSTEM_PROMPT, "prompt": prompt}) as span:
-                            raw = self.client.generate(prompt, system=SYSTEM_PROMPT, response_schema=ANSWER_SCHEMA)
+                            raw = self.client.generate(prompt, system=SYSTEM_PROMPT, response_schema=answer_schema(len(chunks)))
                             span["text"] = raw
                     finally:
                         generation_ms = round((perf_counter() - generation_started) * 1000, 2)
                         record["generation_latency_ms"] = generation_ms
+                        record["token_usage"] = getattr(self.client, "last_usage", None)
                     record["stage"] = "validation"
-                    grounded = validate_answer(raw, chunks)
+                    grounded = validate_answer(raw, chunks, max_sources=top_k)
                 else:
                     grounded = abstention()
                 result = {
                     "question": question, **grounded, "retrieved_chunks": chunks,
                     "retrieval_latency_ms": retrieval["retrieval_latency_ms"],
                     "generation_latency_ms": generation_ms,
+                    "token_usage": record.get("token_usage"),
                     "latency_ms": round((perf_counter() - started) * 1000, 2),
                 }
                 trace.finish(result)

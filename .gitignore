@@ -19,3 +19,4 @@ data/embedding_models/
 
 # Native runtime index; publish the reviewed deployment/index_bundle.json instead.
 data/chroma_db/
+data/eval_indexes/

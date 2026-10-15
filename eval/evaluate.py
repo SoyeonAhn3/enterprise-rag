@@ -14,7 +14,7 @@ from pathlib import Path
 import platform
 import statistics
 import sys
-from time import perf_counter
+from time import perf_counter, sleep
 from uuid import uuid4
 
 from config import DOCUMENTS_DIR, INDEX_DIR, PROJECT_ROOT, Settings, load_settings
@@ -36,7 +36,16 @@ def save_json(path: Path, value: dict):
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(path.name + ".tmp")
     temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    temporary.replace(path)
+    # Windows readers and sync clients can briefly deny atomic replacement.
+    # Retry only this file operation, never the model request that produced it.
+    for attempt in range(20):
+        try:
+            temporary.replace(path)
+            break
+        except PermissionError:
+            if attempt == 19:
+                raise
+            sleep(min(0.05 * (attempt + 1), 0.25))
 
 
 def validate_dataset(questions: list[dict]):
@@ -153,7 +162,7 @@ def public_configuration(settings: Settings, manifest: dict) -> dict:
     return {
         "provider": "anthropic", "chat_model": settings.chat_model,
         "max_tokens": settings.chat_max_tokens, "timeout_seconds": settings.api_timeout_seconds,
-        "top_k": 3, "embedding": manifest["signature"]["embedding"],
+        "top_k": settings.top_k, "embedding": manifest["signature"]["embedding"],
         "index_signature": manifest["signature"], "index_collection": manifest["collection"],
         "chunk_count": manifest["chunk_count"], "python": platform.python_version(),
         "libraries": {name: version(name) for name in ("anthropic", "fastembed", "chromadb", "langsmith")},
@@ -237,6 +246,8 @@ def main(argv=None) -> int:
             print(json.dumps(metrics, ensure_ascii=False, indent=2))
             return 0
         settings = load_settings()
+        if settings.top_k != 3:
+            raise ValueError("The historical ten-question evaluator requires k=3; use eval.benchmark for configurable experiments.")
         questions = json.loads((PROJECT_ROOT / "eval/questions.json").read_text(encoding="utf-8"))
         validate_dataset(questions)
         output = args.output or RESULTS_DIR / (datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + ".json")

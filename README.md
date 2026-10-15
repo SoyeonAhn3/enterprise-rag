@@ -6,48 +6,100 @@ A portfolio project for answering questions about business policies with retriev
 
 The goal is to deliver a public Streamlit demo, source code, and measured evaluation results under the scope of a two-day MVP plan.
 
+## Measured results
+
+The original answer evaluation on **2026-10-14** used **4 synthetic Korean PDFs, 13 pages, 22 chunks, and 10 questions**. Automated checks were updated on **2026-10-15**.
+
+| Measure | Recorded result | What was checked |
+| --- | --- | --- |
+| Retrieval Hit@3 | **8/8 (100%)** | At least one accepted evidence page in the top three chunks for each answerable question |
+| Multi-document page coverage | **2/2** | All required evidence groups had an accepted page among the retrieved chunks |
+| Abstention on unanswerable questions | **2/2** | Questions without a documented answer received an abstention |
+| AI-agent-reviewed correctness | **9/10 (90%)** | Grading against reference answers and criteria, including two correct abstentions |
+| Mean RAG response time | **3.33 seconds** | Retrieval and answer generation; model/index/client initialization excluded |
+| Automated tests | **243 passed** | Program and failure checks on 2026-10-15, separate from answer evaluation |
+
+Correctness was reviewed by an AI agent; **human grading has not been completed**. The answerable subset scored **7/8 (87.5%)**. These figures describe this small synthetic benchmark. The q08 answer omitted required detail despite supported conclusions; the [failure analysis](Phase/Phase5_EvaluationAndDeployment.md) records this limitation.
+
+Inspect the [original evaluation run](eval/results/phase5_baseline.json), [baseline metrics](eval/results/phase5_metrics.json), [AI review](eval/results/phase5_agent_review.json), and [243-test verification record](eval/results/phase5_v2_20261014/verification_20261015.json) for the supporting evidence.
+
+The expanded evaluation also completed on 2026-10-14: **60 questions, 120 saved answers, and 120 AI grades**. Development-only retrieval selected B (800 characters / 120 overlap / k=5) for comparison with A (800/120/3). The app still defaults to k=3.
+
+| Split | A AI correctness | B AI correctness |
+| --- | --- | --- |
+| Development, 40 questions | 35/40 (87.5%) | 39/40 (97.5%) |
+| Final check, 20 questions | 13/20 (65.0%) | 15/20 (75.0%) |
+
+The same Claude model generated and graded answers in separate calls; human review remains pending. The [expanded report](eval/results/phase5_v2_20261014/report.md) includes failure analysis, checkpoint recovery, and a 34-entry review queue. On 2026-10-15, offline verification reproduced the metrics from the saved artifacts. Reports now expose failed/missing answers, handle zero successful responses, and protect human notes in the review CSV.
+
+```powershell
+# Read-only validation; no model calls or credentials required.
+.\.venv\Scripts\python.exe -X utf8 -m eval.benchmark verify --output-dir eval/results/phase5_v2_20261014
+```
+
 ## Current status
 
-**Phases 1–4 work locally. Phase 5 evaluation, tracing integration, and deployment preparation are implemented; public deployment and a real LangSmith trace remain pending. The ten-question baseline has 8/8 retrieval hits, 2/2 multi-document coverage, and 2/2 abstentions. Agent-reviewed correctness is 9/10; independent human review is pending.**
+**Phases 1–4 work locally. Phase 5 evaluation, tracing integration, and deployment preparation are implemented; public deployment and a real LangSmith trace remain pending.**
 
 | Available now | Details |
 | --- | --- |
 | MVP specification | Requirements, architecture, implementation sequence, and acceptance criteria |
 | Sample documents | Four Korean PDFs totaling 13 pages |
-| Evaluation dataset | Ten questions with reference answers, alternative evidence, and manual grading criteria |
+| Evaluation dataset | Original ten-question baseline plus 60-question v2 with separate development/final splits |
 | Offline preprocessing | Four PDFs / 13 pages produce 22 chunks with source metadata |
 | Indexing and retrieval | Persistent Chroma, compatible-index reuse, explicit rebuilds, and top-three retrieval |
-| Local verification | 205 tests passed; covers Chroma, embeddings, Claude, citation validation, evaluation metrics, tracing failures, Streamlit, and portable index integrity |
+| Local verification | 243 tests passed; includes artifact consistency, failure/missing-answer reporting, human CSV preservation, and existing RAG/UI/deployment checks |
 | Real model retrieval | Local E5 model; q01/q07/q08 all cover their required evidence groups, including the original quotes |
 | Grounded answers | `RAGAssistant.answer()` uses one retrieval and at most one Claude call; returns cited claims, original retrieval, and latency |
 | Live Claude checks | q01/q07/q08 answered with matched quotes; q09/q10 abstained; partial/conflicting evidence and document instructions checked |
 | Streamlit UI | Examples, chat history, source expanders, safe errors, and a ten-attempt session limit; three real browser questions verified |
-| Phase 5 evaluation | Ten actual results, reproducible metrics, identified agent review, and a blank human review bound to the run |
+| Phase 5 evaluation | Original baseline plus 120 paired answers/AI grades, reproducible metrics, and 34 pending human-review entries |
 | Deployment preparation | Portable precomputed-vector bundle and server settings; [deployment guide](DEPLOYMENT.md), public URL pending |
 | Development phases | Five bilingual phase documents with dependencies and completion criteria |
 
-`app.py` uses the verified `rag.py` pipeline; `grounding.py` validates claims and citations. `eval/evaluate.py` preserves all ten runs and recomputes metrics; `tracing.py` isolates optional LangSmith failures. See the [Phase 4](Phase/Phase4_StreamlitInterface.md) and [Phase 5 reports](Phase/Phase5_EvaluationAndDeployment.md) for current evidence. Target repository: [SoyeonAhn3/enterprise-rag](https://github.com/SoyeonAhn3/enterprise-rag). **No public demo URL has been verified.**
+`app.py` uses the verified `rag.py` pipeline; `grounding.py` validates claims and citations. `eval/evaluate.py` preserves the ten-question baseline, while `eval/benchmark.py` compares settings and verifies the expanded run. `tracing.py` isolates optional LangSmith failures. See the [Phase 4](Phase/Phase4_StreamlitInterface.md) and [Phase 5 reports](Phase/Phase5_EvaluationAndDeployment.md) for current evidence. Source repository: [SoyeonAhn3/enterprise-rag](https://github.com/SoyeonAhn3/enterprise-rag). **No public demo URL has been verified.**
 
 ## Run locally
 
-For a fresh checkout, run the following from the project root in PowerShell with Python 3.12 installed:
+With Python 3.12 and Git installed, use PowerShell to clone the project and install the runtime dependencies:
 
 ```powershell
+git clone https://github.com/SoyeonAhn3/enterprise-rag.git
+Set-Location enterprise-rag
 py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+if (-not (Test-Path -LiteralPath .env)) {
+    Copy-Item -LiteralPath .env.example -Destination .env
+}
+```
+
+Set `ANTHROPIC_API_KEY` in the local `.env`, then run these commands from the repository root. Keep an existing `.env` and its settings. The app imports the bundled vectors automatically and downloads the public query-embedding model on its first start; building a document index is optional for this fixed corpus.
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 deployment.py check
+.\.venv\Scripts\python.exe -X utf8 -m streamlit run app.py
+```
+
+Open the local URL printed by Streamlit and try a sample question. Answer generation uses the operator's Claude key and incurs API usage. Visitors do not enter credentials. For server settings and public deployment checks, follow [DEPLOYMENT.md](DEPLOYMENT.md).
+
+### Offline checks and development
+
+These checks use local documents, saved evaluation results, and test doubles. They require no API credentials or new model calls:
+
+```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
 .\.venv\Scripts\python.exe -X utf8 ingest.py --dry-run
 .\.venv\Scripts\python.exe -X utf8 -m pytest -q
+.\.venv\Scripts\python.exe -X utf8 -m eval.benchmark verify --output-dir eval/results/phase5_v2_20261014
 ```
 
 The dry run creates `data/chunks_preview.json` without API credentials or embedding requests. The current corpus produces **4 documents, 13 text pages, 0 skipped pages, and 22 chunks**. The preview is generated locally and excluded from Git.
 
-Copy `.env.example` only if `.env` is absent. Indexing and retrieval need no API key. The first run downloads the public `intfloat/multilingual-e5-small` model into `data/embedding_models/` (about 487 MB locally); subsequent runs reuse it on CPU. Both `.env` and the model cache are ignored by Git.
+### Indexing and command-line answers
+
+Indexing and retrieval need no API key. The first run downloads the public `intfloat/multilingual-e5-small` model into `data/embedding_models/` (about 487 MB locally); subsequent runs reuse it on CPU. Both `.env` and the model cache are ignored by Git.
 
 ```powershell
-if (-not (Test-Path -LiteralPath .env)) {
-    Copy-Item -LiteralPath .env.example -Destination .env
-}
-
 # No API key needed. The first build downloads the local model.
 .\.venv\Scripts\python.exe -X utf8 ingest.py
 .\.venv\Scripts\python.exe -X utf8 rag.py "부가세 제외 구매 금액이 정확히 100만원이라면 최종 결재권자는 누구인가요?"
@@ -85,6 +137,8 @@ The server reads `.env` or Streamlit Secrets. Visitors never enter a key. On a f
 
 The [chat screenshot](docs/evidence/local-chat.png) shows real local answers, source excerpts, and abstention. Public Cloud setup, secrets, restart checks, and optional trace verification are described in [DEPLOYMENT.md](DEPLOYMENT.md).
 
+Source excerpts reconnect PDF-split Korean words when their complete form is found in the fixed documents, and use word-based wrapping. Original evidence is retained. The [line-wrap fix report](Phase/Phase4_StreamlitInterface.md#source-excerpt-line-wrapping--2026-10-14) includes desktop/mobile screenshots and regression results.
+
 1. Read the [MVP plan](plan/enterprise_rag_assistant_streamlit_mvp_plan.md) for the implementation requirements and planned deployment workflow.
 2. Review the [sample-document guide](rag_mvp_sample_documents/README.md) for corpus details and evidence-matching rules.
 3. Inspect the [runtime evaluation dataset](eval/questions.json) for the questions, reference answers, and grading criteria. The reviewed original remains in the sample-document folder.
@@ -117,7 +171,7 @@ The implemented pipeline uses **2-Step RAG: one retrieval step followed by answe
 
 Initial chunking settings are approximately **800 characters per chunk** with **120 characters of overlap**. These are starting settings from the plan, not measured optimal values.
 
-| Area | Planned technology |
+| Area | Technology / status |
 | --- | --- |
 | Application and UI | Python, Streamlit |
 | PDF extraction | PyMuPDF |
@@ -125,21 +179,21 @@ Initial chunking settings are approximately **800 characters per chunk** with **
 | Vector index | Chroma, langchain-chroma |
 | Embeddings | FastEmbed / ONNX Runtime, local multilingual E5 |
 | Answer generation | Anthropic Claude API, official Python SDK |
-| Tracing | LangSmith |
-| Evaluation | Python, JSON, manual answer review |
-| Deployment | Streamlit Community Cloud |
+| Tracing | LangSmith integration implemented; real remote trace pending |
+| Evaluation | Python, JSON, AI grading; human review pending |
+| Deployment | Streamlit Community Cloud planned; public verification pending |
 
 The application is verified locally on Windows / Python 3.12.10 with pinned dependencies. Streamlit 1.65.0 was added without replacing existing packages; `pip check` passes. LangSmith HTTP contracts and disabled/failing tracing are tested, but the real trace needs an operator key. Cloud compatibility, memory, model-cache startup, and public restart behavior remain unverified. The Linux Docker daemon was unavailable locally.
 
 ## Evaluation design
 
-The dataset contains **six single-document questions, two multi-document questions, and two unanswerable questions**. It covers amount boundaries, deadlines, approval and review requirements, and abstention.
+The original dataset contains **six single-document questions, two multi-document questions, and two unanswerable questions**. It covers amount boundaries, deadlines, approval and review requirements, and abstention. The separate [v2 dataset](eval/questions_v2.json) expands to 40 development and 20 final-check questions under the [Phase 5 protocol](Phase/Phase5_EvaluationAndDeployment.md).
 
 Each answerable question has `evidence_groups` for the facts needed to answer it. Groups are combined with **AND**; candidates within a group's `any_of` are combined with **OR**. Each candidate records `document`, `page`, and an original `quote`. A valid alternative source is accepted without requiring every alternative page.
 
 For example, q07 requires both an approval-authority source and a security-review source. The security requirement can be supported by page 1 or page 3 of `03_it_security.pdf`.
 
-| Planned measure | Definition |
+| Original baseline measure | Definition |
 | --- | --- |
 | Retrieval Hit@3 | Among the eight answerable questions, the proportion with at least one accepted document/page in the top three retrieved chunks |
 | Multi-document Coverage | For each of the two multi-document questions, whether every required evidence group has at least one candidate page in the top three |
@@ -184,7 +238,7 @@ The [MVP plan](plan/enterprise_rag_assistant_streamlit_mvp_plan.md) defines the 
 | [2 — Indexing and retrieval](Phase/Phase2_IndexingAndRetrieval.md) | Build/reload a Chroma index and retrieve the top three chunks | ✅ Completed with real local embeddings |
 | [3 — Grounded answers](Phase/Phase3_GroundedAnswers.md) | Generate supported answers, validate sources, and abstain | ✅ Completed with live Claude checks |
 | [4 — Streamlit interface](Phase/Phase4_StreamlitInterface.md) | Provide chat, source display, loading/errors, and usage controls | ✅ Local browser verified |
-| [5 — Evaluation and deployment](Phase/Phase5_EvaluationAndDeployment.md) | Measure ten questions, verify tracing, and publish the working demo | 🚧 Local evaluation/deployment preparation ready; remote gates pending |
+| [5 — Evaluation and deployment](Phase/Phase5_EvaluationAndDeployment.md) | Preserve the ten-question baseline, compare 60 questions, verify tracing, and publish the demo | 🚧 Expanded AI evaluation and offline verification complete; human review and remote checks pending |
 
 The original two-day target maps Phases 1–4 to local operation on Day 1 and Phase 5 to evaluation/deployment on Day 2. Completion is based on verification evidence, not elapsed time. Each Phase document contains English first and Korean second.
 
@@ -209,9 +263,14 @@ Enterprise-rag/
 │   ├── check_retrieval.py                  # q01/q07/q08 retrieval smoke check
 │   ├── check_answers.py                    # Five live grounded-answer checks
 │   ├── evaluate.py                         # Ten-question runner and offline metrics
+│   ├── benchmark.py                        # Paired evaluation, summarize, read-only verify
+│   ├── ai_review.py                        # Reference-based AI grading and pilot
+│   ├── expanded_cases.py                   # Versioned dataset and PDF-reference checks
+│   ├── render_report.py                    # Verified Markdown/CSV exports
 │   ├── check_trace.py                      # Read back actual LangSmith child runs
 │   ├── results/                            # Baseline, metrics, agent/human review files
-│   └── questions.json                      # Ten evaluation questions
+│   ├── questions.json                      # Original ten evaluation questions
+│   └── questions_v2.json                   # 40 development / 20 final-check questions
 ├── plan/
 │   └── enterprise_rag_assistant_streamlit_mvp_plan.md
 ├── rag_mvp_sample_documents/                # Reviewed source materials
@@ -227,11 +286,15 @@ Enterprise-rag/
 │   ├── test_answers.py
 │   ├── test_answer_checks.py
 │   ├── test_evaluation.py
+│   ├── test_benchmark.py
+│   ├── test_benchmark_artifacts.py
 │   ├── test_tracing.py
 │   ├── test_deployment.py
-│   └── test_app.py
+│   ├── test_app.py
+│   └── test_source_display.py
 ├── app.py                                  # Korean Streamlit chat interface
 ├── app_runtime.py                          # Cached RAG resources and lifecycle
+├── source_display.py                       # Evidence-preserving excerpt presentation
 ├── config.py
 ├── embeddings.py
 ├── deployment.py                           # Export/import/check portable index
