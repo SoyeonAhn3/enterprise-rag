@@ -2,6 +2,16 @@
 
 # Enterprise RAG Assistant
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-%EB%B0%94%EB%A1%9C%20%EC%8B%A4%ED%96%89-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://enterprise-rag-demo-project.streamlit.app/)
+
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.65-FF4B4B?logo=streamlit&logoColor=white)
+![Claude](https://img.shields.io/badge/LLM-Claude-D97757?logo=anthropic&logoColor=white)
+![Chroma](https://img.shields.io/badge/Vector%20DB-Chroma-327EFF)
+
+> 🚀 **바로 사용해 보기:** **[enterprise-rag-demo-project.streamlit.app](https://enterprise-rag-demo-project.streamlit.app/)** — 회원가입·API 키 없이 바로 질문할 수 있습니다.
+> 앱이 잠들어 있으면 **"Yes, get this app back up!"** 버튼을 누르고 1분 정도 기다려 주세요.
+
 업무 규정에 관한 질문에 검색 증강 생성(RAG)으로 답하는 포트폴리오 프로젝트입니다. Streamlit 앱은 고정 PDF에서 근거를 검색하고 한국어 답변과 함께 문서명·페이지·발췌를 보여 줍니다.
 
 2일 MVP 기획의 범위 안에서 공개 Streamlit 데모, 소스 코드, 실제 측정한 평가 결과를 제공하는 것이 목표입니다.
@@ -56,10 +66,10 @@
 | 실제 Claude 검사 | q01·q07·q08 근거 답변, q09·q10 보류. 일부·상충 근거와 문서 지시문 처리 검증 |
 | Streamlit 화면 | 예시·대화 기록·출처 펼치기·안전한 오류·세션 10회 제한. 실제 브라우저 3문항 검증 |
 | Phase 5 평가 | 기존 평가와 비교 답변·AI 채점 각 120개, 재현 가능한 지표, 대기 중인 사람 검토 목록 34건 |
-| 배포 준비 | 사전 계산 벡터 번들과 서버 설정. [배포 안내](DEPLOYMENT.md), 공개 URL은 대기 |
+| 배포 | 사전 계산 벡터 번들과 서버 설정. [배포 안내](DEPLOYMENT.md). Streamlit Community Cloud에 [공개 데모](https://enterprise-rag-demo-project.streamlit.app/) 배포 |
 | 개발 단계 | 영문·국문 Phase 문서 5개와 최신 현황 점검·우선순위별 로드맵 |
 
-`app.py`가 검증한 `rag.py`를 호출하고 `grounding.py`가 주장·인용을 검증합니다. `eval/evaluate.py`는 기존 10문항 결과를 보존하고 `eval/benchmark.py`는 설정 비교와 확대 실행 검증을 담당합니다. `tracing.py`는 선택적인 LangSmith 실패를 답변과 분리합니다. 현재 증빙은 [Phase 4](Phase/Phase4_StreamlitInterface.md)와 [Phase 5 보고서](Phase/Phase5_EvaluationAndDeployment.md)에 있습니다. 소스 저장소는 [SoyeonAhn3/enterprise-rag](https://github.com/SoyeonAhn3/enterprise-rag)이며 **검증한 공개 데모 URL은 아직 없습니다.**
+`app.py`가 검증한 `rag.py`를 호출하고 `grounding.py`가 주장·인용을 검증합니다. `eval/evaluate.py`는 기존 10문항 결과를 보존하고 `eval/benchmark.py`는 설정 비교와 확대 실행 검증을 담당합니다. `tracing.py`는 선택적인 LangSmith 실패를 답변과 분리합니다. 현재 증빙은 [Phase 4](Phase/Phase4_StreamlitInterface.md)와 [Phase 5 보고서](Phase/Phase5_EvaluationAndDeployment.md)에 있습니다. 소스 저장소는 [SoyeonAhn3/enterprise-rag](https://github.com/SoyeonAhn3/enterprise-rag)이며, 공개 데모는 [enterprise-rag-demo-project.streamlit.app](https://enterprise-rag-demo-project.streamlit.app/)입니다(2026-10-16 시크릿 창에서 동작 확인).
 
 ## 로컬 실행
 

@@ -2,6 +2,16 @@
 
 # Enterprise RAG Assistant
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Open%20App-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://enterprise-rag-demo-project.streamlit.app/)
+
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.65-FF4B4B?logo=streamlit&logoColor=white)
+![Claude](https://img.shields.io/badge/LLM-Claude-D97757?logo=anthropic&logoColor=white)
+![Chroma](https://img.shields.io/badge/Vector%20DB-Chroma-327EFF)
+
+> 🚀 **Try it now:** **[enterprise-rag-demo-project.streamlit.app](https://enterprise-rag-demo-project.streamlit.app/)** — no sign-up or API key needed.
+> If the app is asleep, click **"Yes, get this app back up!"** and wait about a minute.
+
 A portfolio project for answering questions about business policies with retrieval-augmented generation (RAG). The Streamlit app searches a fixed PDF collection, generates Korean answers from retrieved evidence, and displays the source document, page, and excerpt.
 
 The goal is to deliver a public Streamlit demo, source code, and measured evaluation results under the scope of a two-day MVP plan.
@@ -56,10 +66,10 @@ The [2026-10-16 status audit and development roadmap](Phase/DevelopmentStatusAnd
 | Live Claude checks | q01/q07/q08 answered with matched quotes; q09/q10 abstained; partial/conflicting evidence and document instructions checked |
 | Streamlit UI | Examples, chat history, source expanders, safe errors, and a ten-attempt session limit; three real browser questions verified |
 | Phase 5 evaluation | Original baseline plus 120 paired answers/AI grades, reproducible metrics, and 34 pending human-review entries |
-| Deployment preparation | Portable precomputed-vector bundle and server settings; [deployment guide](DEPLOYMENT.md), public URL pending |
+| Deployment | Portable precomputed-vector bundle and server settings; [deployment guide](DEPLOYMENT.md); deployed to Streamlit Community Cloud as a [public demo](https://enterprise-rag-demo-project.streamlit.app/) |
 | Development phases | Five bilingual phase documents plus a current status audit and prioritized roadmap |
 
-`app.py` uses the verified `rag.py` pipeline; `grounding.py` validates claims and citations. `eval/evaluate.py` preserves the ten-question baseline, while `eval/benchmark.py` compares settings and verifies the expanded run. `tracing.py` isolates optional LangSmith failures. See the [Phase 4](Phase/Phase4_StreamlitInterface.md) and [Phase 5 reports](Phase/Phase5_EvaluationAndDeployment.md) for current evidence. Source repository: [SoyeonAhn3/enterprise-rag](https://github.com/SoyeonAhn3/enterprise-rag). **No public demo URL has been verified.**
+`app.py` uses the verified `rag.py` pipeline; `grounding.py` validates claims and citations. `eval/evaluate.py` preserves the ten-question baseline, while `eval/benchmark.py` compares settings and verifies the expanded run. `tracing.py` isolates optional LangSmith failures. See the [Phase 4](Phase/Phase4_StreamlitInterface.md) and [Phase 5 reports](Phase/Phase5_EvaluationAndDeployment.md) for current evidence. Source repository: [SoyeonAhn3/enterprise-rag](https://github.com/SoyeonAhn3/enterprise-rag). Public demo: [enterprise-rag-demo-project.streamlit.app](https://enterprise-rag-demo-project.streamlit.app/), confirmed working in a private browser window on 2026-10-16.
 
 ## Run locally
 
