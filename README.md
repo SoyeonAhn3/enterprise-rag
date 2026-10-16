@@ -8,7 +8,7 @@ The goal is to deliver a public Streamlit demo, source code, and measured evalua
 
 ## Measured results
 
-The original answer evaluation on **2026-10-14** used **4 synthetic Korean PDFs, 13 pages, 22 chunks, and 10 questions**. Automated checks were updated on **2026-10-15**.
+The original answer evaluation on **2026-10-14** used **4 synthetic Korean PDFs, 13 pages, 22 chunks, and 10 questions**. Automated checks were rerun on **2026-10-16**.
 
 | Measure | Recorded result | What was checked |
 | --- | --- | --- |
@@ -17,11 +17,11 @@ The original answer evaluation on **2026-10-14** used **4 synthetic Korean PDFs,
 | Abstention on unanswerable questions | **2/2** | Questions without a documented answer received an abstention |
 | AI-agent-reviewed correctness | **9/10 (90%)** | Grading against reference answers and criteria, including two correct abstentions |
 | Mean RAG response time | **3.33 seconds** | Retrieval and answer generation; model/index/client initialization excluded |
-| Automated tests | **243 passed** | Program and failure checks on 2026-10-15, separate from answer evaluation |
+| Automated tests | **243 passed** | Program and failure checks on 2026-10-16, separate from answer evaluation |
 
 Correctness was reviewed by an AI agent; **human grading has not been completed**. The answerable subset scored **7/8 (87.5%)**. These figures describe this small synthetic benchmark. The q08 answer omitted required detail despite supported conclusions; the [failure analysis](Phase/Phase5_EvaluationAndDeployment.md) records this limitation.
 
-Inspect the [original evaluation run](eval/results/phase5_baseline.json), [baseline metrics](eval/results/phase5_metrics.json), [AI review](eval/results/phase5_agent_review.json), and [243-test verification record](eval/results/phase5_v2_20261014/verification_20261015.json) for the supporting evidence.
+Inspect the [original evaluation run](eval/results/phase5_baseline.json), [baseline metrics](eval/results/phase5_metrics.json), [AI review](eval/results/phase5_agent_review.json), and [243-test verification record](eval/results/phase5_v2_20261014/verification_20261016.json) for the supporting evidence.
 
 The expanded evaluation also completed on 2026-10-14: **60 questions, 120 saved answers, and 120 AI grades**. Development-only retrieval selected B (800 characters / 120 overlap / k=5) for comparison with A (800/120/3). The app still defaults to k=3.
 
@@ -41,6 +41,8 @@ The same Claude model generated and graded answers in separate calls; human revi
 
 **Phases 1–4 work locally. Phase 5 evaluation, tracing integration, and deployment preparation are implemented; public deployment and a real LangSmith trace remain pending.**
 
+The [2026-10-16 status audit and development roadmap](Phase/DevelopmentStatusAndRoadmap.md) links current code and verification evidence to the remaining work: finish public deployment and tracing, then improve retrieval quality, followed by optional usability and enterprise expansion. The audit reran 243 tests, reproduced saved metrics, and validated the deployment bundle without new model calls.
+
 | Available now | Details |
 | --- | --- |
 | MVP specification | Requirements, architecture, implementation sequence, and acceptance criteria |
@@ -55,7 +57,7 @@ The same Claude model generated and graded answers in separate calls; human revi
 | Streamlit UI | Examples, chat history, source expanders, safe errors, and a ten-attempt session limit; three real browser questions verified |
 | Phase 5 evaluation | Original baseline plus 120 paired answers/AI grades, reproducible metrics, and 34 pending human-review entries |
 | Deployment preparation | Portable precomputed-vector bundle and server settings; [deployment guide](DEPLOYMENT.md), public URL pending |
-| Development phases | Five bilingual phase documents with dependencies and completion criteria |
+| Development phases | Five bilingual phase documents plus a current status audit and prioritized roadmap |
 
 `app.py` uses the verified `rag.py` pipeline; `grounding.py` validates claims and citations. `eval/evaluate.py` preserves the ten-question baseline, while `eval/benchmark.py` compares settings and verifies the expanded run. `tracing.py` isolates optional LangSmith failures. See the [Phase 4](Phase/Phase4_StreamlitInterface.md) and [Phase 5 reports](Phase/Phase5_EvaluationAndDeployment.md) for current evidence. Source repository: [SoyeonAhn3/enterprise-rag](https://github.com/SoyeonAhn3/enterprise-rag). **No public demo URL has been verified.**
 
@@ -230,7 +232,7 @@ For tracing, set `LANGSMITH_TRACING=true` and `LANGSMITH_API_KEY` locally, then 
 
 ## Development sequence and scope
 
-The [MVP plan](plan/enterprise_rag_assistant_streamlit_mvp_plan.md) defines the scope. The missing Phase 4 prerequisite was completed during the requested Phase 5 work. Phase 5 stays in progress until human review, real tracing, and public deployment checks are complete.
+The [MVP plan](plan/enterprise_rag_assistant_streamlit_mvp_plan.md) defines the scope. Phase 4 is locally complete. Phase 5 stays in progress while real tracing and public deployment checks remain unverified. Full human grading is deferred under the decision recorded in Phase 5 and remains explicitly unverified. The [current roadmap](Phase/DevelopmentStatusAndRoadmap.md) details remaining release work and proposed later milestones.
 
 | Phase | Goal | Status |
 | --- | --- | --- |
@@ -249,6 +251,7 @@ The MVP uses a fixed corpus. User uploads, OCR, complex table recognition, authe
 ```text
 Enterprise-rag/
 ├── Phase/
+│   ├── DevelopmentStatusAndRoadmap.md       # Current audit and prioritized next work
 │   ├── Phase1_Foundation.md                 # ✅ Completed
 │   ├── Phase2_IndexingAndRetrieval.md       # ✅ Local model acceptance complete
 │   ├── Phase3_GroundedAnswers.md            # ✅ Grounded answers verified

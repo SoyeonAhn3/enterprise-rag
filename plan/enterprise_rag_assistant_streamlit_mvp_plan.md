@@ -1,5 +1,7 @@
 # Enterprise RAG Assistant — Streamlit 2일 MVP 개발 기획서
 
+> **2026-10-16 현황·후속 계획:** [개발 현황 및 로드맵](../Phase/DevelopmentStatusAndRoadmap.md), [Phase 5 잔여 작업](../Phase/Phase5_EvaluationAndDeployment.md)을 참고한다. 이 기획서는 초기 요구사항 기준이며 아래 체크리스트는 현재 완료 현황이 아니다. 일부 초기 OpenAI·인덱스 배포 예시는 이후 구현으로 대체되었으므로 현재 실행·배포 절차는 [README_ko.md](../README_ko.md)와 [DEPLOYMENT.md](../DEPLOYMENT.md)를 따른다.
+
 > **문서 유형:** 바이브코딩용 개발 명세서(PRD + 구현 가이드)\
 > **작성 기준:** 2026-10-13\
 > **기술 선택 갱신:** 2026-10-14 — 사용자 요청으로 Claude API + 로컬 다국어 임베딩으로 전환\

@@ -2,7 +2,7 @@
 
 > Demonstrate the application with measured results, a real trace, and a working public URL.
 
-**Status**: 🚧 Ten-question baseline and expanded 60-question AI evaluation completed on 2026-10-14; offline reproduction and reporting hardened on 2026-10-15. Human review, a real LangSmith trace, and public Cloud verification remain pending.\
+**Status**: 🚧 Ten-question baseline and expanded 60-question AI evaluation completed on 2026-10-14; reporting hardened on 2026-10-15 and offline checks passed again on 2026-10-16. Human review is deferred; a real LangSmith trace and public Cloud verification remain pending.\
 **Prerequisites**: [Phase 4](Phase4_StreamlitInterface.md) works locally; API access, a LangSmith project, and GitHub/Streamlit deployment access are available.\
 **Planned technology**: Python evaluation runner, JSON results, reference-based AI grading and a deferred human-review queue, LangSmith, Streamlit Community Cloud.
 
@@ -26,7 +26,26 @@ The missing Phase 4 interface was implemented and verified locally first. The us
 
 Implemented [eval/evaluate.py](../eval/evaluate.py), [tracing.py](../tracing.py), [eval/check_trace.py](../eval/check_trace.py), [deployment.py](../deployment.py), the portable index bundle, Streamlit settings/interface, tests, and [deployment instructions](../DEPLOYMENT.md). Existing packages were preserved when Streamlit was installed; `pip check` found no broken requirements. `.env` gained only missing optional tracing/session settings, preserving the Claude key.
 
-The latest complete local suite passed **243 tests in 20.25 seconds** on 2026-10-15, including 20 new evaluation/reporting regressions. The earlier 205-test result remains historical. Automated tests are separate from live model evaluation and browser checks. See the [verification record](../eval/results/phase5_v2_20261014/verification_20261015.json).
+The latest complete local suite passed **243 tests in 60.40 seconds** on 2026-10-16. Dependency checks, saved benchmark verification, and the 22-chunk deployment bundle also passed. No new model answers or AI grades were generated. See the [2026-10-16 verification record](../eval/results/phase5_v2_20261014/verification_20261016.json). The [2026-10-15 record](../eval/results/phase5_v2_20261014/verification_20261015.json) preserves the earlier 20.25-second run and 20 added reporting regressions. Automated tests remain separate from live model evaluation and browser checks.
+
+## Remaining work after the 2026-10-16 audit
+
+The [development status and roadmap](DevelopmentStatusAndRoadmap.md) consolidates implementation evidence and proposed later milestones. Finish the existing public MVP first. The following tasks detail only the current phase; CI and configuration-document cleanup are proposed release work, not missing implementations in Phases 1–4.
+
+| Task / priority | Work and affected files | Acceptance criterion | Verification | Status |
+| --- | --- | --- | --- | --- |
+| 5.R1 / P0 | Audit source, corpus, effective settings, saved evaluation, dependencies, and tests | Current state has dated, reproducible evidence without generating new answers | Existing full suite, `pip check`, `benchmark verify`, `deployment.py check`; record linked above | ✅ Complete |
+| 5.R2 / P0 | Identify the release snapshot in the separate project checkout; align `.env.example`, `.streamlit/secrets.toml.example`, README, and the original plan with the current Claude/local-E5/vector-bundle implementation; document `RAG_TOP_K=3` explicitly | One documented release configuration; obsolete OpenAI/native-index examples cannot be mistaken for current instructions; quality changes are separately identified | Compare release files with the audited workspace; inspect loaded non-secret settings and deployment bundle compatibility | 🔲 Planned |
+| 5.R3 / P0 startup, P1 CI | Validate a fresh Linux/Python 3.12 environment and startup; add a small offline CI workflow at `.github/workflows/ci.yml` (proposed file) | Dependencies and existing checks pass on Linux; first vector import and restart work without document embedding; actual query-model startup is separately recorded | Fresh install, four offline commands in the roadmap, cache-download/restart smoke check; record startup time and memory instead of assuming capacity | 🔲 Planned |
+| 5.R4 / P0 | Supply operator LangSmith settings and run existing `eval.check_trace` | Remote root and completed retrieval/generation child runs match the observed answer; failure isolation remains intact | One live generation and remote read-back; local `data/trace_check.json`; existing failure-isolation tests | ⏸ Credential needed: key absent and tracing disabled |
+| 5.R5 / P0 | Deploy `app.py` from the identified release to Community Cloud; configure server secrets and provider usage controls | Fresh visitor gets q01/q07 answers with real sources and q09 abstention without entering a key; refresh/restart works; usage-control settings are recorded | Private-browser checks, public URL, startup/restart logs, screenshots; inspect waiting with two sessions because shared resources serialize requests | 🔲 Public execution unverified |
+| 5.R6 / P0 | Reconcile `README.md`, `README_ko.md`, `DEPLOYMENT.md`, and this report with the deployed release | Actual URL, release configuration, trace evidence, split-specific AI scores, and remaining limitations agree; no human-verification claim | Follow the public link and evidence from a fresh session; compare published settings/results to the release snapshot | 🔲 Depends on 5.R4–5.R5 |
+
+Suggested sequence: **5.R2 → 5.R3 startup → 5.R5 → 5.R6**; complete 5.R4 as soon as its credential is available and finish it before closing the phase. CI can be prepared alongside startup checks. Initial remaining effort is **2–3 working days for one developer**, excluding access/setup delays and platform failures; this is an estimate, not a delivery promise. The operator supplies server/account configuration; the developer performs implementation, verification, and evidence updates.
+
+Keep k=3 for the existing MVP release unless a separate quality-change decision is recorded. k=5 is already supported and evaluated; the proposed Phase 6 will consider promotion before introducing more search machinery. Do not repeat the full 120-answer evaluation merely to document current status.
+
+Human review remains deferred under the existing recorded user decision. Preserve the 34-entry queue and distinguish AI scores from human judgments; selective review can resume later. It is not silently converted into an additional deployment prerequisite. This phase still cannot be marked complete without verified public operation and a real trace. The current audit did not access the remote repository, deploy, or perform a live model/browser check.
 
 ## Expanded evaluation protocol — agreed before execution (2026-10-14)
 
@@ -136,6 +155,7 @@ Actual local Edge browser automation verified q01/q07 answers, q09 abstention, s
 | 2026-10-13 | Created the evaluation contract and portfolio/deployment completion criteria; all execution evidence remains pending. |
 | 2026-10-14 | Implemented evaluation, error-isolated tracing, remote trace verifier, portable index, and the missing local UI. Recorded 10 live results, agent review, local browser evidence, and deploy instructions. Human review, LangSmith credentials, and public deployment remain pending. Separate dev-log unavailable. |
 | 2026-10-15 | Reconciled the completed 60-question evaluation; added read-only artifact verification, cross-run/grade validation, missing/failed-answer exports, and protection for human CSV notes. 243 tests passed in 20.25 seconds. Preserved original model outputs and application settings; live trace/public deployment pending. Separate dev-log unavailable; changes recorded here. |
+| 2026-10-16 | Audited the implementation and planned remaining release tasks; 243 tests passed in 60.40 seconds, with dependency/artifact/bundle checks passing. Added a consolidated roadmap and dated verification record. Preserved runtime code and saved evaluations; human review remains deferred. Separate dev-log unavailable; changes recorded here. |
 
 ---
 
@@ -143,7 +163,7 @@ Actual local Edge browser automation verified q01/q07 answers, q09 abstention, s
 
 > 실제 평가 결과, 실행 Trace, 공개 URL로 애플리케이션을 검증하고 보여준다.
 
-**상태**: 🚧 2026-10-14 기존 10문항·확대 60문항 AI 평가 완료, 2026-10-15 오프라인 재현 검증과 보고서 보강. 사람 검토, 실제 LangSmith Trace, 공개 Cloud 검증은 대기.\
+**상태**: 🚧 2026-10-14 기존 10문항·확대 60문항 AI 평가 완료, 2026-10-15 보고서 보강, 2026-10-16 오프라인 재검증 통과. 사람 검토는 후속으로 보류하며 실제 LangSmith Trace·공개 Cloud 검증은 대기.\
 **선행 조건**: [Phase 4](Phase4_StreamlitInterface.md) 로컬 동작 검증, API 사용 준비, LangSmith 프로젝트, GitHub·Streamlit 배포 접근 권한.\
 **예정 기술**: Python 평가 실행 코드, JSON 결과, 참고 근거 기반 AI 채점과 추후 사람 검토 목록, LangSmith, Streamlit Community Cloud.
 
@@ -167,7 +187,26 @@ Actual local Edge browser automation verified q01/q07 answers, q09 abstention, s
 
 구현 파일: [eval/evaluate.py](../eval/evaluate.py), [tracing.py](../tracing.py), [eval/check_trace.py](../eval/check_trace.py), [deployment.py](../deployment.py), 사전 계산 인덱스 번들, Streamlit 설정·화면, 테스트, [배포 안내](../DEPLOYMENT.md). 기존 패키지를 교체하지 않고 Streamlit을 설치했고 `pip check`에서 충돌이 없었다. `.env`에는 누락된 선택적 추적·세션 설정만 추가해 Claude 키를 보존했다.
 
-최신 전체 로컬 테스트는 2026-10-15 **243개, 20.25초**로 통과했으며 평가·보고서 회귀 검사 20개를 추가했다. 이전 205개 결과는 과거 기록이다. 자동 테스트는 실제 모델 평가·브라우저 검사와 구분한다. [검증 기록](../eval/results/phase5_v2_20261014/verification_20261015.json)에 근거를 남겼다.
+최신 전체 로컬 테스트는 2026-10-16 **243개, 60.40초**로 통과했다. 의존성, 저장 평가 산출물, 청크 22개 배포 번들 검사도 통과했다. 새 모델 답변·AI 채점은 생성하지 않았다. [2026-10-16 검증 기록](../eval/results/phase5_v2_20261014/verification_20261016.json)에 근거를 남겼다. 이전 20.25초 실행과 보고서 회귀 검사 20개 추가 내역은 [2026-10-15 기록](../eval/results/phase5_v2_20261014/verification_20261015.json)에 보존한다. 자동 테스트는 실제 모델 평가·브라우저 검사와 구분한다.
+
+## 2026-10-16 점검 이후 남은 작업
+
+[개발 현황 및 로드맵](DevelopmentStatusAndRoadmap.md)에 구현 근거와 이후 단계 제안을 모았다. 기존 공개 MVP를 먼저 완료한다. 아래는 현재 단계만 상세화한 작업이며 CI·설정 문서 정리는 새 배포 준비 제안이다. Phase 1~4의 구현 누락으로 간주하지 않는다.
+
+| Task·우선순위 | 작업 내용·대상 파일 | 완료 기준 | 검증 방법 | 상태 |
+| --- | --- | --- | --- | --- |
+| 5.R1 / P0 | 소스·문서·실제 설정·저장 평가·의존성·테스트 점검 | 새 답변 생성 없이 현재 상태를 날짜와 재현 근거로 확인 | 기존 전체 테스트, `pip check`, `benchmark verify`, `deployment.py check`. 위 검증 기록 참조 | ✅ 완료 |
+| 5.R2 / P0 | 분리된 프로젝트 체크아웃에서 배포본 식별. `.env.example`, `.streamlit/secrets.toml.example`, README, 기존 기획서를 실제 Claude·로컬 E5·벡터 번들에 맞춤. `RAG_TOP_K=3` 명시 | 배포 설정이 일관됨. 오래된 OpenAI·네이티브 인덱스 예시를 현재 절차로 오인하지 않음. 품질 변경은 별도로 식별 | 배포 파일과 점검 작업 폴더 비교, 비밀값을 제외한 설정 로딩과 번들 호환성 확인 | 🔲 예정 |
+| 5.R3 / 시작 P0, CI P1 | 새로운 Linux·Python 3.12 환경과 시작 동작 검증. `.github/workflows/ci.yml`에 작은 오프라인 CI 추가(예정 파일) | Linux 의존성·기존 검사 통과. 문서 임베딩 없이 첫 가져오기·재시작 성공. 실제 질문 모델 시작은 별도 증빙 | 새 설치, 로드맵의 오프라인 명령 4개, 캐시 다운로드·재시작 확인. 시작 시간·메모리 실측 | 🔲 예정 |
+| 5.R4 / P0 | 운영자 LangSmith 설정 후 기존 `eval.check_trace` 실행 | 원격 루트·완료된 검색 및 생성 하위 실행이 실제 답변과 일치. 실패 격리 유지 | 실제 생성 1회와 원격 재조회, 로컬 `data/trace_check.json`, 기존 실패 격리 테스트 | ⏸ 키 필요: 현재 미설정·추적 꺼짐 |
+| 5.R5 / P0 | 식별한 배포본의 `app.py`를 Community Cloud에 배포. 서버 시크릿·제공업체 사용량 제어 설정 | 새 방문자가 키 없이 q01·q07 근거 답변과 q09 보류 확인. 새로고침·재시작 정상. 사용량 제어 설정 기록 | 시크릿 브라우저, 공개 URL, 시작·재시작 로그, 스크린샷. 공유 리소스의 순차 처리 때문에 세션 2개의 대기 동작도 확인 | 🔲 공개 실행 미검증 |
+| 5.R6 / P0 | `README.md`, `README_ko.md`, `DEPLOYMENT.md`, 본 문서를 실제 배포본과 맞춤 | 실제 URL·배포 설정·Trace·구간별 AI 점수·남은 한계가 일치. 사람 검증 완료로 표시하지 않음 | 새 세션에서 공개 링크·증빙 확인, 배포 설정·결과와 대상 코드 비교 | 🔲 5.R4~5.R5 선행 |
+
+권장 순서는 **5.R2 → 5.R3 시작 검증 → 5.R5 → 5.R6**이다. 5.R4는 키가 준비되면 진행하여 Phase 완료 전에 끝낸다. CI는 시작 검증과 함께 준비할 수 있다. 남은 작업량은 **개발자 1명 기준 2~3작업일**로 추정하며 접근 권한·계정 준비·플랫폼 장애 대기는 제외한다. 납기 약속이 아니다. 운영자는 계정·서버 설정을 제공하고 개발자는 구현·검증·증빙 갱신을 수행한다.
+
+별도 품질 변경 결정을 기록하기 전에는 기존 MVP의 k=3을 유지한다. k=5는 이미 지원·평가했고 제안한 Phase 6에서 우선 적용을 검토한다. 현재 상태를 문서화하려고 답변 120개 전체 평가를 다시 실행하지 않는다.
+
+기존에 기록된 사용자 결정에 따라 사람 검토는 계속 뒤로 미룬다. 검토 목록 34건과 AI·사람 판정 구분을 유지하고 선택 검토는 추후 재개한다. 이를 추가 배포 선행 조건으로 바꾸지 않는다. 실제 공개 동작과 Trace 검증이 없으면 Phase 완료로 표시할 수 없다. 이번 점검에서는 원격 저장소 조회·배포·실제 모델 및 브라우저 검사를 수행하지 않았다.
 
 ## 확대 평가 기준 — 실행 전에 확정 (2026-10-14)
 
@@ -277,3 +316,4 @@ Actual local Edge browser automation verified q01/q07 answers, q09 abstention, s
 | 2026-10-13 | 평가 기준과 포트폴리오·배포 완료 조건 신규 작성. 실행 증빙은 모두 후속 검증 대상으로 기록함. |
 | 2026-10-14 | 평가 실행·오류를 분리한 추적·원격 검증기·인덱스 번들·누락된 로컬 화면 구현. 실제 10문항·에이전트 검토·브라우저 증빙·배포 안내 기록. 사람 검토·LangSmith 키·공개 배포는 대기. 별도 dev-log 미설치. |
 | 2026-10-15 | 완료된 60문항 평가 반영. 읽기 전용 산출물 검증, 실행 간 연결·채점 검증, 누락·실패 답변 내보내기, 사람 CSV 메모 보호 추가. 테스트 243개·20.25초 통과. 기존 모델 출력·앱 설정 보존. 실제 Trace·공개 배포 대기. 별도 dev-log 미설치로 여기에 변경 이력 기록. |
+| 2026-10-16 | 구현 상태 점검 및 잔여 배포 Task 계획. 테스트 243개·60.40초와 의존성·산출물·번들 검사 통과. 통합 로드맵·당일 검증 기록 추가. 실행 코드와 기존 평가 보존, 사람 검토 보류 유지. 별도 dev-log 미설치로 여기에 이력 기록. |

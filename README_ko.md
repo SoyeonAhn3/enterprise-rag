@@ -8,7 +8,7 @@
 
 ## 검증 성과
 
-**2026-10-14 기존 답변 평가**는 **합성 한국어 PDF 4개, 13페이지, 청크 22개, 질문 10개**를 대상으로 했습니다. 자동 검사는 **2026-10-15**에 갱신했습니다.
+**2026-10-14 기존 답변 평가**는 **합성 한국어 PDF 4개, 13페이지, 청크 22개, 질문 10개**를 대상으로 했습니다. 자동 검사는 **2026-10-16**에 다시 실행했습니다.
 
 | 평가 항목 | 기록된 결과 | 확인한 내용 |
 | --- | --- | --- |
@@ -17,11 +17,11 @@
 | 답변 불가 질문 보류 | **2/2** | 문서에 답이 없는 질문에 답변을 보류함 |
 | AI 에이전트 검토 정답 | **9/10 (90%)** | 참고 정답과 채점 기준에 따른 판정이며, 올바른 답변 보류 2건을 포함함 |
 | 평균 RAG 응답 시간 | **3.33초** | 검색·답변 생성 시간이며 모델·인덱스·클라이언트 초기화는 제외함 |
-| 자동화 테스트 | **243개 통과** | 2026-10-15 프로그램 동작·실패 처리 검사이며, 답변 평가와는 별개임 |
+| 자동화 테스트 | **243개 통과** | 2026-10-16 프로그램 동작·실패 처리 검사이며, 답변 평가와는 별개임 |
 
 정답 여부는 AI 에이전트가 검토했으며 **사람 채점은 아직 완료되지 않았습니다**. 답이 있는 질문만 보면 **7/8 (87.5%)**입니다. 이 수치는 소규모 합성 평가셋의 결과입니다. q08은 결론에 근거가 있었지만 필수 설명이 누락되었으며, [실패 분석](Phase/Phase5_EvaluationAndDeployment.md)에 해당 한계를 기록했습니다.
 
-근거는 [기존 평가 실행 원본](eval/results/phase5_baseline.json), [기존 집계 지표](eval/results/phase5_metrics.json), [AI 검토 기록](eval/results/phase5_agent_review.json), [테스트 243개 검증 기록](eval/results/phase5_v2_20261014/verification_20261015.json)에서 확인할 수 있습니다.
+근거는 [기존 평가 실행 원본](eval/results/phase5_baseline.json), [기존 집계 지표](eval/results/phase5_metrics.json), [AI 검토 기록](eval/results/phase5_agent_review.json), [테스트 243개 검증 기록](eval/results/phase5_v2_20261014/verification_20261016.json)에서 확인할 수 있습니다.
 
 확대 평가도 2026-10-14에 완료했으며 **질문 60개·답변 120개·AI 채점 120개**를 저장했습니다. 개발용 검색만으로 B(800자/중복120자/k=5)를 선택하여 A(800/120/3)와 비교했습니다. 앱 기본값은 k=3을 유지합니다.
 
@@ -41,6 +41,8 @@
 
 **Phase 1~4는 로컬 동작을 검증했습니다. Phase 5의 평가·추적 연동·배포 준비를 구현했으며 공개 배포와 실제 LangSmith 검증은 대기 중입니다.**
 
+[2026-10-16 개발 현황 및 로드맵](Phase/DevelopmentStatusAndRoadmap.md)에 코드·검증 근거와 남은 작업을 연결했습니다. 공개 배포·추적 완료 → 검색 품질 개선 → 선택적 사용성·기업용 확장 순서입니다. 이번 점검에서 새 모델 호출 없이 테스트 243개, 저장 지표 재현, 배포 번들 검증을 통과했습니다.
+
 | 현재 준비된 자료 | 내용 |
 | --- | --- |
 | MVP 기획서 | 요구사항, 아키텍처, 구현 순서, 인수 조건 |
@@ -55,7 +57,7 @@
 | Streamlit 화면 | 예시·대화 기록·출처 펼치기·안전한 오류·세션 10회 제한. 실제 브라우저 3문항 검증 |
 | Phase 5 평가 | 기존 평가와 비교 답변·AI 채점 각 120개, 재현 가능한 지표, 대기 중인 사람 검토 목록 34건 |
 | 배포 준비 | 사전 계산 벡터 번들과 서버 설정. [배포 안내](DEPLOYMENT.md), 공개 URL은 대기 |
-| 개발 단계 | 선행 관계와 완료 기준을 정리한 영문·국문 Phase 문서 5개 |
+| 개발 단계 | 영문·국문 Phase 문서 5개와 최신 현황 점검·우선순위별 로드맵 |
 
 `app.py`가 검증한 `rag.py`를 호출하고 `grounding.py`가 주장·인용을 검증합니다. `eval/evaluate.py`는 기존 10문항 결과를 보존하고 `eval/benchmark.py`는 설정 비교와 확대 실행 검증을 담당합니다. `tracing.py`는 선택적인 LangSmith 실패를 답변과 분리합니다. 현재 증빙은 [Phase 4](Phase/Phase4_StreamlitInterface.md)와 [Phase 5 보고서](Phase/Phase5_EvaluationAndDeployment.md)에 있습니다. 소스 저장소는 [SoyeonAhn3/enterprise-rag](https://github.com/SoyeonAhn3/enterprise-rag)이며 **검증한 공개 데모 URL은 아직 없습니다.**
 
@@ -230,7 +232,7 @@ q08은 근거 있는 CFO·법무 검토 결론을 제시했지만 일반 적용 
 
 ## 개발 순서와 범위
 
-[MVP 기획서](plan/enterprise_rag_assistant_streamlit_mvp_plan.md)의 범위를 따릅니다. 요청한 Phase 5 진행 중 누락된 Phase 4 선행 조건을 완료했습니다. 사람 검토·실제 추적·공개 배포 검증을 마칠 때까지 Phase 5는 진행 중으로 유지합니다.
+[MVP 기획서](plan/enterprise_rag_assistant_streamlit_mvp_plan.md)의 범위를 따릅니다. Phase 4는 로컬 완료이며 실제 추적·공개 배포를 검증하기 전까지 Phase 5는 진행 중으로 유지합니다. 전체 사람 채점은 Phase 5에 기록된 결정에 따라 뒤로 미뤘으며 미검증으로 명시합니다. [최신 로드맵](Phase/DevelopmentStatusAndRoadmap.md)에 남은 배포 작업과 이후 단계 제안을 정리했습니다.
 
 | Phase | 목표 | 상태 |
 | --- | --- | --- |
@@ -249,6 +251,7 @@ MVP는 고정된 문서를 사용합니다. 사용자 파일 업로드, OCR, 복
 ```text
 Enterprise-rag/
 ├── Phase/
+│   ├── DevelopmentStatusAndRoadmap.md       # 현재 상태 점검과 다음 개발 우선순위
 │   ├── Phase1_Foundation.md                 # ✅ 완료
 │   ├── Phase2_IndexingAndRetrieval.md       # ✅ 로컬 모델 인수 검증 완료
 │   ├── Phase3_GroundedAnswers.md            # ✅ 근거 답변 검증 완료

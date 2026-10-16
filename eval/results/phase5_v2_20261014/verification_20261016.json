@@ -1,0 +1,93 @@
+{
+  "verified_at": "2026-10-16T01:07:44.923Z",
+  "audit_date": "2026-10-16",
+  "command": ".\\.venv\\Scripts\\python.exe -X utf8 -m pytest -q",
+  "observed_result": "243 passed in 60.40s",
+  "exit_code": 0,
+  "passed": 243,
+  "duration_seconds": 60.4,
+  "new_regression_tests": 0,
+  "scope": "Development-status audit and roadmap planning. Existing offline suite and saved-artifact checks; no new live model or browser evaluation.",
+  "python_version": "3.12.10",
+  "dependency_check": {
+    "command": ".\\.venv\\Scripts\\python.exe -m pip check",
+    "exit_code": 0,
+    "observed_result": "No broken requirements found."
+  },
+  "artifact_verification": {
+    "status": "verified_artifacts",
+    "report_sha256": "d27d38285fbbf47d058ca856c761c817b46dce3ee560c6ca2ad68a01ded9119e",
+    "questions": 60,
+    "answers": 120,
+    "reviews": 120,
+    "selected_alternative": "B",
+    "rag_errors": 0,
+    "missing_answers": 0,
+    "judge_errors_or_missing": 0,
+    "review_queue_entries": 34,
+    "human_review_completed": false
+  },
+  "deployment_bundle": {
+    "status": "valid",
+    "chunk_count": 22,
+    "sha256": "8170f81077f0e4950001d39be86bb3f855830a5bbcfb04ab0670eae2f83bd96b"
+  },
+  "corpus": {
+    "documents": 4,
+    "total_pages": 13,
+    "text_pages": 13,
+    "skipped_pages": 0,
+    "chunks": 22
+  },
+  "effective_settings": {
+    "top_k": 3,
+    "chunk_size": 800,
+    "chunk_overlap": 120
+  },
+  "local_readiness": {
+    "claude_key_configured": true,
+    "claude_api_access_rechecked": false,
+    "langsmith_tracing_enabled": false,
+    "langsmith_key_configured": false,
+    "local_trace_evidence_exists": false,
+    "ci_directory_exists": false
+  },
+  "remote_trace": "Not run: tracing disabled and no LangSmith key configured.",
+  "public_deployment": "No public deployment verified in project evidence; no remote hosting or repository inspection performed in this audit.",
+  "linux_cloud_execution": "Not run in this audit; remains unverified.",
+  "human_review_completed": false,
+  "generation_or_judge_api_calls_in_this_update": 0,
+  "existing_implementation_and_evaluation_files_checked_unchanged": 134,
+  "source_sha256": {
+    "app.py": "9bb6fc5f75e796e05d4948543a89a5c8e8349e01e2f7e7037cbc5523a9053c76",
+    "app_runtime.py": "0d696ff073b76117ce6073dbefffe8ba8dae6d51936b453c54498bc75db1530a",
+    "config.py": "7a0787112f5bee1f31a1c724e447aeae9af56bbf769a4ad864b762608e642937",
+    "deployment.py": "62cfda60e6bd5ff8be7d8d4ad96d863a1e7709bcfbe4e97e9f6cee2e7e952fb2",
+    "embeddings.py": "4c798defd8224d80c7f598701b26447a1106ffb438b6c75764b7ebbe473f0e35",
+    "eval/ai_review.py": "abcca96baf6d897b62240da381936e718fb7522155356a3d56816263498d600c",
+    "eval/benchmark.py": "0eef4e0c0465154358a8ca890dc65b739b8d4a7374a480a386e5e676fda54a7b",
+    "eval/check_trace.py": "c82f2e438cccb4cff8f73452d517a5abd76b6e8dc790de8d7a02d6e4c5e93344",
+    "eval/evaluate.py": "8a69bee566649f5404abaa98d939c2c112f216669e4f564435df62502081b0f5",
+    "eval/render_report.py": "b0429d73ea7e660d90e3b72f909dae4bc086f58132a01f7f7fc7f0cf2175604f",
+    "grounding.py": "6b8ca3802733b7edfd20b6e31af1cfe1696bea8f75f6997d4aec379e158629d8",
+    "index_store.py": "021aa85872fcff42d7b4a99677b06b148cb1a0def24a99fde823cb8eb77fd3fd",
+    "ingest.py": "56a04dc86fad48b805c0af2dd73d3339812001470bd6d0578a1cbc68afaddff7",
+    "llm.py": "abc1f6554b0f0cde797af709dd12c515466c8009cecb5767a91d21ade1485454",
+    "rag.py": "21d1847646b704c980ae0cdd77ce002a90c2860c3f4294ab1299d4fc86378aa1",
+    "source_display.py": "550e596829097fa1f5d5a3817d614f5fe8ee820cbc6971776e0a3a4a427aa7ac",
+    "tracing.py": "6bc563c423b5aa939e25004697e2267afe7aa76c9d7b4fe2e9d3bbe36ad0349f"
+  },
+  "historical_artifact_sha256": {
+    "deployment/index_bundle.json": "63f0b0deb032c8f13fae2c0e98125b63df0adcb376da638a72b7eb87160b1a06",
+    "eval/questions.json": "ecf7e6e9c4f2f0a379794420705063d7f77b4af05a6cb9fd4a9ca80a8ec6a9e4",
+    "eval/questions_v2.json": "ff234a02aee97d9bb49288eba4364565d57081c1b5c3f8094686bce0f76d9b54",
+    "eval/results/phase5_agent_review.json": "a1f63a4a9d0c7d05ae1c555778c1097fe19f9b568a5fd0104ea5324395c2dee7",
+    "eval/results/phase5_baseline.json": "ccc2932b4adab0c1cae51a845fda0e048a075be776fd84a7fd4eb30543e4dc6f",
+    "eval/results/phase5_metrics.json": "8e570fc0964cdcb030fb581eb9a3a0ce747c9efaaba9c0a814790e5b2ce58318",
+    "eval/results/phase5_v2_20261014/answers.json": "cb47e59ff607e8744ebfa5db89f9e7eb9c41594a452fd6ae8c7d5b495a3e3a57",
+    "eval/results/phase5_v2_20261014/metrics.json": "f110bb96045abe5b365eed2366959f5ad72cfc2ce45b14faea0c1ffacf5e14dd",
+    "eval/results/phase5_v2_20261014/report.md": "0535990f81c6090b6a1d07b55b705e5d260970dcf5a09696ca84eb6f34071264",
+    "eval/results/phase5_v2_20261014/review_queue.csv": "8ece198140669bdca3bb67eaf5d9c33626c31d89b694c3188180a9a88e43ddcf",
+    "eval/results/phase5_v2_20261014/review_queue.json": "cdf52862e937908476b3f022c3e202f28a50a5e1eec2ad7a3470322d4ac0785b"
+  }
+}
