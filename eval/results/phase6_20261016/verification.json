@@ -1,0 +1,43 @@
+{
+  "created_at": "2026-10-16T04:56:11.799729+00:00",
+  "scope": "Local Phase 6 verification; no Cloud deployment, restart/resource checks, LangSmith checks, or human review.",
+  "tests": {
+    "command": "python -X utf8 -m pytest -q",
+    "passed": 267,
+    "duration_seconds": 31.63,
+    "exit_code": 0
+  },
+  "focused_tests": {
+    "passed": 129,
+    "duration_seconds": 4.97,
+    "exit_code": 0
+  },
+  "dependencies": {
+    "command": "python -m pip check",
+    "status": "No broken requirements found",
+    "exit_code": 0
+  },
+  "phase5_artifacts": {
+    "status": "verified_artifacts",
+    "questions": 60,
+    "answers": 120,
+    "reviews": 120,
+    "review_queue_entries": 34,
+    "human_review_completed": false,
+    "exit_code": 0
+  },
+  "historical_files": {
+    "count": 86,
+    "changed": []
+  },
+  "deployment_bundle": {
+    "status": "valid",
+    "chunk_count": 22,
+    "sha256": "8170f81077f0e4950001d39be86bb3f855830a5bbcfb04ab0670eae2f83bd96b",
+    "exit_code": 0
+  },
+  "retrieval_report_sha256": "305c9701fd19bba6bc7e60e38d927b794d6b3f593f0cf6180843a48bbdbf193b",
+  "smoke_report_sha256": "25f135205b0185c18c4b122a22b20fc1ce0fc74686a070a6c095381f7d2b2346",
+  "selected_candidate": "pages5",
+  "deployed": false
+}

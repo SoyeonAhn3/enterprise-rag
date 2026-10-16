@@ -46,6 +46,8 @@ class Settings:
     chunk_size: int = CHUNK_SIZE
     chunk_overlap: int = CHUNK_OVERLAP
     top_k: int = TOP_K
+    retrieval_mode: str = "chunks"
+    context_max_chars: int = 6000
     langsmith_tracing: bool = False
     langsmith_api_key: str = field(default="", repr=False)
     langsmith_project: str = "enterprise-rag-mvp"
@@ -69,6 +71,10 @@ class Settings:
             raise ConfigurationError("Require chunk_size > 0 and 0 <= chunk_overlap < chunk_size.")
         if type(self.top_k) is not int or not 1 <= self.top_k <= 10:
             raise ConfigurationError("RAG_TOP_K must be an integer between 1 and 10.")
+        if self.retrieval_mode not in ("chunks", "pages"):
+            raise ConfigurationError("RAG_RETRIEVAL_MODE must be chunks or pages.")
+        if type(self.context_max_chars) is not int or not 800 <= self.context_max_chars <= 20000:
+            raise ConfigurationError("RAG_CONTEXT_MAX_CHARS must be an integer between 800 and 20000.")
         if not 1 <= self.session_question_limit <= 100:
             raise ConfigurationError("SESSION_QUESTION_LIMIT must be between 1 and 100.")
 
@@ -95,6 +101,7 @@ def load_settings(
         "EMBEDDING_PROVIDER", "EMBEDDING_MODEL", "EMBEDDING_DIMENSIONS",
         "EMBEDDING_CACHE_DIR", "EMBEDDING_LOCAL_FILES_ONLY",
         "API_TIMEOUT_SECONDS", "RAG_CHUNK_SIZE", "RAG_CHUNK_OVERLAP", "RAG_TOP_K",
+        "RAG_RETRIEVAL_MODE", "RAG_CONTEXT_MAX_CHARS",
         "LANGSMITH_TRACING", "LANGSMITH_API_KEY", "LANGSMITH_PROJECT", "LANGSMITH_ENDPOINT",
         "SESSION_QUESTION_LIMIT",
     )
@@ -133,6 +140,8 @@ def load_settings(
         chunk_size=number("RAG_CHUNK_SIZE", str(CHUNK_SIZE), int),
         chunk_overlap=number("RAG_CHUNK_OVERLAP", str(CHUNK_OVERLAP), int),
         top_k=number("RAG_TOP_K", str(TOP_K), int),
+        retrieval_mode=text("RAG_RETRIEVAL_MODE", "chunks"),
+        context_max_chars=number("RAG_CONTEXT_MAX_CHARS", "6000", int),
         # Optional tracing configuration must never prevent ordinary answers.
         langsmith_tracing=text("LANGSMITH_TRACING", "false").lower() in {"true", "1"},
         langsmith_api_key=text("LANGSMITH_API_KEY", ""),

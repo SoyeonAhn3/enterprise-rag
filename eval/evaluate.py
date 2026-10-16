@@ -163,11 +163,12 @@ def public_configuration(settings: Settings, manifest: dict) -> dict:
         "provider": "anthropic", "chat_model": settings.chat_model,
         "max_tokens": settings.chat_max_tokens, "timeout_seconds": settings.api_timeout_seconds,
         "top_k": settings.top_k, "embedding": manifest["signature"]["embedding"],
+        "retrieval_mode": settings.retrieval_mode, "context_max_chars": settings.context_max_chars,
         "index_signature": manifest["signature"], "index_collection": manifest["collection"],
         "chunk_count": manifest["chunk_count"], "python": platform.python_version(),
         "libraries": {name: version(name) for name in ("anthropic", "fastembed", "chromadb", "langsmith")},
         "source_sha256": {name: hashlib.sha256((PROJECT_ROOT / name).read_bytes()).hexdigest()
-                          for name in ("rag.py", "grounding.py", "llm.py", "embeddings.py", "index_store.py", "tracing.py")},
+                          for name in ("rag.py", "retrieval_context.py", "grounding.py", "llm.py", "embeddings.py", "index_store.py", "tracing.py")},
         "tracing_requested": settings.langsmith_tracing,
     }
 
@@ -246,8 +247,8 @@ def main(argv=None) -> int:
             print(json.dumps(metrics, ensure_ascii=False, indent=2))
             return 0
         settings = load_settings()
-        if settings.top_k != 3:
-            raise ValueError("The historical ten-question evaluator requires k=3; use eval.benchmark for configurable experiments.")
+        if settings.top_k != 3 or settings.retrieval_mode != "chunks":
+            raise ValueError("The historical ten-question evaluator requires k=3 and chunks mode; use eval.phase6 for page-context experiments.")
         questions = json.loads((PROJECT_ROOT / "eval/questions.json").read_text(encoding="utf-8"))
         validate_dataset(questions)
         output = args.output or RESULTS_DIR / (datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + ".json")

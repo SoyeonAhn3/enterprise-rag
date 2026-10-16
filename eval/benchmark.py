@@ -113,7 +113,7 @@ def run_search(output):
     questions = read(DATASET_PATH)
     validate_dataset(questions)
     dev = [q for q in questions if q["split"] == "dev"]
-    settings = replace(load_settings(), langsmith_tracing=False)
+    settings = replace(load_settings(), langsmith_tracing=False, retrieval_mode="chunks")
     provider = create_embeddings(settings)
     report = {"created_at": now(), "status": "running", "dataset_sha256": digest(questions), "dataset": questions,
               "documents_sha256": pdf_fingerprints(DOCUMENTS_DIR), "source_sha256": source_hashes(),
@@ -175,7 +175,7 @@ def run_live(output, *, resume=False):
             or pilot["judge_prompt_sha256"] != search["judge_prompt_sha256"]):
         raise ValueError("Protocol changed or judge pilot failed; freeze and validate before running.")
     names = ["A", search["selected_alternative"]]
-    settings = replace(load_settings(), langsmith_tracing=False)
+    settings = replace(load_settings(), langsmith_tracing=False, retrieval_mode="chunks")
     judge_settings = replace(settings, chat_max_tokens=4096, api_timeout_seconds=60)
     provider = create_embeddings(settings)
     provider.embed_query("구매 규정")  # Warm-up excluded from timed queries.

@@ -27,11 +27,11 @@
 | 답변 불가 질문 보류 | **2/2** | 문서에 답이 없는 질문에 답변을 보류함 |
 | AI 에이전트 검토 정답 | **9/10 (90%)** | 참고 정답과 채점 기준에 따른 판정이며, 올바른 답변 보류 2건을 포함함 |
 | 평균 RAG 응답 시간 | **3.33초** | 검색·답변 생성 시간이며 모델·인덱스·클라이언트 초기화는 제외함 |
-| 자동화 테스트 | **243개 통과** | 2026-10-16 프로그램 동작·실패 처리 검사이며, 답변 평가와는 별개임 |
+| 자동화 테스트 | **267개 통과** | 2026-10-16 최신 Phase 6 로컬 검사이며, 답변 평가와는 별개임 |
 
 정답 여부는 AI 에이전트가 검토했으며 **사람 채점은 아직 완료되지 않았습니다**. 답이 있는 질문만 보면 **7/8 (87.5%)**입니다. 이 수치는 소규모 합성 평가셋의 결과입니다. q08은 결론에 근거가 있었지만 필수 설명이 누락되었으며, [실패 분석](Phase/Phase5_EvaluationAndDeployment.md)에 해당 한계를 기록했습니다.
 
-근거는 [기존 평가 실행 원본](eval/results/phase5_baseline.json), [기존 집계 지표](eval/results/phase5_metrics.json), [AI 검토 기록](eval/results/phase5_agent_review.json), [테스트 243개 검증 기록](eval/results/phase5_v2_20261014/verification_20261016.json)에서 확인할 수 있습니다.
+근거는 [기존 평가 실행 원본](eval/results/phase5_baseline.json), [기존 집계 지표](eval/results/phase5_metrics.json), [AI 검토 기록](eval/results/phase5_agent_review.json), [최신 테스트 267개 검증 기록](eval/results/phase6_20261016/verification.json)에서 확인할 수 있습니다. [이전 243개 검증 기록](eval/results/phase5_v2_20261014/verification_20261016.json)도 보존합니다.
 
 확대 평가도 2026-10-14에 완료했으며 **질문 60개·답변 120개·AI 채점 120개**를 저장했습니다. 개발용 검색만으로 B(800자/중복120자/k=5)를 선택하여 A(800/120/3)와 비교했습니다. 앱 기본값은 k=3을 유지합니다.
 
@@ -49,9 +49,11 @@
 
 ## 현재 상태
 
-**Phase 1~4는 로컬 동작을 검증했습니다. Phase 5의 평가·추적 연동·배포 준비를 구현했으며 공개 배포와 실제 LangSmith 검증은 대기 중입니다.**
+**Phase 1~4는 로컬 동작을 검증했습니다. Phase 5의 평가·추적 연동을 구현했고 2026-10-16 공개 데모를 배포했습니다. 정식 배포 검사와 실제 LangSmith 검증은 대기 중입니다.**
 
-[2026-10-16 개발 현황 및 로드맵](Phase/DevelopmentStatusAndRoadmap.md)에 코드·검증 근거와 남은 작업을 연결했습니다. 공개 배포·추적 완료 → 검색 품질 개선 → 선택적 사용성·기업용 확장 순서입니다. 이번 점검에서 새 모델 호출 없이 테스트 243개, 저장 지표 재현, 배포 번들 검증을 통과했습니다.
+[2026-10-16 로드맵](Phase/DevelopmentStatusAndRoadmap.md)에 남은 Phase 5 검증을 보류하고 [Phase 6](Phase/Phase6_RetrievalAndAnswerQuality.md)를 진행한 사용자 결정을 반영했습니다. Phase 6은 로컬 구현·검증을 완료했습니다. 선택형 페이지 문맥 검색은 중복 페이지를 제거하고 6,000자 한도에서 원문을 보존하며, 공통 답변 프롬프트는 요구 항목·조건·시점을 명확히 설명하도록 보강했습니다.
+
+[Phase 6 보고서](eval/results/phase6_20261016/report.md)의 개발용 필수 근거 전체 포함률은 **24/32(chunks/k=3) → 26/32(chunks/k=5) → 32/32(pages/k=5)**이며, 알려진 실제 회귀 사례는 같은 모델의 AI 채점에서 **6/6** 통과했습니다. 개발 진단 결과이며 독립 정답률이 아닙니다. 평균 문맥 글자 수는 chunks/k=5보다 **34.39% 증가**했습니다. **테스트 267개**가 통과했고 기존 평가 파일·배포 번들은 보존했습니다. 기본 검색 설정은 chunks/k=3이며 서버 모드 활성화·원격 반영 확인은 대기 중입니다. 개선 모드는 Phase 6 문서에 따라 `RAG_RETRIEVAL_MODE=pages`, `RAG_TOP_K=5`, `RAG_CONTEXT_MAX_CHARS=6000`으로 선택합니다.
 
 | 현재 준비된 자료 | 내용 |
 | --- | --- |
@@ -60,14 +62,15 @@
 | 평가 데이터셋 | 기존 10문항과 개발용·최종 확인용을 분리한 60문항 v2 |
 | 오프라인 전처리 | PDF 4개·13페이지에서 출처 메타데이터를 포함한 청크 22개 생성 |
 | 인덱싱·검색 | Chroma 영구 저장, 호환 인덱스 재사용, 명시적 재생성, 상위 3개 검색 |
-| 로컬 검증 | 테스트 243개 통과. 산출물 연결·실패 및 누락 보고·사람 CSV 보존과 기존 RAG·화면·배포 검사 포함 |
+| 로컬 검증 | 테스트 267개 통과. 페이지 문맥 한도·출처·비교 보호와 기존 RAG·화면·평가·배포 검사 포함 |
 | 실제 모델 검색 | 로컬 E5 모델로 q01·q07·q08의 필수 근거 그룹과 원문 발췌를 모두 확보 |
 | 근거 기반 답변 | `RAGAssistant.answer()`가 검색 1회·최대 Claude 호출 1회로 주장·인용·전체 검색 결과·시간 반환 |
 | 실제 Claude 검사 | q01·q07·q08 근거 답변, q09·q10 보류. 일부·상충 근거와 문서 지시문 처리 검증 |
 | Streamlit 화면 | 예시·대화 기록·출처 펼치기·안전한 오류·세션 10회 제한. 실제 브라우저 3문항 검증 |
 | Phase 5 평가 | 기존 평가와 비교 답변·AI 채점 각 120개, 재현 가능한 지표, 대기 중인 사람 검토 목록 34건 |
 | 배포 | 사전 계산 벡터 번들과 서버 설정. [배포 안내](DEPLOYMENT.md). Streamlit Community Cloud에 [공개 데모](https://enterprise-rag-demo-project.streamlit.app/) 배포 |
-| 개발 단계 | 영문·국문 Phase 문서 5개와 최신 현황 점검·우선순위별 로드맵 |
+| Phase 6 품질 | 선택형 페이지 문맥·요구 항목별 답변. 개발용 검색 비교와 알려진 실제 답변·AI 채점 6건 |
+| 개발 단계 | 영문·국문 Phase 문서 6개와 최신 현황 점검·우선순위별 로드맵 |
 
 `app.py`가 검증한 `rag.py`를 호출하고 `grounding.py`가 주장·인용을 검증합니다. `eval/evaluate.py`는 기존 10문항 결과를 보존하고 `eval/benchmark.py`는 설정 비교와 확대 실행 검증을 담당합니다. `tracing.py`는 선택적인 LangSmith 실패를 답변과 분리합니다. 현재 증빙은 [Phase 4](Phase/Phase4_StreamlitInterface.md)와 [Phase 5 보고서](Phase/Phase5_EvaluationAndDeployment.md)에 있습니다. 소스 저장소는 [SoyeonAhn3/enterprise-rag](https://github.com/SoyeonAhn3/enterprise-rag)이며, 공개 데모는 [enterprise-rag-demo-project.streamlit.app](https://enterprise-rag-demo-project.streamlit.app/)입니다(2026-10-16 시크릿 창에서 동작 확인).
 
@@ -193,9 +196,9 @@ Claude를 사용하려면 로컬 `ANTHROPIC_API_KEY`를 설정하고 `.\.venv\Sc
 | 답변 생성 | Anthropic Claude API, 공식 Python SDK |
 | 실행 추적 | LangSmith 연동 구현, 실제 원격 Trace 대기 |
 | 평가 | Python, JSON, AI 채점. 사람 검토 대기 |
-| 배포 | Streamlit Community Cloud 예정, 공개 검증 대기 |
+| 배포 | Streamlit Community Cloud, 2026-10-16부터 [공개 데모](https://enterprise-rag-demo-project.streamlit.app/) 운영. 정식 검사 대기 |
 
-Windows / Python 3.12.10과 고정 의존성으로 로컬 검증했습니다. 기존 패키지 교체 없이 Streamlit 1.65.0을 추가했고 `pip check`를 통과했습니다. LangSmith HTTP 계약과 추적 비활성·실패 처리는 테스트했지만 실제 Trace에는 운영자 키가 필요합니다. Cloud 호환성·메모리·모델 캐시 시작·공개 재시작 동작은 아직 미검증이며 로컬 Linux Docker 데몬도 실행되지 않았습니다.
+Windows / Python 3.12.10과 고정 의존성으로 로컬 검증했습니다. 기존 패키지 교체 없이 Streamlit 1.65.0을 추가했고 `pip check`를 통과했습니다. LangSmith HTTP 계약과 추적 비활성·실패 처리는 테스트했지만 실제 Trace에는 운영자 키가 필요합니다. 2026-10-16부터 Streamlit Community Cloud에서 실행 중이지만 Cloud 메모리·모델 캐시 시작·재시작 동작은 아직 미검증이며 로컬 Linux Docker 데몬도 실행되지 않았습니다.
 
 ## 평가 설계
 
@@ -251,6 +254,7 @@ q08은 근거 있는 CFO·법무 검토 결론을 제시했지만 일반 적용 
 | [3 — 근거 기반 답변](Phase/Phase3_GroundedAnswers.md) | 근거 있는 답변 생성·출처 검증·답변 보류 | ✅ 실제 Claude 검증 완료 |
 | [4 — Streamlit 화면](Phase/Phase4_StreamlitInterface.md) | 채팅·출처 표시·로딩과 오류·사용량 제한 | ✅ 로컬 브라우저 검증 완료 |
 | [5 — 평가·배포](Phase/Phase5_EvaluationAndDeployment.md) | 기존 10문항 보존·60문항 비교·실행 추적 검증·공개 데모 배포 | 🚧 확대 AI 평가·오프라인 검증 완료, 사람 검토·원격 검사 대기 |
+| [6 — 검색·답변 품질](Phase/Phase6_RetrievalAndAnswerQuality.md) | 원래 페이지 문맥의 길이 제한과 조건을 보존하는 답변 | ✅ 로컬 구현·테스트 완료. 선택형이며 Cloud 활성화 대기 |
 
 기존 2일 목표에 대응하면 Day 1은 Phase 1~4의 로컬 동작, Day 2는 Phase 5의 평가·배포입니다. 시간 경과가 아니라 검증 근거를 기준으로 완료를 판단합니다. 각 Phase 문서는 상단 영문, 하단 국문으로 구성했습니다.
 
@@ -266,7 +270,8 @@ Enterprise-rag/
 │   ├── Phase2_IndexingAndRetrieval.md       # ✅ 로컬 모델 인수 검증 완료
 │   ├── Phase3_GroundedAnswers.md            # ✅ 근거 답변 검증 완료
 │   ├── Phase4_StreamlitInterface.md         # ✅ 로컬 브라우저 검증 완료
-│   └── Phase5_EvaluationAndDeployment.md    # 🚧 원격 완료 조건 대기
+│   ├── Phase5_EvaluationAndDeployment.md    # 🚧 원격 완료 조건 대기
+│   └── Phase6_RetrievalAndAnswerQuality.md  # ✅ 로컬 후보 검증 완료, Cloud 활성화 대기
 ├── .streamlit/                             # 테마 및 서버 시크릿 템플릿
 ├── deployment/index_bundle.json            # 검토한 사전 계산 벡터
 ├── docs/evidence/                          # 실제 로컬 브라우저 스크린샷
@@ -277,6 +282,7 @@ Enterprise-rag/
 │   ├── check_answers.py                    # 실제 근거 답변 5문항 검사
 │   ├── evaluate.py                         # 10문항 실행 및 오프라인 지표
 │   ├── benchmark.py                        # 비교 평가·집계·읽기 전용 검증
+│   ├── phase6.py                           # 로컬 검색 비교와 알려진 실제 답변 검사
 │   ├── ai_review.py                        # 참고 근거 기반 AI 채점·사전 시험
 │   ├── expanded_cases.py                   # 버전별 데이터셋·PDF 근거 검사
 │   ├── render_report.py                    # 검증된 Markdown·CSV 내보내기
@@ -301,6 +307,8 @@ Enterprise-rag/
 │   ├── test_evaluation.py
 │   ├── test_benchmark.py
 │   ├── test_benchmark_artifacts.py
+│   ├── test_page_context.py
+│   ├── test_phase6.py
 │   ├── test_tracing.py
 │   ├── test_deployment.py
 │   ├── test_app.py
@@ -317,6 +325,7 @@ Enterprise-rag/
 ├── index_store.py
 ├── ingest.py                               # 미리보기·인덱스 생성·재사용·재생성
 ├── rag.py                                  # 검색 및 근거 답변 (--answer)
+├── retrieval_context.py                    # 원래 페이지 문맥 구성·한도. 추가 벡터 검색 없음
 ├── .env.example
 ├── .gitignore
 ├── .python-version

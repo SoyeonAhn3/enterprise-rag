@@ -2,7 +2,7 @@
 
 > Demonstrate the application with measured results, a real trace, and a working public URL.
 
-**Status**: 🚧 Ten-question baseline and expanded 60-question AI evaluation completed on 2026-10-14; reporting hardened on 2026-10-15 and offline checks passed again on 2026-10-16. Human review is deferred; a real LangSmith trace and public Cloud verification remain pending.\
+**Status**: 🚧 Ten-question baseline and expanded 60-question AI evaluation completed on 2026-10-14; reporting hardened on 2026-10-15 and offline checks passed again on 2026-10-16. The public demo was deployed to Streamlit Community Cloud on 2026-10-16. Human review is deferred; a real LangSmith trace and formal Cloud acceptance checks remain pending.\
 **Prerequisites**: [Phase 4](Phase4_StreamlitInterface.md) works locally; API access, a LangSmith project, and GitHub/Streamlit deployment access are available.\
 **Planned technology**: Python evaluation runner, JSON results, reference-based AI grading and a deferred human-review queue, LangSmith, Streamlit Community Cloud.
 
@@ -10,7 +10,7 @@
 
 Preserve the original ten-question baseline, expand evaluation under the protocol below, inspect retrieval and generation traces, and deploy the verified corpus and settings. AI grading and human verification are reported separately. Live tracing and public deployment are outside the current evaluation execution.
 
-The missing Phase 4 interface was implemented and verified locally first. The user selected `https://github.com/SoyeonAhn3/enterprise-rag.git` and confirmed the Streamlit/GitHub account connection. Claude credentials work locally; LangSmith credentials are not configured, and no public URL has been established.
+The missing Phase 4 interface was implemented and verified locally first. The user selected `https://github.com/SoyeonAhn3/enterprise-rag.git` and confirmed the Streamlit/GitHub account connection. Claude credentials work locally; LangSmith credentials are not configured. On 2026-10-16 `main` was deployed to Streamlit Community Cloud at [enterprise-rag-demo-project.streamlit.app](https://enterprise-rag-demo-project.streamlit.app/), and the repository was made public. The owner confirmed the app works in a private browser window, and an anonymous request reached the app without sign-in.
 
 ## Tasks and current evidence
 
@@ -21,8 +21,8 @@ The missing Phase 4 interface was implemented and verified locally first. The us
 | ✅ Expanded AI evaluation | Frozen 60-question dataset, development-only selection, paired answers and verified judge notes | Twelve-case pilot; four retrieval settings; B (800/120/k=5) selected; 120 saved answers and 120 AI grades; 34 human-review entries |
 | ✅ Offline reproduction | Validate the artifact chain and expose failed/missing answers in exports | Read-only `benchmark verify`; recomputed metrics/queue; regression coverage for mixed runs, invalid grades, missing answers, and human CSV notes |
 | 🚧 LangSmith | Separate retrieval/generation spans; tracing failure does not break answers; verify one real remote tree | SDK HTTP contract and every write-failure position tested; real key absent, so remote verification not run |
-| 🚧 Public deployment | Public key-free visitor flow and index reload after restart | Local real browser and portable index import/reload passed; source repository available; Cloud execution pending |
-| 🚧 Portfolio evidence | Actual measurements, failure analysis, screenshots, trace/public links | Bilingual docs, local screenshots, and saved JSON ready; live URL/trace evidence remain absent |
+| 🚧 Public deployment | Public key-free visitor flow and index reload after restart | Local real browser and portable index import/reload passed. Deployed to Community Cloud on 2026-10-16; owner's private-window check passed. Formal q01/q07/q09, restart, and resource checks pending |
+| 🚧 Portfolio evidence | Actual measurements, failure analysis, screenshots, trace/public links | Bilingual docs, local screenshots, and saved JSON ready; live URL recorded on 2026-10-16. Public screenshots and trace evidence remain absent |
 
 Implemented [eval/evaluate.py](../eval/evaluate.py), [tracing.py](../tracing.py), [eval/check_trace.py](../eval/check_trace.py), [deployment.py](../deployment.py), the portable index bundle, Streamlit settings/interface, tests, and [deployment instructions](../DEPLOYMENT.md). Existing packages were preserved when Streamlit was installed; `pip check` found no broken requirements. `.env` gained only missing optional tracing/session settings, preserving the Claude key.
 
@@ -35,17 +35,17 @@ The [development status and roadmap](DevelopmentStatusAndRoadmap.md) consolidate
 | Task / priority | Work and affected files | Acceptance criterion | Verification | Status |
 | --- | --- | --- | --- | --- |
 | 5.R1 / P0 | Audit source, corpus, effective settings, saved evaluation, dependencies, and tests | Current state has dated, reproducible evidence without generating new answers | Existing full suite, `pip check`, `benchmark verify`, `deployment.py check`; record linked above | ✅ Complete |
-| 5.R2 / P0 | Identify the release snapshot in the separate project checkout; align `.env.example`, `.streamlit/secrets.toml.example`, README, and the original plan with the current Claude/local-E5/vector-bundle implementation; document `RAG_TOP_K=3` explicitly | One documented release configuration; obsolete OpenAI/native-index examples cannot be mistaken for current instructions; quality changes are separately identified | Compare release files with the audited workspace; inspect loaded non-secret settings and deployment bundle compatibility | 🔲 Planned |
+| 5.R2 / P0 | Identify the release snapshot in the separate project checkout; align `.env.example`, `.streamlit/secrets.toml.example`, README, and the original plan with the current Claude/local-E5/vector-bundle implementation; document `RAG_TOP_K=3` explicitly | One documented release configuration; obsolete OpenAI/native-index examples cannot be mistaken for current instructions; quality changes are separately identified | Compare release files with the audited workspace; inspect loaded non-secret settings and deployment bundle compatibility | 🟡 Partly done (2026-10-16): release pushed from the separate checkout; example files document `RAG_TOP_K=3` and load correctly. The original plan still contains OpenAI-era text |
 | 5.R3 / P0 startup, P1 CI | Validate a fresh Linux/Python 3.12 environment and startup; add a small offline CI workflow at `.github/workflows/ci.yml` (proposed file) | Dependencies and existing checks pass on Linux; first vector import and restart work without document embedding; actual query-model startup is separately recorded | Fresh install, four offline commands in the roadmap, cache-download/restart smoke check; record startup time and memory instead of assuming capacity | 🔲 Planned |
 | 5.R4 / P0 | Supply operator LangSmith settings and run existing `eval.check_trace` | Remote root and completed retrieval/generation child runs match the observed answer; failure isolation remains intact | One live generation and remote read-back; local `data/trace_check.json`; existing failure-isolation tests | ⏸ Credential needed: key absent and tracing disabled |
-| 5.R5 / P0 | Deploy `app.py` from the identified release to Community Cloud; configure server secrets and provider usage controls | Fresh visitor gets q01/q07 answers with real sources and q09 abstention without entering a key; refresh/restart works; usage-control settings are recorded | Private-browser checks, public URL, startup/restart logs, screenshots; inspect waiting with two sessions because shared resources serialize requests | 🔲 Public execution unverified |
-| 5.R6 / P0 | Reconcile `README.md`, `README_ko.md`, `DEPLOYMENT.md`, and this report with the deployed release | Actual URL, release configuration, trace evidence, split-specific AI scores, and remaining limitations agree; no human-verification claim | Follow the public link and evidence from a fresh session; compare published settings/results to the release snapshot | 🔲 Depends on 5.R4–5.R5 |
+| 5.R5 / P0 | Deploy `app.py` from the identified release to Community Cloud; configure server secrets and provider usage controls | Fresh visitor gets q01/q07 answers with real sources and q09 abstention without entering a key; refresh/restart works; usage-control settings are recorded | Private-browser checks, public URL, startup/restart logs, screenshots; inspect waiting with two sessions because shared resources serialize requests | 🟡 Deployed 2026-10-16 ([public URL](https://enterprise-rag-demo-project.streamlit.app/)); owner's private-window check only. Formal q01/q07/q09, restart, usage-control, and two-session checks not recorded |
+| 5.R6 / P0 | Reconcile `README.md`, `README_ko.md`, `DEPLOYMENT.md`, and this report with the deployed release | Actual URL, release configuration, trace evidence, split-specific AI scores, and remaining limitations agree; no human-verification claim | Follow the public link and evidence from a fresh session; compare published settings/results to the release snapshot | 🟡 URL recorded in both READMEs, DEPLOYMENT.md, and this report; trace evidence depends on 5.R4 |
 
 Suggested sequence: **5.R2 → 5.R3 startup → 5.R5 → 5.R6**; complete 5.R4 as soon as its credential is available and finish it before closing the phase. CI can be prepared alongside startup checks. Initial remaining effort is **2–3 working days for one developer**, excluding access/setup delays and platform failures; this is an estimate, not a delivery promise. The operator supplies server/account configuration; the developer performs implementation, verification, and evidence updates.
 
 Keep k=3 for the existing MVP release unless a separate quality-change decision is recorded. k=5 is already supported and evaluated; the proposed Phase 6 will consider promotion before introducing more search machinery. Do not repeat the full 120-answer evaluation merely to document current status.
 
-Human review remains deferred under the existing recorded user decision. Preserve the 34-entry queue and distinguish AI scores from human judgments; selective review can resume later. It is not silently converted into an additional deployment prerequisite. This phase still cannot be marked complete without verified public operation and a real trace. The current audit did not access the remote repository, deploy, or perform a live model/browser check.
+Human review remains deferred under the existing recorded user decision. Preserve the 34-entry queue and distinguish AI scores from human judgments; selective review can resume later. It is not silently converted into an additional deployment prerequisite. This phase still cannot be marked complete without verified public operation and a real trace. The 2026-10-16 audit itself did not access the remote repository, deploy, or perform a live model/browser check; the deployment followed later that day.
 
 ## Expanded evaluation protocol — agreed before execution (2026-10-14)
 
@@ -92,7 +92,7 @@ The historical run recovered from a Windows checkpoint failure: 80 answers and 5
 
 [benchmark.py](../eval/benchmark.py) now validates the dataset/PDF fingerprints, selection/pilot links, development-only retrieval, answer identity/split, judge inputs/raw grades, and derived metrics/queue. [render_report.py](../eval/render_report.py) uses that validation before writing. Missing answers enter both the review queue and CSV; failed/missing answers stay in score denominators, and a run with no successes displays no mean latency. Export stops before writing if the existing review CSV contains human notes or changed review statuses; keep human work in a separate review file. Checksums detect mismatches, not independent truth or human approval.
 
-On 2026-10-15 the 22-chunk deployment bundle passed validation. `eval.check_trace` stopped before generation because LangSmith is unconfigured. Docker's Linux engine remained unavailable, so Linux/Cloud execution and a public URL are still unverified.
+On 2026-10-15 the 22-chunk deployment bundle passed validation. `eval.check_trace` stopped before generation because LangSmith is unconfigured. Docker's Linux engine remained unavailable, so Linux/Cloud execution and a public URL were still unverified then. On 2026-10-16 the app ran on Community Cloud, the first Linux execution evidence; startup time, memory, and restart behavior were not measured.
 
 ## Results and reproduction
 
@@ -128,7 +128,7 @@ The runner writes a checkpoint after every question, preserves retrieved chunks 
 
 Tracing is opt-in. Explicit root, `retrieval`, and `generation` runs contain question/context/output, not settings or credentials. Writes use bounded network settings; the first failure disables that sink until restart, while ordinary answers continue. `check_trace` reads the remote tree back and requires both completed child runs plus matching output; a successful POST alone is not proof of a verified trace. The local check currently stops before Claude because no LangSmith key is configured.
 
-The 208,225-byte [index bundle](../deployment/index_bundle.json) stores the 22 original chunks and precomputed 384-dimensional vectors. It imports into an empty Chroma directory, verifies integrity, and reuses the index on restart. Fresh-import retrieval succeeded with the real query model while document embedding was forbidden. PDFs, settings, and the original local index were not rebuilt. Linux/Cloud behavior remains unverified because the local Docker Linux daemon was unavailable.
+The 208,225-byte [index bundle](../deployment/index_bundle.json) stores the 22 original chunks and precomputed 384-dimensional vectors. It imports into an empty Chroma directory, verifies integrity, and reuses the index on restart. Fresh-import retrieval succeeded with the real query model while document embedding was forbidden. PDFs, settings, and the original local index were not rebuilt. The local Docker Linux daemon was unavailable; the first Linux evidence is the 2026-10-16 Community Cloud deployment, where restart and resource behavior have not yet been measured.
 
 Actual local Edge browser automation verified q01/q07 answers, q09 abstention, source expanders, and reload. Screenshots: [home](../docs/evidence/local-home.png), [chat](../docs/evidence/local-chat.png). Full Cloud instructions and remaining operator steps are in [DEPLOYMENT.md](../DEPLOYMENT.md).
 
@@ -146,7 +146,7 @@ Actual local Edge browser automation verified q01/q07 answers, q09 abstention, s
 - Confirm the same Python and working dependency versions locally and on Cloud. Verify the chosen prebuilt-index strategy before considering the startup-build fallback.
 - Configure server-side Claude/LangSmith settings and provider usage controls. Real `.env` and `.streamlit/secrets.toml` files must not be published.
 - Record actual model names, corpus/chunk settings, and run date with results. Do not invent performance targets or claim that ten synthetic questions establish real enterprise performance.
-- This phase remains in progress while live URL or trace evidence is missing. Full human grading is deferred by the user's 2026-10-14 instruction; the review queue remains explicitly unverified until selective review is performed. AI evaluation completion does not mean human validation or deployment completion.
+- This phase remains in progress while trace evidence or formal public acceptance checks are missing. Full human grading is deferred by the user's 2026-10-14 instruction; the review queue remains explicitly unverified until selective review is performed. AI evaluation completion does not mean human validation or deployment completion.
 
 ## Change Log
 
@@ -156,6 +156,7 @@ Actual local Edge browser automation verified q01/q07 answers, q09 abstention, s
 | 2026-10-14 | Implemented evaluation, error-isolated tracing, remote trace verifier, portable index, and the missing local UI. Recorded 10 live results, agent review, local browser evidence, and deploy instructions. Human review, LangSmith credentials, and public deployment remain pending. Separate dev-log unavailable. |
 | 2026-10-15 | Reconciled the completed 60-question evaluation; added read-only artifact verification, cross-run/grade validation, missing/failed-answer exports, and protection for human CSV notes. 243 tests passed in 20.25 seconds. Preserved original model outputs and application settings; live trace/public deployment pending. Separate dev-log unavailable; changes recorded here. |
 | 2026-10-16 | Audited the implementation and planned remaining release tasks; 243 tests passed in 60.40 seconds, with dependency/artifact/bundle checks passing. Added a consolidated roadmap and dated verification record. Preserved runtime code and saved evaluations; human review remains deferred. Separate dev-log unavailable; changes recorded here. |
+| 2026-10-16 | Deployed `main` to Streamlit Community Cloud ([public URL](https://enterprise-rag-demo-project.streamlit.app/)) and made the repository public; the owner confirmed it works in a private window. Documented `RAG_TOP_K=3` in example files and recorded the URL. Runtime code and evaluations unchanged; formal acceptance checks and the real trace remain pending. |
 
 ---
 
@@ -163,7 +164,7 @@ Actual local Edge browser automation verified q01/q07 answers, q09 abstention, s
 
 > 실제 평가 결과, 실행 Trace, 공개 URL로 애플리케이션을 검증하고 보여준다.
 
-**상태**: 🚧 2026-10-14 기존 10문항·확대 60문항 AI 평가 완료, 2026-10-15 보고서 보강, 2026-10-16 오프라인 재검증 통과. 사람 검토는 후속으로 보류하며 실제 LangSmith Trace·공개 Cloud 검증은 대기.\
+**상태**: 🚧 2026-10-14 기존 10문항·확대 60문항 AI 평가 완료, 2026-10-15 보고서 보강, 2026-10-16 오프라인 재검증 통과. 2026-10-16 Streamlit Community Cloud에 공개 데모 배포. 사람 검토는 후속으로 보류하며 실제 LangSmith Trace·정식 Cloud 인수 검사는 대기.\
 **선행 조건**: [Phase 4](Phase4_StreamlitInterface.md) 로컬 동작 검증, API 사용 준비, LangSmith 프로젝트, GitHub·Streamlit 배포 접근 권한.\
 **예정 기술**: Python 평가 실행 코드, JSON 결과, 참고 근거 기반 AI 채점과 추후 사람 검토 목록, LangSmith, Streamlit Community Cloud.
 
@@ -171,7 +172,7 @@ Actual local Edge browser automation verified q01/q07 answers, q09 abstention, s
 
 기존 10문항 결과를 보존하고 아래 기준으로 평가를 확대한 뒤 검색·생성 Trace와 배포 환경을 검증한다. AI 채점과 사람 확인은 구분해 표시한다. 실제 추적 연결과 공개 배포는 이번 평가 실행 범위에 포함하지 않는다.
 
-누락된 Phase 4 화면을 먼저 구현하고 로컬 검증했다. 사용자가 `https://github.com/SoyeonAhn3/enterprise-rag.git`를 지정하고 Streamlit·GitHub 계정 연결을 확인했다. 로컬 Claude 키는 동작하며 LangSmith 키는 미설정이고 공개 URL은 아직 없다.
+누락된 Phase 4 화면을 먼저 구현하고 로컬 검증했다. 사용자가 `https://github.com/SoyeonAhn3/enterprise-rag.git`를 지정하고 Streamlit·GitHub 계정 연결을 확인했다. 로컬 Claude 키는 동작하며 LangSmith 키는 미설정이다. 2026-10-16 `main`을 Streamlit Community Cloud에 배포했고([enterprise-rag-demo-project.streamlit.app](https://enterprise-rag-demo-project.streamlit.app/)) 같은 날 저장소를 공개로 전환했다. 사용자가 시크릿 창에서 동작을 확인했고, 로그인 없는 요청으로 앱 접근을 확인했다.
 
 ## Task 및 현재 증빙
 
@@ -182,8 +183,8 @@ Actual local Edge browser automation verified q01/q07 answers, q09 abstention, s
 | ✅ 확대 AI 평가 | 60문항 고정, 개발용 결과로만 설정 선택, 동일 질문 답변 비교와 근거를 확인한 AI 검토 | 12사례 사전 시험·검색 설정 4개 비교·B(800/120/k=5) 선택. 답변 120개·AI 채점 120개·사람 검토 목록 34건 저장 |
 | ✅ 오프라인 재현 | 산출물 연결 검증 및 실패·누락을 내보내기에 표시 | 읽기 전용 `benchmark verify`, 지표·검토 목록 재계산. 실행 혼합·잘못된 채점·답변 누락·사람 CSV 메모 회귀 검사 |
 | 🚧 LangSmith | 검색·생성 분리, 추적 오류 시 답변 유지, 실제 원격 실행 확인 | SDK HTTP 계약·모든 전송 단계 실패 테스트 통과. 실제 키가 없어 원격 검증 미실행 |
-| 🚧 공개 배포 | 방문자 키 없는 공개 사용 흐름 및 재시작 후 인덱스 로딩 | 실제 로컬 브라우저·번들 가져오기 및 재로딩 통과. 소스 저장소 게시됨. Cloud 실행 대기 |
-| 🚧 포트폴리오 | 실측·실패 분석·스크린샷·실제 추적 및 공개 링크 | 영문·국문 문서·로컬 스크린샷·JSON 준비. 실제 공개 URL·Trace 증빙은 아직 없음 |
+| 🚧 공개 배포 | 방문자 키 없는 공개 사용 흐름 및 재시작 후 인덱스 로딩 | 실제 로컬 브라우저·번들 가져오기 및 재로딩 통과. 2026-10-16 Community Cloud 배포, 사용자 시크릿 창 확인 통과. q01·q07·q09 정식 검사·재시작·자원 확인은 대기 |
+| 🚧 포트폴리오 | 실측·실패 분석·스크린샷·실제 추적 및 공개 링크 | 영문·국문 문서·로컬 스크린샷·JSON 준비. 2026-10-16 공개 URL 기록. 공개 화면 스크린샷·Trace 증빙은 아직 없음 |
 
 구현 파일: [eval/evaluate.py](../eval/evaluate.py), [tracing.py](../tracing.py), [eval/check_trace.py](../eval/check_trace.py), [deployment.py](../deployment.py), 사전 계산 인덱스 번들, Streamlit 설정·화면, 테스트, [배포 안내](../DEPLOYMENT.md). 기존 패키지를 교체하지 않고 Streamlit을 설치했고 `pip check`에서 충돌이 없었다. `.env`에는 누락된 선택적 추적·세션 설정만 추가해 Claude 키를 보존했다.
 
@@ -196,17 +197,17 @@ Actual local Edge browser automation verified q01/q07 answers, q09 abstention, s
 | Task·우선순위 | 작업 내용·대상 파일 | 완료 기준 | 검증 방법 | 상태 |
 | --- | --- | --- | --- | --- |
 | 5.R1 / P0 | 소스·문서·실제 설정·저장 평가·의존성·테스트 점검 | 새 답변 생성 없이 현재 상태를 날짜와 재현 근거로 확인 | 기존 전체 테스트, `pip check`, `benchmark verify`, `deployment.py check`. 위 검증 기록 참조 | ✅ 완료 |
-| 5.R2 / P0 | 분리된 프로젝트 체크아웃에서 배포본 식별. `.env.example`, `.streamlit/secrets.toml.example`, README, 기존 기획서를 실제 Claude·로컬 E5·벡터 번들에 맞춤. `RAG_TOP_K=3` 명시 | 배포 설정이 일관됨. 오래된 OpenAI·네이티브 인덱스 예시를 현재 절차로 오인하지 않음. 품질 변경은 별도로 식별 | 배포 파일과 점검 작업 폴더 비교, 비밀값을 제외한 설정 로딩과 번들 호환성 확인 | 🔲 예정 |
+| 5.R2 / P0 | 분리된 프로젝트 체크아웃에서 배포본 식별. `.env.example`, `.streamlit/secrets.toml.example`, README, 기존 기획서를 실제 Claude·로컬 E5·벡터 번들에 맞춤. `RAG_TOP_K=3` 명시 | 배포 설정이 일관됨. 오래된 OpenAI·네이티브 인덱스 예시를 현재 절차로 오인하지 않음. 품질 변경은 별도로 식별 | 배포 파일과 점검 작업 폴더 비교, 비밀값을 제외한 설정 로딩과 번들 호환성 확인 | 🟡 일부 완료(2026-10-16): 분리 체크아웃에서 배포본 게시, 예시 파일에 `RAG_TOP_K=3` 명시·로딩 확인. 기존 기획서에는 OpenAI 시기 문구가 남아 있음 |
 | 5.R3 / 시작 P0, CI P1 | 새로운 Linux·Python 3.12 환경과 시작 동작 검증. `.github/workflows/ci.yml`에 작은 오프라인 CI 추가(예정 파일) | Linux 의존성·기존 검사 통과. 문서 임베딩 없이 첫 가져오기·재시작 성공. 실제 질문 모델 시작은 별도 증빙 | 새 설치, 로드맵의 오프라인 명령 4개, 캐시 다운로드·재시작 확인. 시작 시간·메모리 실측 | 🔲 예정 |
 | 5.R4 / P0 | 운영자 LangSmith 설정 후 기존 `eval.check_trace` 실행 | 원격 루트·완료된 검색 및 생성 하위 실행이 실제 답변과 일치. 실패 격리 유지 | 실제 생성 1회와 원격 재조회, 로컬 `data/trace_check.json`, 기존 실패 격리 테스트 | ⏸ 키 필요: 현재 미설정·추적 꺼짐 |
-| 5.R5 / P0 | 식별한 배포본의 `app.py`를 Community Cloud에 배포. 서버 시크릿·제공업체 사용량 제어 설정 | 새 방문자가 키 없이 q01·q07 근거 답변과 q09 보류 확인. 새로고침·재시작 정상. 사용량 제어 설정 기록 | 시크릿 브라우저, 공개 URL, 시작·재시작 로그, 스크린샷. 공유 리소스의 순차 처리 때문에 세션 2개의 대기 동작도 확인 | 🔲 공개 실행 미검증 |
-| 5.R6 / P0 | `README.md`, `README_ko.md`, `DEPLOYMENT.md`, 본 문서를 실제 배포본과 맞춤 | 실제 URL·배포 설정·Trace·구간별 AI 점수·남은 한계가 일치. 사람 검증 완료로 표시하지 않음 | 새 세션에서 공개 링크·증빙 확인, 배포 설정·결과와 대상 코드 비교 | 🔲 5.R4~5.R5 선행 |
+| 5.R5 / P0 | 식별한 배포본의 `app.py`를 Community Cloud에 배포. 서버 시크릿·제공업체 사용량 제어 설정 | 새 방문자가 키 없이 q01·q07 근거 답변과 q09 보류 확인. 새로고침·재시작 정상. 사용량 제어 설정 기록 | 시크릿 브라우저, 공개 URL, 시작·재시작 로그, 스크린샷. 공유 리소스의 순차 처리 때문에 세션 2개의 대기 동작도 확인 | 🟡 2026-10-16 배포([공개 URL](https://enterprise-rag-demo-project.streamlit.app/)), 사용자 시크릿 창 확인만 완료. q01·q07·q09 정식 검사·재시작·사용량 제어·세션 2개 확인은 미기록 |
+| 5.R6 / P0 | `README.md`, `README_ko.md`, `DEPLOYMENT.md`, 본 문서를 실제 배포본과 맞춤 | 실제 URL·배포 설정·Trace·구간별 AI 점수·남은 한계가 일치. 사람 검증 완료로 표시하지 않음 | 새 세션에서 공개 링크·증빙 확인, 배포 설정·결과와 대상 코드 비교 | 🟡 양쪽 README·DEPLOYMENT.md·본 문서에 URL 기록. Trace 증빙은 5.R4 선행 |
 
 권장 순서는 **5.R2 → 5.R3 시작 검증 → 5.R5 → 5.R6**이다. 5.R4는 키가 준비되면 진행하여 Phase 완료 전에 끝낸다. CI는 시작 검증과 함께 준비할 수 있다. 남은 작업량은 **개발자 1명 기준 2~3작업일**로 추정하며 접근 권한·계정 준비·플랫폼 장애 대기는 제외한다. 납기 약속이 아니다. 운영자는 계정·서버 설정을 제공하고 개발자는 구현·검증·증빙 갱신을 수행한다.
 
 별도 품질 변경 결정을 기록하기 전에는 기존 MVP의 k=3을 유지한다. k=5는 이미 지원·평가했고 제안한 Phase 6에서 우선 적용을 검토한다. 현재 상태를 문서화하려고 답변 120개 전체 평가를 다시 실행하지 않는다.
 
-기존에 기록된 사용자 결정에 따라 사람 검토는 계속 뒤로 미룬다. 검토 목록 34건과 AI·사람 판정 구분을 유지하고 선택 검토는 추후 재개한다. 이를 추가 배포 선행 조건으로 바꾸지 않는다. 실제 공개 동작과 Trace 검증이 없으면 Phase 완료로 표시할 수 없다. 이번 점검에서는 원격 저장소 조회·배포·실제 모델 및 브라우저 검사를 수행하지 않았다.
+기존에 기록된 사용자 결정에 따라 사람 검토는 계속 뒤로 미룬다. 검토 목록 34건과 AI·사람 판정 구분을 유지하고 선택 검토는 추후 재개한다. 이를 추가 배포 선행 조건으로 바꾸지 않는다. 실제 공개 동작과 Trace 검증이 없으면 Phase 완료로 표시할 수 없다. 2026-10-16 점검 자체에서는 원격 저장소 조회·배포·실제 모델 및 브라우저 검사를 수행하지 않았으며, 배포는 같은 날 이후에 진행했다.
 
 ## 확대 평가 기준 — 실행 전에 확정 (2026-10-14)
 
@@ -253,7 +254,7 @@ Actual local Edge browser automation verified q01/q07 answers, q09 abstention, s
 
 [benchmark.py](../eval/benchmark.py)는 데이터셋·PDF 해시, 설정 선택·사전 시험 연결, 개발용 검색, 답변 ID·묶음, 채점 입력·원본 판정, 재계산 지표·목록을 검증한다. [render_report.py](../eval/render_report.py)는 쓰기 전에 같은 검증을 수행한다. 누락 답변도 검토 목록·CSV에 포함하고 실패·누락은 정답률 분모에 남긴다. 성공 응답이 없으면 평균 시간을 표시하지 않는다. 기존 검토 CSV에 사람 메모나 변경된 검토 상태가 있으면 쓰기 전에 중단하므로 사람 작업은 별도 검토 파일에 보존한다. 해시는 불일치를 탐지하며 내용의 독립 검증이나 사람 승인을 의미하지 않는다.
 
-2026-10-15 청크 22개 배포 번들 검증에 통과했다. `eval.check_trace`는 LangSmith 미설정으로 생성 전에 중단했다. Docker Linux 엔진도 실행되지 않아 Linux·Cloud 실행과 공개 URL은 여전히 미검증이다.
+2026-10-15 청크 22개 배포 번들 검증에 통과했다. `eval.check_trace`는 LangSmith 미설정으로 생성 전에 중단했다. Docker Linux 엔진도 실행되지 않아 당시 Linux·Cloud 실행과 공개 URL은 미검증이었다. 2026-10-16 Community Cloud에서 앱이 실행되어 첫 Linux 실행 근거를 얻었으며, 시작 시간·메모리·재시작 동작은 측정하지 않았다.
 
 ## 실측 결과 및 재현
 
@@ -289,7 +290,7 @@ Actual local Edge browser automation verified q01/q07 answers, q09 abstention, s
 
 추적은 선택적으로 켠다. 루트·`retrieval`·`generation`에 질문·문맥·출력을 기록하며 키·설정 객체는 넣지 않는다. 네트워크 요청을 제한하고 첫 전송 실패부터 재시작 전까지 해당 추적기를 중단해도 답변은 유지한다. `check_trace`는 실제 원격 실행을 재조회하여 두 하위 실행 완료와 답변 일치를 확인한다. POST 성공만을 Trace 검증으로 간주하지 않는다. 현재는 LangSmith 키가 없어 Claude 호출 전에 검사를 중단한다.
 
-208,225바이트 [인덱스 번들](../deployment/index_bundle.json)은 원래 청크 22개와 384차원 사전 계산 벡터를 담는다. 빈 Chroma 폴더에 가져와 무결성을 검증하고 이후 재사용한다. 문서 임베딩을 금지한 채 신규 가져오기와 실제 질문 모델 검색에 성공했다. PDF·설정·기존 로컬 인덱스를 재생성하지 않았다. 로컬 Docker Linux 데몬이 실행되지 않아 Linux·Cloud 동작은 아직 미검증이다.
+208,225바이트 [인덱스 번들](../deployment/index_bundle.json)은 원래 청크 22개와 384차원 사전 계산 벡터를 담는다. 빈 Chroma 폴더에 가져와 무결성을 검증하고 이후 재사용한다. 문서 임베딩을 금지한 채 신규 가져오기와 실제 질문 모델 검색에 성공했다. PDF·설정·기존 로컬 인덱스를 재생성하지 않았다. 로컬 Docker Linux 데몬은 실행되지 않았다. 첫 Linux 실행 근거는 2026-10-16 Community Cloud 배포이며, 재시작·자원 동작은 아직 측정하지 않았다.
 
 실제 로컬 Edge 브라우저 자동화로 q01·q07 답변, q09 보류, 출처 펼치기, 새로고침을 확인했다. 스크린샷: [초기 화면](../docs/evidence/local-home.png), [대화](../docs/evidence/local-chat.png). Cloud 설정과 남은 운영자 절차는 [DEPLOYMENT.md](../DEPLOYMENT.md)에 있다.
 
@@ -307,7 +308,7 @@ Actual local Edge browser automation verified q01/q07 answers, q09 abstention, s
 - 로컬과 Cloud의 Python 및 작동하는 의존성 버전을 맞춘다. 시작 시 인덱스 생성 예비안을 검토하기 전에 사전 생성 인덱스 로딩을 검증한다.
 - 서버 Claude·LangSmith 설정과 제공업체 사용량 제어를 준비한다. 실제 `.env`와 `.streamlit/secrets.toml`은 공개하지 않는다.
 - 실제 모델명, 문서·청크 설정, 실행 날짜를 결과에 기록한다. 성능 목표를 임의로 만들거나 합성 질문 10개로 실제 기업 문서 성능을 입증했다고 주장하지 않는다.
-- 공개 URL 또는 실제 Trace 증빙이 남아 있으면 진행 중 상태를 유지한다. 2026-10-14 사용자 요청에 따라 전체 사람 채점은 뒤로 미루며 선택 검토 전까지 검토 목록은 미확인으로 표시한다. AI 평가 완료를 사람 검증이나 배포 완료로 표시하지 않는다.
+- 실제 Trace 증빙 또는 정식 공개 인수 검사가 남아 있으면 진행 중 상태를 유지한다. 2026-10-14 사용자 요청에 따라 전체 사람 채점은 뒤로 미루며 선택 검토 전까지 검토 목록은 미확인으로 표시한다. AI 평가 완료를 사람 검증이나 배포 완료로 표시하지 않는다.
 
 ## 변경 이력
 
@@ -317,3 +318,4 @@ Actual local Edge browser automation verified q01/q07 answers, q09 abstention, s
 | 2026-10-14 | 평가 실행·오류를 분리한 추적·원격 검증기·인덱스 번들·누락된 로컬 화면 구현. 실제 10문항·에이전트 검토·브라우저 증빙·배포 안내 기록. 사람 검토·LangSmith 키·공개 배포는 대기. 별도 dev-log 미설치. |
 | 2026-10-15 | 완료된 60문항 평가 반영. 읽기 전용 산출물 검증, 실행 간 연결·채점 검증, 누락·실패 답변 내보내기, 사람 CSV 메모 보호 추가. 테스트 243개·20.25초 통과. 기존 모델 출력·앱 설정 보존. 실제 Trace·공개 배포 대기. 별도 dev-log 미설치로 여기에 변경 이력 기록. |
 | 2026-10-16 | 구현 상태 점검 및 잔여 배포 Task 계획. 테스트 243개·60.40초와 의존성·산출물·번들 검사 통과. 통합 로드맵·당일 검증 기록 추가. 실행 코드와 기존 평가 보존, 사람 검토 보류 유지. 별도 dev-log 미설치로 여기에 이력 기록. |
+| 2026-10-16 | `main`을 Streamlit Community Cloud에 배포([공개 URL](https://enterprise-rag-demo-project.streamlit.app/))하고 저장소를 공개로 전환. 사용자가 시크릿 창에서 동작 확인. 예시 파일에 `RAG_TOP_K=3` 명시, URL 기록. 실행 코드·평가는 변경하지 않음. 정식 인수 검사와 실제 Trace는 대기. |

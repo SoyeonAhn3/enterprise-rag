@@ -1,4 +1,4 @@
-"""Local top-three retrieval; add --answer for one grounded Claude response."""
+"""Local chunk or bounded page-context retrieval; --answer adds one Claude call."""
 
 import argparse
 from dataclasses import asdict, dataclass
@@ -15,6 +15,7 @@ from index_store import IndexErrorBase, load_index
 from grounding import SYSTEM_PROMPT, AnswerValidationError, abstention, answer_schema, build_prompt, validate_answer
 from llm import ClaudeClient, ClaudeError
 from tracing import LangSmithTracer
+from retrieval_context import PageContext
 
 
 class RetrievalError(RuntimeError):
@@ -46,13 +47,24 @@ class Retriever:
         documents_dir: Path = DOCUMENTS_DIR, embeddings: Embeddings | None = None,
     ):
         self.top_k = settings.top_k
+        self.retrieval_mode = settings.retrieval_mode
+        self.context_max_chars = settings.context_max_chars
         self.index = load_index(index_dir, documents_dir, settings, embeddings=embeddings)
+        self.page_context = None
+        try:
+            if self.retrieval_mode == "pages":
+                self.page_context = PageContext(documents_dir, self.index.manifest["signature"]["files"])
+        except Exception:
+            self.index.close()
+            raise
 
     def retrieve(self, question: str) -> dict:
         question = validate_question(question)
         started = perf_counter()
+        search_k = (min(self.top_k * 3, self.index.manifest["chunk_count"])
+                    if self.page_context is not None else self.top_k)
         try:
-            matches = self.index.store.similarity_search_with_score(question, k=self.top_k)
+            matches = self.index.store.similarity_search_with_score(question, k=search_k)
         except EmbeddingError:
             raise
         except Exception:
@@ -65,9 +77,16 @@ class Retriever:
             )
             for position, (document, distance) in enumerate(matches, start=1)
         ]
+        ranked = [asdict(chunk) for chunk in chunks]
+        context = (self.page_context.assemble(ranked, max_sources=self.top_k, max_chars=self.context_max_chars)
+                   if self.page_context is not None else ranked)
         return {
             "question": question,
-            "retrieved_chunks": [asdict(chunk) for chunk in chunks],
+            "retrieved_chunks": context,
+            "ranked_chunks": ranked,
+            "retrieval_mode": self.retrieval_mode,
+            "search_k": search_k,
+            "context_chars": sum(len(chunk["text"]) for chunk in context),
             "retrieval_latency_ms": round((perf_counter() - started) * 1000, 2),
         }
 
@@ -122,7 +141,7 @@ class RAGAssistant:
                 else:
                     grounded = abstention()
                 result = {
-                    "question": question, **grounded, "retrieved_chunks": chunks,
+                    **retrieval, **grounded,
                     "retrieval_latency_ms": retrieval["retrieval_latency_ms"],
                     "generation_latency_ms": generation_ms,
                     "token_usage": record.get("token_usage"),

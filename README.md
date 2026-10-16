@@ -27,11 +27,11 @@ The original answer evaluation on **2026-10-14** used **4 synthetic Korean PDFs,
 | Abstention on unanswerable questions | **2/2** | Questions without a documented answer received an abstention |
 | AI-agent-reviewed correctness | **9/10 (90%)** | Grading against reference answers and criteria, including two correct abstentions |
 | Mean RAG response time | **3.33 seconds** | Retrieval and answer generation; model/index/client initialization excluded |
-| Automated tests | **243 passed** | Program and failure checks on 2026-10-16, separate from answer evaluation |
+| Automated tests | **267 passed** | Latest local Phase 6 checks on 2026-10-16, separate from answer evaluation |
 
 Correctness was reviewed by an AI agent; **human grading has not been completed**. The answerable subset scored **7/8 (87.5%)**. These figures describe this small synthetic benchmark. The q08 answer omitted required detail despite supported conclusions; the [failure analysis](Phase/Phase5_EvaluationAndDeployment.md) records this limitation.
 
-Inspect the [original evaluation run](eval/results/phase5_baseline.json), [baseline metrics](eval/results/phase5_metrics.json), [AI review](eval/results/phase5_agent_review.json), and [243-test verification record](eval/results/phase5_v2_20261014/verification_20261016.json) for the supporting evidence.
+Inspect the [original evaluation run](eval/results/phase5_baseline.json), [baseline metrics](eval/results/phase5_metrics.json), [AI review](eval/results/phase5_agent_review.json), and [latest 267-test verification record](eval/results/phase6_20261016/verification.json) for the supporting evidence. The [earlier 243-test record](eval/results/phase5_v2_20261014/verification_20261016.json) is preserved.
 
 The expanded evaluation also completed on 2026-10-14: **60 questions, 120 saved answers, and 120 AI grades**. Development-only retrieval selected B (800 characters / 120 overlap / k=5) for comparison with A (800/120/3). The app still defaults to k=3.
 
@@ -49,9 +49,11 @@ The same Claude model generated and graded answers in separate calls; human revi
 
 ## Current status
 
-**Phases 1–4 work locally. Phase 5 evaluation, tracing integration, and deployment preparation are implemented; public deployment and a real LangSmith trace remain pending.**
+**Phases 1–4 work locally. Phase 5 evaluation and tracing integration are implemented, and the public demo was deployed on 2026-10-16; formal deployment checks and a real LangSmith trace remain pending.**
 
-The [2026-10-16 status audit and development roadmap](Phase/DevelopmentStatusAndRoadmap.md) links current code and verification evidence to the remaining work: finish public deployment and tracing, then improve retrieval quality, followed by optional usability and enterprise expansion. The audit reran 243 tests, reproduced saved metrics, and validated the deployment bundle without new model calls.
+The [2026-10-16 roadmap](Phase/DevelopmentStatusAndRoadmap.md) records the user's decision to defer remaining Phase 5 checks and proceed with [Phase 6](Phase/Phase6_RetrievalAndAnswerQuality.md), now implemented and verified locally. Optional page-context retrieval removes duplicate pages and preserves whole source text within a 6,000-character budget. The common answer prompt also makes required items, conditions, and timing explicit.
+
+The [Phase 6 report](eval/results/phase6_20261016/report.md) records development complete-evidence coverage of **24/32 (chunks/k=3) → 26/32 (chunks/k=5) → 32/32 (pages/k=5)** and **6/6** same-model AI passes on known live regression cases. These are development diagnostics, not an independent accuracy estimate. Mean context characters increased **34.39%** versus chunks/k=5. All **267 tests** passed; existing evaluation files and the deployment bundle were preserved. Default retrieval settings remain chunks/k=3; server mode activation and rollout verification are pending. See the Phase 6 document to opt into `RAG_RETRIEVAL_MODE=pages`, `RAG_TOP_K=5`, and `RAG_CONTEXT_MAX_CHARS=6000`.
 
 | Available now | Details |
 | --- | --- |
@@ -60,14 +62,15 @@ The [2026-10-16 status audit and development roadmap](Phase/DevelopmentStatusAnd
 | Evaluation dataset | Original ten-question baseline plus 60-question v2 with separate development/final splits |
 | Offline preprocessing | Four PDFs / 13 pages produce 22 chunks with source metadata |
 | Indexing and retrieval | Persistent Chroma, compatible-index reuse, explicit rebuilds, and top-three retrieval |
-| Local verification | 243 tests passed; includes artifact consistency, failure/missing-answer reporting, human CSV preservation, and existing RAG/UI/deployment checks |
+| Local verification | 267 tests passed; includes bounded page context, provenance, comparison safeguards, and existing RAG/UI/evaluation/deployment checks |
 | Real model retrieval | Local E5 model; q01/q07/q08 all cover their required evidence groups, including the original quotes |
 | Grounded answers | `RAGAssistant.answer()` uses one retrieval and at most one Claude call; returns cited claims, original retrieval, and latency |
 | Live Claude checks | q01/q07/q08 answered with matched quotes; q09/q10 abstained; partial/conflicting evidence and document instructions checked |
 | Streamlit UI | Examples, chat history, source expanders, safe errors, and a ten-attempt session limit; three real browser questions verified |
 | Phase 5 evaluation | Original baseline plus 120 paired answers/AI grades, reproducible metrics, and 34 pending human-review entries |
 | Deployment | Portable precomputed-vector bundle and server settings; [deployment guide](DEPLOYMENT.md); deployed to Streamlit Community Cloud as a [public demo](https://enterprise-rag-demo-project.streamlit.app/) |
-| Development phases | Five bilingual phase documents plus a current status audit and prioritized roadmap |
+| Phase 6 quality | Opt-in page context and required-item answers; development retrieval comparison and six known live/AI-reviewed cases |
+| Development phases | Six bilingual phase documents plus a current status audit and prioritized roadmap |
 
 `app.py` uses the verified `rag.py` pipeline; `grounding.py` validates claims and citations. `eval/evaluate.py` preserves the ten-question baseline, while `eval/benchmark.py` compares settings and verifies the expanded run. `tracing.py` isolates optional LangSmith failures. See the [Phase 4](Phase/Phase4_StreamlitInterface.md) and [Phase 5 reports](Phase/Phase5_EvaluationAndDeployment.md) for current evidence. Source repository: [SoyeonAhn3/enterprise-rag](https://github.com/SoyeonAhn3/enterprise-rag). Public demo: [enterprise-rag-demo-project.streamlit.app](https://enterprise-rag-demo-project.streamlit.app/), confirmed working in a private browser window on 2026-10-16.
 
@@ -193,9 +196,9 @@ Initial chunking settings are approximately **800 characters per chunk** with **
 | Answer generation | Anthropic Claude API, official Python SDK |
 | Tracing | LangSmith integration implemented; real remote trace pending |
 | Evaluation | Python, JSON, AI grading; human review pending |
-| Deployment | Streamlit Community Cloud planned; public verification pending |
+| Deployment | Streamlit Community Cloud, [public demo](https://enterprise-rag-demo-project.streamlit.app/) since 2026-10-16; formal checks pending |
 
-The application is verified locally on Windows / Python 3.12.10 with pinned dependencies. Streamlit 1.65.0 was added without replacing existing packages; `pip check` passes. LangSmith HTTP contracts and disabled/failing tracing are tested, but the real trace needs an operator key. Cloud compatibility, memory, model-cache startup, and public restart behavior remain unverified. The Linux Docker daemon was unavailable locally.
+The application is verified locally on Windows / Python 3.12.10 with pinned dependencies. Streamlit 1.65.0 was added without replacing existing packages; `pip check` passes. LangSmith HTTP contracts and disabled/failing tracing are tested, but the real trace needs an operator key. The app has run on Streamlit Community Cloud since 2026-10-16, but Cloud memory, model-cache startup, and restart behavior remain unverified. The Linux Docker daemon was unavailable locally.
 
 ## Evaluation design
 
@@ -251,6 +254,7 @@ The [MVP plan](plan/enterprise_rag_assistant_streamlit_mvp_plan.md) defines the 
 | [3 — Grounded answers](Phase/Phase3_GroundedAnswers.md) | Generate supported answers, validate sources, and abstain | ✅ Completed with live Claude checks |
 | [4 — Streamlit interface](Phase/Phase4_StreamlitInterface.md) | Provide chat, source display, loading/errors, and usage controls | ✅ Local browser verified |
 | [5 — Evaluation and deployment](Phase/Phase5_EvaluationAndDeployment.md) | Preserve the ten-question baseline, compare 60 questions, verify tracing, and publish the demo | 🚧 Expanded AI evaluation and offline verification complete; human review and remote checks pending |
+| [6 — Retrieval and answer quality](Phase/Phase6_RetrievalAndAnswerQuality.md) | Bounded original-page context and condition-preserving answers | ✅ Local implementation/tests complete; opt-in; Cloud activation pending |
 
 The original two-day target maps Phases 1–4 to local operation on Day 1 and Phase 5 to evaluation/deployment on Day 2. Completion is based on verification evidence, not elapsed time. Each Phase document contains English first and Korean second.
 
@@ -266,7 +270,8 @@ Enterprise-rag/
 │   ├── Phase2_IndexingAndRetrieval.md       # ✅ Local model acceptance complete
 │   ├── Phase3_GroundedAnswers.md            # ✅ Grounded answers verified
 │   ├── Phase4_StreamlitInterface.md         # ✅ Local browser verified
-│   └── Phase5_EvaluationAndDeployment.md    # 🚧 Remote completion gates pending
+│   ├── Phase5_EvaluationAndDeployment.md    # 🚧 Remote completion gates pending
+│   └── Phase6_RetrievalAndAnswerQuality.md  # ✅ Local candidate verified; Cloud activation pending
 ├── .streamlit/                             # Theme and server-secret template
 ├── deployment/index_bundle.json            # Reviewed portable precomputed vectors
 ├── docs/evidence/                          # Actual local browser screenshots
@@ -277,6 +282,7 @@ Enterprise-rag/
 │   ├── check_answers.py                    # Five live grounded-answer checks
 │   ├── evaluate.py                         # Ten-question runner and offline metrics
 │   ├── benchmark.py                        # Paired evaluation, summarize, read-only verify
+│   ├── phase6.py                           # Local retrieval comparison and known-case live smoke
 │   ├── ai_review.py                        # Reference-based AI grading and pilot
 │   ├── expanded_cases.py                   # Versioned dataset and PDF-reference checks
 │   ├── render_report.py                    # Verified Markdown/CSV exports
@@ -301,6 +307,8 @@ Enterprise-rag/
 │   ├── test_evaluation.py
 │   ├── test_benchmark.py
 │   ├── test_benchmark_artifacts.py
+│   ├── test_page_context.py
+│   ├── test_phase6.py
 │   ├── test_tracing.py
 │   ├── test_deployment.py
 │   ├── test_app.py
@@ -317,6 +325,7 @@ Enterprise-rag/
 ├── index_store.py
 ├── ingest.py                               # Preview, index build/reuse, rebuild
 ├── rag.py                                  # Retrieval and grounded answers (--answer)
+├── retrieval_context.py                    # Bounded original-page context; no extra vector search
 ├── .env.example
 ├── .gitignore
 ├── .python-version
