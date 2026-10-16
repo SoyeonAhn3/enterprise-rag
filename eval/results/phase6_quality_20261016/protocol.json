@@ -1,0 +1,1923 @@
+{
+  "format_version": 1,
+  "created_at": "2026-10-16T07:24:41.376201+00:00",
+  "scope": "Known-case regression; all 60 v2 questions were previously inspected. Same-model AI grading, no completed human review, no unseen holdout. Page mode changes both candidate depth and context assembly.",
+  "dataset": [
+    {
+      "id": "q01",
+      "category": "single_document",
+      "question": "부가세 제외 구매 금액이 정확히 100만원이라면 최종 결재권자는 누구인가요?",
+      "expected_answer": "100만원 이하는 팀장 최종 결재 대상입니다.",
+      "evidence_groups": [
+        {
+          "id": "approval_authority",
+          "claim": "공급가액 100만원의 최종 결재권자는 팀장이다.",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원"
+            }
+          ]
+        }
+      ],
+      "answerable": true,
+      "grading_criteria": [
+        "정확히 100만원을 '100만원 이하' 구간에 포함하고 팀장으로 답한다.",
+        "부서장 등 다른 직책을 최종 결재권자로 제시하지 않는다."
+      ],
+      "split": "dev",
+      "family": "authority_boundaries"
+    },
+    {
+      "id": "q02",
+      "category": "single_document",
+      "question": "공급가액 360만원의 외부 서비스를 구매할 때 비교견적은 몇 부 필요한가요?",
+      "expected_answer": "300만원 이상 구매이므로 서로 다른 공급업체의 유효 견적 2부 이상이 원칙입니다. 단독 공급 예외는 사유서와 구매운영팀 승인 기록이 필요합니다.",
+      "evidence_groups": [
+        {
+          "id": "comparison_quotes",
+          "claim": "360만원 구매는 원칙적으로 서로 다른 공급업체의 유효 견적 2부 이상이 필요하다.",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 2,
+              "quote": "300만원 이상 서로 다른 공급업체의 유효 견적 2부 이상을 원칙으로 비교"
+            },
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 2,
+              "quote": "사례 부가세 제외 360만원의 외부 서비스 구매에는 유효한 비교견적 2부가 필요하다."
+            }
+          ]
+        }
+      ],
+      "answerable": true,
+      "grading_criteria": [
+        "원칙적으로 서로 다른 공급업체의 유효 견적 2부 이상이 필요하다고 답한다.",
+        "단독 공급 예외를 설명하는 경우 사유서와 구매운영팀 승인 기록이 필요함을 명시하며, 견적 1부만으로 자동 면제된다고 설명하지 않는다."
+      ],
+      "split": "dev",
+      "family": "quote_thresholds"
+    },
+    {
+      "id": "q03",
+      "category": "single_document",
+      "question": "업무용 장비가 납품되면 요청 부서는 언제까지 검수를 등록해야 하나요?",
+      "expected_answer": "납품 또는 수령 후 3영업일 이내에 검수 결과를 등록해야 합니다.",
+      "evidence_groups": [
+        {
+          "id": "inspection_deadline",
+          "claim": "요청 부서는 납품 또는 수령 후 3영업일 이내에 검수 결과를 등록한다.",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 2,
+              "quote": "물품은 납품일, 용역은 계약상 산출물 제출일을 기준으로 요청 부서가 3영업일 이내 검수 결과를 등록한다."
+            },
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 3,
+              "quote": "제품 또는 서비스가 제공되면 요청 부서는 납품·완료 사실을 확인하고, 수령 후 3영업일 이내에 검수 결과를 등록한다."
+            }
+          ]
+        }
+      ],
+      "answerable": true,
+      "grading_criteria": [
+        "요청 부서가 납품 또는 수령 후 3영업일 이내에 검수 결과를 등록해야 한다고 답한다.",
+        "달력 기준 3일, IT 자산 등록 기한 5영업일, 정산 서류 제출 기한 5영업일과 혼동하지 않는다."
+      ],
+      "split": "dev",
+      "family": "inspection_deadline"
+    },
+    {
+      "id": "q04",
+      "category": "single_document",
+      "question": "고객정보를 입력하는 무료 SaaS 체험은 보안검토 없이 시작해도 되나요?",
+      "expected_answer": "아니요. 고객정보 등 회사 데이터를 사용하는 무료 SaaS는 체험 시작 전에 정보보안팀 사전 보안검토가 필요합니다.",
+      "evidence_groups": [
+        {
+          "id": "security_review",
+          "claim": "고객정보를 사용하는 무료 SaaS도 사용 전에 보안검토가 필요하다.",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 1,
+              "quote": "무료 SaaS라도 고객정보·임직원 개인정보·회사 내부자료를 입력하거나 저장하려는 경우에는 무료 체험 시작 전 사전 보안검토가 필요하다."
+            },
+            {
+              "document": "03_it_security.pdf",
+              "page": 2,
+              "quote": "실무 예시 외부 SaaS에 고객 이메일과 상담이력을 저장한다면 유료·무료와 관계없이 보안 사전검토 대상이며, 일반적으로 높은 위험도 검토가 필요하다."
+            },
+            {
+              "document": "03_it_security.pdf",
+              "page": 3,
+              "quote": "무료 체험이라도 회사 자료나 고객 데이터가 사용되는 경우에는 사전에 보안검토를 신청한다."
+            }
+          ]
+        }
+      ],
+      "answerable": true,
+      "grading_criteria": [
+        "고객정보를 사용하는 무료 SaaS 체험에도 시작 전 보안검토가 필요하다고 답한다.",
+        "무료이거나 개인 계정을 사용한다는 이유로 검토를 생략할 수 있다고 설명하지 않는다."
+      ],
+      "split": "dev",
+      "family": "free_security"
+    },
+    {
+      "id": "q05",
+      "category": "single_document",
+      "question": "높은 위험도로 분류된 IT 서비스의 표준 보안 검토 예상 기간은 얼마인가요?",
+      "expected_answer": "서류가 완비된 시점부터 5영업일이 표준 예상 기간이며 보완 요청 시 길어질 수 있습니다.",
+      "evidence_groups": [
+        {
+          "id": "security_review_duration",
+          "claim": "높은 위험도 검토는 서류 완비부터 5영업일이 표준 예상 기간이며 보완 시 늘어날 수 있다.",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 2,
+              "quote": "높음 개인정보 처리 또는 외부 관리자 접근 5영업일 상기 기간은 접수 서류가 완비된 시점부터 계산하는 표준 예상 기간이며, 보완 요청이 있는 경우 늘어날 수 있다."
+            }
+          ]
+        }
+      ],
+      "answerable": true,
+      "grading_criteria": [
+        "높은 위험도의 표준 예상 기간을 5영업일로 답하고 계산 시작점이 서류 완비 시점임을 설명한다.",
+        "보완 요청에 따라 연장될 수 있음을 알리며 확정 처리 기한이나 승인 보장으로 표현하지 않는다."
+      ],
+      "split": "dev",
+      "family": "high_risk_duration"
+    },
+    {
+      "id": "q06",
+      "category": "single_document",
+      "question": "정산 서류 접수 마감일과 정기 지급 예정일은 각각 언제인가요?",
+      "expected_answer": "정산 서류 접수 마감은 매월 5일이며, 휴무일이면 다음 영업일입니다. 마감일까지 서류가 완비된 건은 같은 달 25일 지급 예정입니다. 마감 이후 접수 건은 다음 월 지급 회차로 이월될 수 있고, 지급 예정일은 서류의 적정성·계약조건·금융기관 운영 상황에 따라 변경될 수 있습니다.",
+      "evidence_groups": [
+        {
+          "id": "settlement_cutoff",
+          "claim": "월 정기 접수 마감은 매월 5일이며 휴무일이면 다음 영업일이다.",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 3,
+              "quote": "월 정기 접수 마감 매월 5일 (휴무일이면 다음 영업일)"
+            }
+          ]
+        },
+        {
+          "id": "payment_schedule",
+          "claim": "마감일까지 서류가 완비된 건은 해당 월 25일 지급 예정이며 지연 또는 변경될 수 있다.",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 3,
+              "quote": "정기 지급 예정일 마감일까지 서류가 완비된 건은 해당 월 25일 지급 예정 마감 이후 접수 다음 월 지급 회차로 이월될 수 있음 지급 예정일은 서류의 적정성·계약조건·금융기관 운영 상황에 따라 변경될 수 있다."
+            }
+          ]
+        }
+      ],
+      "answerable": true,
+      "grading_criteria": [
+        "접수 마감일을 매월 5일로 답하고 휴무일에는 다음 영업일임을 설명한다.",
+        "마감일까지 서류가 완비된 건의 지급 예정일이 해당 월 25일임을 명시한다.",
+        "마감 이후 접수나 서류 미비 건까지 같은 달 25일에 반드시 지급된다고 설명하지 않는다."
+      ],
+      "split": "dev",
+      "family": "payment_schedule"
+    },
+    {
+      "id": "q07",
+      "category": "multi_document",
+      "question": "공급가액 180만원인 업무용 노트북을 구매할 때 최종 결재권자와 사전 보안검토 필요 여부를 알려주세요.",
+      "expected_answer": "180만원 구매는 부서장 최종 결재 대상입니다. 업무용 노트북은 금액과 관계없이 발주 전에 정보보안팀 사전 보안검토를 받아야 합니다.",
+      "evidence_groups": [
+        {
+          "id": "approval_authority",
+          "claim": "공급가액 180만원의 최종 결재권자는 부서장이다.",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원"
+            },
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "업무 예시 노트북 공급가액이 180만원이라면 최종 결재권자는 부서장이다."
+            }
+          ]
+        },
+        {
+          "id": "security_review",
+          "claim": "업무용 노트북은 금액과 관계없이 발주 전에 보안검토가 필요하다.",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 1,
+              "quote": "가온비즈에서 회사 업무용으로 구매하는 노트북·데스크톱·서버·네트워크 장비, 신규 유료 SaaS, 회사 명의의 외부 IT 서비스 계약은 금액과 관계없이 발주·계약 전에 정보보안팀 검토를 받아야 한다."
+            },
+            {
+              "document": "03_it_security.pdf",
+              "page": 3,
+              "quote": "노트북 1대만 구매해도 보안 검토하나요? 예. 업무용 IT 장비는 금액과 수량에 관계없이 사전 검토합니다."
+            }
+          ]
+        }
+      ],
+      "answerable": true,
+      "grading_criteria": [
+        "최종 결재권자를 부서장으로 답한다.",
+        "업무용 노트북은 금액과 관계없이 발주 전 보안검토가 필요하다고 답한다.",
+        "결재권자와 보안검토 필요 여부 두 정보를 모두 답하고 각각 검색된 근거로 뒷받침한다."
+      ],
+      "split": "dev",
+      "family": "laptop_approval_security"
+    },
+    {
+      "id": "q08",
+      "category": "multi_document",
+      "question": "공급가액 720만원이고 계약기간이 12개월인 SaaS 계약의 최종 결재권자와 법무 검토 여부는 어떻게 되나요?",
+      "expected_answer": "720만원은 CFO 최종 결재 대상입니다. 계약 체결 전 법무지원팀 사전검토도 필요합니다. 법무 검토는 공급가액 500만원 이상, 계약기간 12개월 이상, 고객·직원 개인정보 처리 위탁 중 하나라도 해당하면 필요합니다. 이 계약은 금액과 기간 기준에 각각 해당하며, 두 조건을 동시에 충족해야만 하는 것은 아닙니다.",
+      "evidence_groups": [
+        {
+          "id": "approval_authority",
+          "claim": "공급가액 720만원의 최종 결재권자는 CFO이다.",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원"
+            },
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 3,
+              "quote": "월 60만원, 계약기간 12개월 총 720만원으로 계산하여 CFO 최종 결재"
+            }
+          ]
+        },
+        {
+          "id": "legal_review",
+          "claim": "720만원·12개월 SaaS 계약은 계약 체결 전 법무 검토 대상이다.",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 1,
+              "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토"
+            },
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 1,
+              "quote": "사례 공급가액 720만원의 12개월 SaaS 계약은 금액과 계약기간 기준 모두 법무 사전검토 대상이다."
+            },
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 4,
+              "quote": "정확히 500만원 계약도 법무 검토하나요? 예. 법무 사전검토는 공급가액 500만원 이상부터 적용됩니다."
+            }
+          ]
+        },
+        {
+          "id": "legal_general_rule",
+          "claim": "계약 전 검토와 독립적인 금액/기간/개인정보 조건",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 1,
+              "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토"
+            }
+          ]
+        }
+      ],
+      "answerable": true,
+      "grading_criteria": [
+        "최종 결재권자를 CFO로 답한다.",
+        "계약 체결 전 법무 사전검토가 필요하다고 답하고 금액 또는 기간 중 적어도 하나의 충족 기준을 설명한다.",
+        "법무 검토에 금액과 기간 조건의 동시 충족이 필요하다고 설명하지 않는다.",
+        "결재권자와 법무 검토 필요 여부 두 정보를 모두 답하고 각각 검색된 근거로 뒷받침한다."
+      ],
+      "split": "dev",
+      "family": "subscription_legal_approval"
+    },
+    {
+      "id": "q09",
+      "category": "unanswerable",
+      "question": "가온비즈 직원 식당에서 채식 메뉴는 매주 몇 번 제공하나요?",
+      "expected_answer": "등록된 문서에는 직원 식당 채식 메뉴 제공 횟수에 대한 정보가 없습니다.",
+      "evidence_groups": [],
+      "answerable": false,
+      "grading_criteria": [
+        "등록된 문서에서 채식 메뉴 제공 횟수를 확인할 수 없다고 답변을 보류한다.",
+        "주당 횟수나 식당 운영 기준을 추정하지 않고, 관련 없는 문서를 정답 근거로 인용하지 않는다."
+      ],
+      "split": "dev",
+      "family": "unknown_cafeteria"
+    },
+    {
+      "id": "q10",
+      "category": "unanswerable",
+      "question": "가온비즈 해외 출장 시 일본 숙박비 1박 상한은 얼마인가요?",
+      "expected_answer": "등록된 문서에는 해외 출장 숙박비 상한에 대한 정보가 없습니다.",
+      "evidence_groups": [],
+      "answerable": false,
+      "grading_criteria": [
+        "등록된 문서에서 일본 출장 숙박비 상한을 확인할 수 없다고 답변을 보류한다.",
+        "숙박비 금액이나 일반적인 출장비 규정을 추정하지 않고, 관련 없는 문서를 정답 근거로 인용하지 않는다."
+      ],
+      "split": "dev",
+      "family": "unknown_travel"
+    },
+    {
+      "id": "q11",
+      "split": "dev",
+      "family": "authority_boundaries",
+      "category": "single_document",
+      "question": "공급가액이 정확히 500만원인 구매의 최종 결재권자는 누구인가요?",
+      "answerable": true,
+      "expected_answer": "500만원 이하는 부서장 최종 결재 대상이다. CFO라고 하지 않는다.",
+      "grading_criteria": [
+        "500만원 이하는 부서장 최종 결재 대상이다. CFO라고 하지 않는다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "authority",
+          "claim": "authority",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q12",
+      "split": "dev",
+      "family": "authority_boundaries",
+      "category": "single_document",
+      "question": "VAT 제외 2,000만원 구매는 CFO와 CEO 중 누가 최종 승인하나요?",
+      "answerable": true,
+      "expected_answer": "정확히 2,000만원은 CFO이고 CEO는 2,000만원 초과부터이다.",
+      "grading_criteria": [
+        "정확히 2,000만원은 CFO이고 CEO는 2,000만원 초과부터이다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "authority",
+          "claim": "authority",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q13",
+      "split": "dev",
+      "family": "authority_boundaries",
+      "category": "single_document",
+      "question": "공급가액 2,001만원 구매의 최종 결재권자는 누구인가요?",
+      "answerable": true,
+      "expected_answer": "2,000만원 초과이므로 대표이사(CEO)이다.",
+      "grading_criteria": [
+        "2,000만원 초과이므로 대표이사(CEO)이다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "authority",
+          "claim": "authority",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q14",
+      "split": "dev",
+      "family": "quote_thresholds",
+      "category": "single_document",
+      "question": "공급가액이 정확히 300만원이면 서로 다른 업체의 견적이 몇 부 필요한가요?",
+      "answerable": true,
+      "expected_answer": "300만원 이상이므로 서로 다른 공급업체 유효 견적 2부 이상이 원칙이다.",
+      "grading_criteria": [
+        "300만원 이상이므로 서로 다른 공급업체 유효 견적 2부 이상이 원칙이다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "quote_high",
+          "claim": "quote_high",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 2,
+              "quote": "300만원 이상 서로 다른 공급업체의 유효 견적 2부 이상을 원칙으로 비교"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q15",
+      "split": "dev",
+      "family": "quote_thresholds",
+      "category": "single_document",
+      "question": "공급가액 299만원 구매는 비교견적 의무가 없으니 견적서를 아예 받지 않아도 되나요?",
+      "answerable": true,
+      "expected_answer": "비교견적 의무는 없지만 금액의 합리성 검토와 견적 1부는 필요하다.",
+      "grading_criteria": [
+        "비교견적 의무는 없지만 금액의 합리성 검토와 견적 1부는 필요하다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "quote_low",
+          "claim": "quote_low",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 2,
+              "quote": "300만원 미만 비교견적 의무는 없지만 금액의 합리성 검토와 견적 1부는 필요"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q16",
+      "split": "dev",
+      "family": "quote_thresholds",
+      "category": "single_document",
+      "question": "독점 제품이라 400만원 구매에 견적이 1부뿐입니다. 예외로 진행하려면 어떤 기록이 필요한가요?",
+      "answerable": true,
+      "expected_answer": "단독 공급 사유서와 구매운영팀 승인 기록이 필요하다. 자동 면제가 아니다.",
+      "grading_criteria": [
+        "단독 공급 사유서와 구매운영팀 승인 기록이 필요하다. 자동 면제가 아니다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "sole",
+          "claim": "sole",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 2,
+              "quote": "단독 공급 불가피 독점 제품·기존 시스템 호환 등 사유서와 구매운영팀 승인 기록"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q17",
+      "split": "dev",
+      "family": "budget_conditions",
+      "category": "single_document",
+      "question": "정규 예산과 잔여예산이 충분한 정확히 500만원 구매에도 재무팀 별도 예산 사전검토가 필수인가요?",
+      "answerable": true,
+      "expected_answer": "예산 내 500만원 이하는 예산코드와 잔여예산 확인 후 정상 결재하며 별도 서면검토가 필수인 것은 아니다.",
+      "grading_criteria": [
+        "예산 내 500만원 이하는 예산코드와 잔여예산 확인 후 정상 결재하며 별도 서면검토가 필수인 것은 아니다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "budget",
+          "claim": "budget",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 2,
+              "quote": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수 예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수 예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q18",
+      "split": "dev",
+      "family": "budget_conditions",
+      "category": "single_document",
+      "question": "50만원 구매인데 잔여예산이 부족합니다. 재무팀 예산 사전검토를 생략할 수 있나요?",
+      "answerable": true,
+      "expected_answer": "잔여예산 부족이면 금액과 무관하게 재무팀 예산 사전검토가 필수이다.",
+      "grading_criteria": [
+        "잔여예산 부족이면 금액과 무관하게 재무팀 예산 사전검토가 필수이다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "budget",
+          "claim": "budget",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 2,
+              "quote": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수 예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수 예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q19",
+      "split": "dev",
+      "family": "budget_conditions",
+      "category": "single_document",
+      "question": "예산은 충분하지만 공급가액이 550만원입니다. 재무팀 예산 검토는 언제 해야 하나요?",
+      "answerable": true,
+      "expected_answer": "500만원 초과이므로 금액별 결재 전에 재무팀 예산 사전검토가 필수이다.",
+      "grading_criteria": [
+        "500만원 초과이므로 금액별 결재 전에 재무팀 예산 사전검토가 필수이다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "budget",
+          "claim": "budget",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 2,
+              "quote": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수 예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수 예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q20",
+      "split": "dev",
+      "family": "aggregation_rule",
+      "category": "single_document",
+      "question": "같은 공급업체에 같은 목적의 구매를 20일 간격으로 두 번 요청하면 금액을 따로 판단하나요?",
+      "answerable": true,
+      "expected_answer": "동일 공급업체·동일 목적의 30일 이내 요청은 합산 공급가액으로 결재 구간과 비교견적 의무를 판단한다.",
+      "grading_criteria": [
+        "동일 공급업체·동일 목적의 30일 이내 요청은 합산 공급가액으로 결재 구간과 비교견적 의무를 판단한다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "aggregate",
+          "claim": "aggregate",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 2,
+              "quote": "같은 공급업체와 동일한 구매 목적을 가진 거래를 30일 이내 여러 번 요청하면 합산 공급가액을 기준으로 결재 구간과 비교견적 의무를 판단한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q21",
+      "split": "dev",
+      "family": "legal_or_conditions",
+      "category": "single_document",
+      "question": "개인정보 처리가 없는 200만원짜리 12개월 계약도 법무 검토를 받아야 하나요?",
+      "answerable": true,
+      "expected_answer": "계약기간 12개월 이상이라는 조건 하나로 계약 체결 전 법무 사전검토가 필요하다. 금액 조건 동시 충족은 필요 없다.",
+      "grading_criteria": [
+        "계약기간 12개월 이상이라는 조건 하나로 계약 체결 전 법무 사전검토가 필요하다. 금액 조건 동시 충족은 필요 없다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "legal",
+          "claim": "legal",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 1,
+              "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q22",
+      "split": "dev",
+      "family": "legal_or_conditions",
+      "category": "single_document",
+      "question": "개인정보 처리가 없는 공급가액 500만원·6개월 계약은 법무 검토 대상인가요?",
+      "answerable": true,
+      "expected_answer": "정확히 500만원은 500만원 이상에 해당해 계약 체결 전 법무 사전검토 대상이다. 12개월 조건 동시 충족은 필요 없다.",
+      "grading_criteria": [
+        "정확히 500만원은 500만원 이상에 해당해 계약 체결 전 법무 사전검토 대상이다. 12개월 조건 동시 충족은 필요 없다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "legal",
+          "claim": "legal",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 1,
+              "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q23",
+      "split": "dev",
+      "family": "legal_or_conditions",
+      "category": "single_document",
+      "question": "직원 개인정보 처리 위탁 계약이 200만원·3개월이면 법무와 DPA 검토를 면제받나요?",
+      "answerable": true,
+      "expected_answer": "개인정보 처리 위탁 자체가 조건이므로 금액·기간과 관계없이 계약 전 법무 및 DPA 검토가 필요하다.",
+      "grading_criteria": [
+        "개인정보 처리 위탁 자체가 조건이므로 금액·기간과 관계없이 계약 전 법무 및 DPA 검토가 필요하다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "legal",
+          "claim": "legal",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 1,
+              "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q24",
+      "split": "dev",
+      "family": "payment_schedule",
+      "category": "single_document",
+      "question": "정산 서류를 월 정기 접수 마감 이후 제출해도 같은 달 25일 지급이 보장되나요?",
+      "answerable": true,
+      "expected_answer": "보장되지 않으며 다음 월 지급 회차로 이월될 수 있다. 반드시 다음 달 지급 확정이라고 하지 않는다.",
+      "grading_criteria": [
+        "보장되지 않으며 다음 월 지급 회차로 이월될 수 있다. 반드시 다음 달 지급 확정이라고 하지 않는다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "payment",
+          "claim": "payment",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 3,
+              "quote": "정기 지급 예정일 마감일까지 서류가 완비된 건은 해당 월 25일 지급 예정 마감 이후 접수 다음 월 지급 회차로 이월될 수 있음 지급 예정일은 서류의 적정성·계약조건·금융기관 운영 상황에 따라 변경될 수 있다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q25",
+      "split": "dev",
+      "family": "subscription_legal_approval",
+      "category": "multi_document",
+      "question": "월 공급가액 60만원인 12개월 SaaS 계약의 계산 금액, 최종 결재권자, 계약 전 법무 검토 여부와 이유를 알려주세요.",
+      "answerable": true,
+      "expected_answer": "총 계약금액은 720만원이고 CFO 최종 결재 대상이다. 계약 전 법무 검토가 필요하며 500만원 이상 또는 12개월 이상 조건 중 하나 이상을 설명한다. 두 조건 동시 충족이 필수라고 하지 않는다.",
+      "grading_criteria": [
+        "총 계약금액은 720만원이고 CFO 최종 결재 대상이다.",
+        "계약 전 법무 검토가 필요하며 500만원 이상 또는 12개월 이상 조건 중 하나 이상을 설명한다. 두 조건 동시 충족이 필수라고 하지 않는다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "subscription",
+          "claim": "subscription",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "월 구독처럼 주기적으로 지급하는 계약은 최초 약정한 총 계약기간 비용으로 판단한다."
+            }
+          ]
+        },
+        {
+          "id": "authority",
+          "claim": "authority",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        },
+        {
+          "id": "legal",
+          "claim": "legal",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 1,
+              "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q26",
+      "split": "dev",
+      "family": "subscription_quotes",
+      "category": "multi_document",
+      "question": "월 30만원씩 12개월 이용하는 외부 서비스의 구매 총액, 최종 결재권자, 비교견적 부수를 알려주세요.",
+      "answerable": true,
+      "expected_answer": "총 360만원이며 부서장 최종 결재 대상이다. 서로 다른 업체의 유효 견적 2부 이상이 원칙이다.",
+      "grading_criteria": [
+        "총 360만원이며 부서장 최종 결재 대상이다.",
+        "서로 다른 업체의 유효 견적 2부 이상이 원칙이다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "subscription",
+          "claim": "subscription",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "월 구독처럼 주기적으로 지급하는 계약은 최초 약정한 총 계약기간 비용으로 판단한다."
+            }
+          ]
+        },
+        {
+          "id": "authority",
+          "claim": "authority",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        },
+        {
+          "id": "quote_high",
+          "claim": "quote_high",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 2,
+              "quote": "300만원 이상 서로 다른 공급업체의 유효 견적 2부 이상을 원칙으로 비교"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q27",
+      "split": "dev",
+      "family": "aggregation_combined",
+      "category": "multi_document",
+      "question": "같은 업체에 같은 장비를 20일 간격으로 200만원과 160만원에 구매합니다. 합산 금액, 최종 결재권자, 비교견적 요건은요?",
+      "answerable": true,
+      "expected_answer": "30일 내 동일 목적·업체이므로 360만원으로 합산하고 부서장 최종 결재를 받는다. 서로 다른 업체 유효 견적 2부 이상이 원칙이다.",
+      "grading_criteria": [
+        "30일 내 동일 목적·업체이므로 360만원으로 합산하고 부서장 최종 결재를 받는다.",
+        "서로 다른 업체 유효 견적 2부 이상이 원칙이다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "aggregate",
+          "claim": "aggregate",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 2,
+              "quote": "같은 공급업체와 동일한 구매 목적을 가진 거래를 30일 이내 여러 번 요청하면 합산 공급가액을 기준으로 결재 구간과 비교견적 의무를 판단한다."
+            }
+          ]
+        },
+        {
+          "id": "authority",
+          "claim": "authority",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        },
+        {
+          "id": "quote_high",
+          "claim": "quote_high",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 2,
+              "quote": "300만원 이상 서로 다른 공급업체의 유효 견적 2부 이상을 원칙으로 비교"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q28",
+      "split": "dev",
+      "family": "laptop_approval_security",
+      "category": "multi_document",
+      "question": "공급가액 95만원인 업무용 노트북 1대의 최종 결재권자와 보안검토 시점은요?",
+      "answerable": true,
+      "expected_answer": "100만원 이하이므로 팀장이다. 금액과 수량에 관계없이 발주 전에 정보보안팀 보안검토를 받아야 한다.",
+      "grading_criteria": [
+        "100만원 이하이므로 팀장이다.",
+        "금액과 수량에 관계없이 발주 전에 정보보안팀 보안검토를 받아야 한다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "authority",
+          "claim": "authority",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        },
+        {
+          "id": "security",
+          "claim": "security",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 1,
+              "quote": "가온비즈에서 회사 업무용으로 구매하는 노트북·데스크톱·서버·네트워크 장비, 신규 유료 SaaS, 회사 명의의 외부 IT 서비스 계약은 금액과 관계없이 발주·계약 전에 정보보안팀 검토를 받아야 한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q29",
+      "split": "dev",
+      "family": "approval_legal_boundary",
+      "category": "multi_document",
+      "question": "개인정보 처리가 없는 공급가액 500만원·6개월 소프트웨어 계약의 최종 결재권자와 법무 검토 필요 여부는요?",
+      "answerable": true,
+      "expected_answer": "정확히 500만원은 부서장 최종 결재 대상이다. 법무 기준은 500만원 이상이므로 계약 체결 전 법무 검토가 필요하다.",
+      "grading_criteria": [
+        "정확히 500만원은 부서장 최종 결재 대상이다.",
+        "법무 기준은 500만원 이상이므로 계약 체결 전 법무 검토가 필요하다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "authority",
+          "claim": "authority",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        },
+        {
+          "id": "legal",
+          "claim": "legal",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 1,
+              "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q30",
+      "split": "dev",
+      "family": "budget_legal_approval",
+      "category": "multi_document",
+      "question": "예산이 충분한 공급가액 550만원·6개월 외부 용역 계약의 최종 결재권자, 예산 검토, 법무 검토를 알려주세요.",
+      "answerable": true,
+      "expected_answer": "CFO가 최종 결재권자이다. 500만원 초과이므로 결재 전에 재무팀 예산 사전검토가 필요하다. 500만원 이상이므로 계약 체결 전 법무 사전검토가 필요하다.",
+      "grading_criteria": [
+        "CFO가 최종 결재권자이다.",
+        "500만원 초과이므로 결재 전에 재무팀 예산 사전검토가 필요하다.",
+        "500만원 이상이므로 계약 체결 전 법무 사전검토가 필요하다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "authority",
+          "claim": "authority",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        },
+        {
+          "id": "budget",
+          "claim": "budget",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 2,
+              "quote": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수 예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수 예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재"
+            }
+          ]
+        },
+        {
+          "id": "legal",
+          "claim": "legal",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 1,
+              "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q31",
+      "split": "dev",
+      "family": "inspection_asset",
+      "category": "multi_document",
+      "question": "업무용 노트북을 수령했습니다. 요청 부서의 검수 등록 기한과 IT지원팀의 자산번호 부여 기한은 각각 언제부터 며칠인가요?",
+      "answerable": true,
+      "expected_answer": "요청 부서는 수령 후 3영업일 이내 검수 등록한다. IT지원팀은 검수 완료일부터 5영업일 이내 자산번호를 부여한다. 두 시작점을 혼동하지 않는다.",
+      "grading_criteria": [
+        "요청 부서는 수령 후 3영업일 이내 검수 등록한다.",
+        "IT지원팀은 검수 완료일부터 5영업일 이내 자산번호를 부여한다. 두 시작점을 혼동하지 않는다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "inspect",
+          "claim": "inspect",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 3,
+              "quote": "제품 또는 서비스가 제공되면 요청 부서는 납품·완료 사실을 확인하고, 수령 후 3영업일 이내에 검수 결과를 등록한다."
+            }
+          ]
+        },
+        {
+          "id": "asset",
+          "claim": "asset",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 3,
+              "quote": "회사 업무용 노트북·모니터·데스크톱 등 자산관리 대상 장비는 구매 요청 부서가 검수 결과를 등록한 뒤, IT지원팀이 검수 완료일부터 5영업일 이내에 자산번호를 부여한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q32",
+      "split": "dev",
+      "family": "personal_security_legal",
+      "category": "multi_document",
+      "question": "고객정보 처리 위탁이 있는 200만원·3개월 신규 SaaS 계약의 보안검토와 법무·DPA 검토는 필요한가요?",
+      "answerable": true,
+      "expected_answer": "신규 유료 SaaS는 금액과 관계없이 발주·계약 전 보안검토 대상이다. 개인정보 처리 위탁 때문에 금액·기간과 관계없이 계약 전 법무 및 DPA 검토가 필요하다.",
+      "grading_criteria": [
+        "신규 유료 SaaS는 금액과 관계없이 발주·계약 전 보안검토 대상이다.",
+        "개인정보 처리 위탁 때문에 금액·기간과 관계없이 계약 전 법무 및 DPA 검토가 필요하다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "security",
+          "claim": "security",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 1,
+              "quote": "가온비즈에서 회사 업무용으로 구매하는 노트북·데스크톱·서버·네트워크 장비, 신규 유료 SaaS, 회사 명의의 외부 IT 서비스 계약은 금액과 관계없이 발주·계약 전에 정보보안팀 검토를 받아야 한다."
+            }
+          ]
+        },
+        {
+          "id": "legal",
+          "claim": "legal",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 1,
+              "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q33",
+      "split": "dev",
+      "family": "emergency_approval_process",
+      "category": "multi_document",
+      "question": "서비스 중단으로 긴급 구매합니다. 우선 승인 기록, 정식 요청서 등록 기한, 상위 결재 면제 여부를 알려주세요.",
+      "answerable": true,
+      "expected_answer": "팀장에게 우선 연락하고 이메일 또는 업무시스템에 임시 승인 기록을 남긴다. 1영업일 이내 정식 구매요청서를 등록한다. 긴급 구매도 상위 결재권자 승인을 원칙적으로 면제하지 않는다.",
+      "grading_criteria": [
+        "팀장에게 우선 연락하고 이메일 또는 업무시스템에 임시 승인 기록을 남긴다.",
+        "1영업일 이내 정식 구매요청서를 등록한다.",
+        "긴급 구매도 상위 결재권자 승인을 원칙적으로 면제하지 않는다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "emergency",
+          "claim": "emergency",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 3,
+              "quote": "이 경우 팀장에게 우선 연락하고 이메일 또는 업무시스템에 임시 승인 흔적을 남긴다. 요청 부서는 1영업일 이내에 정식 구매요청서를 등록해야 한다."
+            }
+          ]
+        },
+        {
+          "id": "emergency_approval",
+          "claim": "emergency_approval",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 3,
+              "quote": "긴급 구매도 상위 결재권자의 승인을 원칙적으로 면제하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q34",
+      "split": "dev",
+      "family": "small_purchase_combined",
+      "category": "multi_document",
+      "question": "공급가액 50만원 일반 비품도 구매요청서를 내야 하나요? 최종 결재권자도 알려주세요.",
+      "answerable": true,
+      "expected_answer": "소액 비품도 구매요청이 필요하다. 50만원은 100만원 이하이므로 팀장이 최종 결재한다.",
+      "grading_criteria": [
+        "소액 비품도 구매요청이 필요하다.",
+        "50만원은 100만원 이하이므로 팀장이 최종 결재한다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "small_request",
+          "claim": "small_request",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 3,
+              "quote": "50만원 비품도 구매요청이 필요한가요? 필요하다. 다만 300만원 미만이므로 비교견적 2부 의무는 없다."
+            }
+          ]
+        },
+        {
+          "id": "authority",
+          "claim": "authority",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q35",
+      "split": "dev",
+      "family": "unknown_contacts",
+      "category": "unanswerable",
+      "question": "정보보안팀 담당자의 개인 이메일 주소를 알려주세요.",
+      "answerable": false,
+      "expected_answer": "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다. 횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다.",
+      "grading_criteria": [
+        "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다.",
+        "횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다."
+      ],
+      "evidence_groups": []
+    },
+    {
+      "id": "q36",
+      "split": "dev",
+      "family": "unknown_live_budget",
+      "category": "unanswerable",
+      "question": "우리 마케팅팀의 올해 현재 잔여예산은 정확히 얼마인가요?",
+      "answerable": false,
+      "expected_answer": "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다. 횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다.",
+      "grading_criteria": [
+        "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다.",
+        "횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다."
+      ],
+      "evidence_groups": []
+    },
+    {
+      "id": "q37",
+      "split": "dev",
+      "family": "unknown_product",
+      "category": "unanswerable",
+      "question": "규정집에서 지정한 업무용 노트북의 정확한 제조사와 모델명을 알려주세요.",
+      "answerable": false,
+      "expected_answer": "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다. 횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다.",
+      "grading_criteria": [
+        "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다.",
+        "횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다."
+      ],
+      "evidence_groups": []
+    },
+    {
+      "id": "q38",
+      "split": "dev",
+      "family": "unknown_order_status",
+      "category": "unanswerable",
+      "question": "PO-12345 주문의 현재 배송 상태와 확정 도착 날짜는요?",
+      "answerable": false,
+      "expected_answer": "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다. 횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다.",
+      "grading_criteria": [
+        "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다.",
+        "횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다."
+      ],
+      "evidence_groups": []
+    },
+    {
+      "id": "q39",
+      "split": "dev",
+      "family": "unknown_discipline",
+      "category": "unanswerable",
+      "question": "보안검토를 생략한 직원의 징계는 감봉 몇 개월인가요?",
+      "answerable": false,
+      "expected_answer": "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다. 횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다.",
+      "grading_criteria": [
+        "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다.",
+        "횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다."
+      ],
+      "evidence_groups": []
+    },
+    {
+      "id": "q40",
+      "split": "dev",
+      "family": "missing_purchase_amount",
+      "category": "unanswerable",
+      "question": "구매 금액은 아직 모릅니다. 이번 장비 구매의 최종 결재권자를 한 명으로 확정해 주세요.",
+      "answerable": false,
+      "expected_answer": "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다. 횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다.",
+      "grading_criteria": [
+        "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다.",
+        "횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다."
+      ],
+      "evidence_groups": []
+    },
+    {
+      "id": "q41",
+      "split": "final",
+      "family": "request_fields",
+      "category": "single_document",
+      "question": "구매요청서에 반드시 기록할 항목과 비교견적 대상일 때 추가 첨부할 자료를 알려주세요.",
+      "answerable": true,
+      "expected_answer": "요청자, 소속 부서, 필요 사유, 품목·수량, 희망 납기, 공급가액, 예산코드, 비용 부담 부서, 정해진 경우 공급업체를 포함한다. 비교견적 대상은 업체별 견적서도 첨부한다.",
+      "grading_criteria": [
+        "요청자, 소속 부서, 필요 사유, 품목·수량, 희망 납기, 공급가액, 예산코드, 비용 부담 부서, 정해진 경우 공급업체를 포함한다.",
+        "비교견적 대상은 업체별 견적서도 첨부한다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "request_fields",
+          "claim": "request_fields",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 2,
+              "quote": "모든 구매 요청에는 요청자, 소속 부서, 필요 사유, 품목·수량, 희망 납기, 공급가액, 예산코드, 비용 부담 부서, 공급업체(정해진 경우)를 기록한다. 비교견적 대상인 경우 업체별 견적서도 첨부한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q42",
+      "split": "final",
+      "family": "security_application",
+      "category": "single_document",
+      "question": "보안검토 신청에 필요한 정보를 사용 목적, 제품, 데이터, 접근관리, 운영·종료 항목별로 알려주세요.",
+      "answerable": true,
+      "expected_answer": "업무 목적·사용 부서·예상 사용자 수와 상품명·제공업체·도입 방식·계약기간을 포함한다. 데이터 분류·저장 위치, 관리자 계정·MFA/SSO·외부 접속 방식, 로그·백업·종료 시 데이터 삭제/반출 방법을 포함한다.",
+      "grading_criteria": [
+        "업무 목적·사용 부서·예상 사용자 수와 상품명·제공업체·도입 방식·계약기간을 포함한다.",
+        "데이터 분류·저장 위치, 관리자 계정·MFA/SSO·외부 접속 방식, 로그·백업·종료 시 데이터 삭제/반출 방법을 포함한다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "security_fields",
+          "claim": "security_fields",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 1,
+              "quote": "사용 목적 업무 목적, 사용 부서, 예상 사용자 수 제품 / 공급업체 상품명, 제공업체, 도입 방식, 계약기간 데이터 처리할 데이터 분류(공개/내부/개인정보 등), 저장 위치 접근관리 관리자 계정, MFA/SSO 지원, 외부 접속 방식 운영·종료 로그·백업, 계약 종료 시 데이터 삭제/반출 방법"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q43",
+      "split": "final",
+      "family": "security_outcomes",
+      "category": "single_document",
+      "question": "정보보안팀이 남기는 보안검토 결과의 종류와 함께 기록할 내용은 무엇인가요?",
+      "answerable": true,
+      "expected_answer": "승인, 보완 후 승인, 반려 중 하나와 보완 요구사항을 기록한다.",
+      "grading_criteria": [
+        "승인, 보완 후 승인, 반려 중 하나와 보완 요구사항을 기록한다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "security_outcomes",
+          "claim": "security_outcomes",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 2,
+              "quote": "보안 검토 결과에는 승인, 보완 후 승인, 반려 중 하나와 보완 요구사항을 기록한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q44",
+      "split": "final",
+      "family": "delegated_approval",
+      "category": "single_document",
+      "question": "전결권자가 부재해서 구두 위임을 받았습니다. 대리 결재할 수 있나요?",
+      "answerable": true,
+      "expected_answer": "결재시스템에 지정된 대리인만 가능하고 구두 위임은 인정하지 않는다.",
+      "grading_criteria": [
+        "결재시스템에 지정된 대리인만 가능하고 구두 위임은 인정하지 않는다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "proxy",
+          "claim": "proxy",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 3,
+              "quote": "전결권자 부재 시 위임 결재는 회사 결재시스템에 지정된 대리인만 수행할 수 있다. 구두로 전달한 위임은 인정하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q45",
+      "split": "final",
+      "family": "invoice_payment",
+      "category": "single_document",
+      "question": "공급업체 세금계산서가 도착했습니다. 다른 절차 없이 즉시 지급할 수 있나요?",
+      "answerable": true,
+      "expected_answer": "세금계산서만으로 즉시 지급되지 않으며 계약조건 충족, 검수 완료, 정산 증빙 확인이 필요하다.",
+      "grading_criteria": [
+        "세금계산서만으로 즉시 지급되지 않으며 계약조건 충족, 검수 완료, 정산 증빙 확인이 필요하다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "invoice",
+          "claim": "invoice",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 4,
+              "quote": "세금계산서를 받으면 즉시 지급되나요? 아니요. 계약조건 충족·검수완료·정산 증빙 확인 후 지급됩니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q46",
+      "split": "final",
+      "family": "bank_change",
+      "category": "single_document",
+      "question": "공급업체가 입금 계좌를 바꿨다고 합니다. 지급 요청에 어떤 추가 기록이 필요한가요?",
+      "answerable": true,
+      "expected_answer": "기존 계좌와 다른 사유 및 구매운영팀의 확인 기록이 필요하다.",
+      "grading_criteria": [
+        "기존 계좌와 다른 사유 및 구매운영팀의 확인 기록이 필요하다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "bank",
+          "claim": "bank",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 3,
+              "quote": "공급업체 계좌 변경 시 기존 계좌와 다르다는 사유 및 구매운영팀의 확인 기록이 필요하다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q47",
+      "split": "final",
+      "family": "contract_changes",
+      "category": "single_document",
+      "question": "계약금액이나 기간, 산출물, 개인정보 처리 범위를 변경할 때 문서 작성과 재검토는 어떻게 하나요?",
+      "answerable": true,
+      "expected_answer": "변경 계약서를 작성한다. 상위 결재권자 구간을 넘으면 재결재하고 법무 검토 조건이 새로 충족되면 사전 법무 검토를 받는다.",
+      "grading_criteria": [
+        "변경 계약서를 작성한다.",
+        "상위 결재권자 구간을 넘으면 재결재하고 법무 검토 조건이 새로 충족되면 사전 법무 검토를 받는다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "change",
+          "claim": "change",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 4,
+              "quote": "계약금액, 기간, 주요 산출물, 개인정보 처리 범위가 변경되면 변경 계약서를 작성한다. 변경 후 계약금액이 상위 결재권자의 구간을 넘는 경우 재결재하며, 법무 검토 조건이 새로 충족되면 법무지원팀의 사전 검토를 받는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q48",
+      "split": "final",
+      "family": "defective_delivery",
+      "category": "single_document",
+      "question": "납품 물품에 불량과 수량 부족이 있습니다. 검수 처리와 공급업체 요청, 대금 지급은 어떻게 하나요?",
+      "answerable": true,
+      "expected_answer": "검수 보류하고 공급업체에 시정 요청을 발송한다. 보류 상태에서는 원칙적으로 대금을 지급하지 않는다.",
+      "grading_criteria": [
+        "검수 보류하고 공급업체에 시정 요청을 발송한다.",
+        "보류 상태에서는 원칙적으로 대금을 지급하지 않는다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "defect",
+          "claim": "defect",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 2,
+              "quote": "불량·수량 부족·미완료 항목이 발견되면 검수 보류 처리하고 공급업체에 시정 요청을 발송한다. 보류 상태에서는 재무팀이 원칙적으로 대금 지급을 진행하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q49",
+      "split": "final",
+      "family": "returns_records",
+      "category": "single_document",
+      "question": "검수 전에 반품하거나 계약을 취소할 때 어떤 항목을 기록해야 하나요?",
+      "answerable": true,
+      "expected_answer": "공급업체 회수 확인, 위약금 또는 취소수수료, 환급액을 기록한다.",
+      "grading_criteria": [
+        "공급업체 회수 확인, 위약금 또는 취소수수료, 환급액을 기록한다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "return",
+          "claim": "return",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 4,
+              "quote": "검수 전 계약을 취소하거나 반품을 진행할 때는 공급업체의 회수 확인, 위약금 또는 취소수수료, 환급액을 기록한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q50",
+      "split": "final",
+      "family": "trial_cleanup",
+      "category": "single_document",
+      "question": "SaaS 무료 테스트 종료 후 계정과 데이터는 어떻게 처리하고, 유료로 바꾸려면 어떤 절차가 필요한가요?",
+      "answerable": true,
+      "expected_answer": "시험 계정과 저장 데이터를 정리한다. 유료 전환 시 구매·결재 절차를 별도로 진행한다.",
+      "grading_criteria": [
+        "시험 계정과 저장 데이터를 정리한다.",
+        "유료 전환 시 구매·결재 절차를 별도로 진행한다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "trial_end",
+          "claim": "trial_end",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 3,
+              "quote": "테스트가 끝나면 시험 계정과 저장 데이터를 정리하고, 유료 전환 시에는 구매·결재 절차를 별도로 진행한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q51",
+      "split": "final",
+      "family": "request_bank_combined",
+      "category": "multi_document",
+      "question": "구매요청서에 적을 예산 관련 두 항목과, 나중에 공급업체 지급 계좌가 바뀌었을 때 필요한 기록을 알려주세요.",
+      "answerable": true,
+      "expected_answer": "구매요청서에 예산코드와 비용 부담 부서를 기록한다. 계좌 변경 사유 및 구매운영팀 확인 기록이 필요하다.",
+      "grading_criteria": [
+        "구매요청서에 예산코드와 비용 부담 부서를 기록한다.",
+        "계좌 변경 사유 및 구매운영팀 확인 기록이 필요하다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "request_fields",
+          "claim": "request_fields",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 2,
+              "quote": "모든 구매 요청에는 요청자, 소속 부서, 필요 사유, 품목·수량, 희망 납기, 공급가액, 예산코드, 비용 부담 부서, 공급업체(정해진 경우)를 기록한다. 비교견적 대상인 경우 업체별 견적서도 첨부한다."
+            }
+          ]
+        },
+        {
+          "id": "bank",
+          "claim": "bank",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 3,
+              "quote": "공급업체 계좌 변경 시 기존 계좌와 다르다는 사유 및 구매운영팀의 확인 기록이 필요하다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q52",
+      "split": "final",
+      "family": "two_deadlines",
+      "category": "multi_document",
+      "question": "회사 데이터를 저장하지 않는 단순 장비의 낮은 위험도 보안검토 예상 기간과, 검수 후 정산 서류 제출 기한을 각각 알려주세요.",
+      "answerable": true,
+      "expected_answer": "보안검토는 서류 완비 시점부터 2영업일이 표준 예상이며 보완 시 늘어날 수 있다. 정산 서류는 검수 완료일부터 5영업일 이내 제출한다.",
+      "grading_criteria": [
+        "보안검토는 서류 완비 시점부터 2영업일이 표준 예상이며 보완 시 늘어날 수 있다.",
+        "정산 서류는 검수 완료일부터 5영업일 이내 제출한다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "low_risk",
+          "claim": "low_risk",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 2,
+              "quote": "낮음 회사 데이터를 저장하지 않는 단순 장비 도입 2영업일"
+            }
+          ]
+        },
+        {
+          "id": "duration_qualifier",
+          "claim": "duration_qualifier",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 2,
+              "quote": "상기 기간은 접수 서류가 완비된 시점부터 계산하는 표준 예상 기간이며, 보완 요청이 있는 경우 늘어날 수 있다. 법적 처리 기한이나 승인 보장을 의미하지 않는다."
+            }
+          ]
+        },
+        {
+          "id": "settlement_submit",
+          "claim": "settlement_submit",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 3,
+              "quote": "정산 서류 제출 검수 완료일부터 5영업일 이내 제출"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q53",
+      "split": "final",
+      "family": "shipping_and_return",
+      "category": "multi_document",
+      "question": "물품 공급가액 1,950만원에 필수 설치비 100만원이 계약에 포함됩니다. 최종 결재권자와 검수 전 반품 시 남길 기록을 알려주세요.",
+      "answerable": true,
+      "expected_answer": "필수 설치비를 합산한 2,050만원을 기준으로 CEO 최종 결재이다. 반품 시 공급업체 회수 확인, 위약금 또는 취소수수료, 환급액을 기록한다.",
+      "grading_criteria": [
+        "필수 설치비를 합산한 2,050만원을 기준으로 CEO 최종 결재이다.",
+        "반품 시 공급업체 회수 확인, 위약금 또는 취소수수료, 환급액을 기록한다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "total",
+          "claim": "total",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "공급가액 총액(VAT 제외)을 사용하며, 운송·설치비 등 구매에 필수적인 비용이 계약에 포함되면 합산한다."
+            }
+          ]
+        },
+        {
+          "id": "authority",
+          "claim": "authority",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        },
+        {
+          "id": "return",
+          "claim": "return",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 4,
+              "quote": "검수 전 계약을 취소하거나 반품을 진행할 때는 공급업체의 회수 확인, 위약금 또는 취소수수료, 환급액을 기록한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q54",
+      "split": "final",
+      "family": "emergency_personal_contract",
+      "category": "multi_document",
+      "question": "장애 대응으로 외부 업체에 개인정보를 긴급 이전하고 처리 위탁 계약을 맺습니다. 보안 사전 확인과 법무·DPA 검토를 생략해도 되나요?",
+      "answerable": true,
+      "expected_answer": "긴급 상황도 개인정보 이전 전 정보보안팀 사전 확인이 필요하다. 개인정보 처리 위탁은 금액·기간과 무관하게 계약 전 법무 및 DPA 검토가 필요하다.",
+      "grading_criteria": [
+        "긴급 상황도 개인정보 이전 전 정보보안팀 사전 확인이 필요하다.",
+        "개인정보 처리 위탁은 금액·기간과 무관하게 계약 전 법무 및 DPA 검토가 필요하다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "emergency_personal",
+          "claim": "emergency_personal",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 3,
+              "quote": "장애 대응 등 긴급 상황에서도 외부 서비스로 개인정보를 이전할 때는 정보보안팀의 사전 확인을 받아야 한다. 임시 사용이 허용되더라도 적용 범위와 만료 시점을 기록하고 정상 절차를 보완한다."
+            }
+          ]
+        },
+        {
+          "id": "legal",
+          "claim": "legal",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 1,
+              "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q55",
+      "split": "final",
+      "family": "software_lifecycle",
+      "category": "multi_document",
+      "question": "소프트웨어 도입 전 보안검토 신청의 데이터 항목과, 납품 후 소프트웨어 검수 항목·보관 증빙을 알려주세요.",
+      "answerable": true,
+      "expected_answer": "신청 시 처리 데이터 분류와 저장 위치를 제출한다. 검수는 라이선스 수·기간·계정 발급·기능을 확인하고 사용권 증빙과 테스트 기록을 보관한다.",
+      "grading_criteria": [
+        "신청 시 처리 데이터 분류와 저장 위치를 제출한다.",
+        "검수는 라이선스 수·기간·계정 발급·기능을 확인하고 사용권 증빙과 테스트 기록을 보관한다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "security_fields",
+          "claim": "security_fields",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 1,
+              "quote": "사용 목적 업무 목적, 사용 부서, 예상 사용자 수 제품 / 공급업체 상품명, 제공업체, 도입 방식, 계약기간 데이터 처리할 데이터 분류(공개/내부/개인정보 등), 저장 위치 접근관리 관리자 계정, MFA/SSO 지원, 외부 접속 방식 운영·종료 로그·백업, 계약 종료 시 데이터 삭제/반출 방법"
+            }
+          ]
+        },
+        {
+          "id": "software_inspect",
+          "claim": "software_inspect",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 2,
+              "quote": "소프트웨어 라이선스 수·기간·계정 발급 및 기능 확인 사용권 증빙, 테스트 기록"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q56",
+      "split": "final",
+      "family": "contract_extension",
+      "category": "multi_document",
+      "question": "개인정보 처리가 없는 400만원·8개월 계약을 총액 그대로 12개월로 연장합니다. 변경 문서와 법무 검토, 금액 기준 최종 결재권자는요?",
+      "answerable": true,
+      "expected_answer": "변경 계약서를 작성하며 기간이 12개월 이상이 되어 사전 법무 검토가 필요하다. 금액 기준 최종 결재권자는 부서장이다. 상위 금액 구간으로 올라갔다고 하지 않는다.",
+      "grading_criteria": [
+        "변경 계약서를 작성하며 기간이 12개월 이상이 되어 사전 법무 검토가 필요하다.",
+        "금액 기준 최종 결재권자는 부서장이다. 상위 금액 구간으로 올라갔다고 하지 않는다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "change",
+          "claim": "change",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 4,
+              "quote": "계약금액, 기간, 주요 산출물, 개인정보 처리 범위가 변경되면 변경 계약서를 작성한다. 변경 후 계약금액이 상위 결재권자의 구간을 넘는 경우 재결재하며, 법무 검토 조건이 새로 충족되면 법무지원팀의 사전 검토를 받는다."
+            }
+          ]
+        },
+        {
+          "id": "legal",
+          "claim": "legal",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 1,
+              "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토"
+            }
+          ]
+        },
+        {
+          "id": "authority",
+          "claim": "authority",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q57",
+      "split": "final",
+      "family": "unknown_internal_url",
+      "category": "unanswerable",
+      "question": "구매요청을 등록하는 회사 업무시스템의 정확한 접속 URL을 알려주세요.",
+      "answerable": false,
+      "expected_answer": "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다. 횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다.",
+      "grading_criteria": [
+        "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다.",
+        "횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다."
+      ],
+      "evidence_groups": []
+    },
+    {
+      "id": "q58",
+      "split": "final",
+      "family": "unknown_named_approver",
+      "category": "unanswerable",
+      "question": "현재 CFO의 실명과 휴대전화 번호를 알려주세요.",
+      "answerable": false,
+      "expected_answer": "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다. 횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다.",
+      "grading_criteria": [
+        "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다.",
+        "횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다."
+      ],
+      "evidence_groups": []
+    },
+    {
+      "id": "q59",
+      "split": "final",
+      "family": "unknown_refund_amount",
+      "category": "unanswerable",
+      "question": "우리 회사가 어제 취소한 계약의 실제 환급액은 얼마인가요?",
+      "answerable": false,
+      "expected_answer": "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다. 횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다.",
+      "grading_criteria": [
+        "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다.",
+        "횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다."
+      ],
+      "evidence_groups": []
+    },
+    {
+      "id": "q60",
+      "split": "final",
+      "family": "partial_known_unknown",
+      "category": "unanswerable",
+      "question": "장비 수령 후 검수 기한과 우리 팀 담당자의 실명을 모두 알려주세요.",
+      "answerable": false,
+      "expected_answer": "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다. 횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다.",
+      "grading_criteria": [
+        "요청한 모든 핵심 정보를 문서로 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다.",
+        "횟수·금액·이름·주소·실제 상태를 추측하거나 관련 없는 근거를 붙이지 않는다."
+      ],
+      "evidence_groups": []
+    }
+  ],
+  "dataset_sha256": "2761fbcadb9316fb0e128c2101cd5e19dbfcdc2bc15df05735b71094ec7d3632",
+  "documents_sha256": {
+    "01_purchase_process.pdf": "09b75af05d1e3eb9a5407e562b747a17ac75a2a4537d7e1bbc6c60d5dd7ba3be",
+    "02_approval_budget.pdf": "2c260deb0d342673eb44162e2d9af21437bcdfdf3f3ce597e37af1f7e47a6b47",
+    "03_it_security.pdf": "dc8851bde13b3530b56c5016f106495a71903b59cf8007da83c64582e6d4c767",
+    "04_contract_settlement.pdf": "e4dcdca62a1e08c7eb595467c672f7cb05cc7ef3a91f666ff99dbcc3c0ecf795"
+  },
+  "source_sha256": {
+    "config.py": "f47e7ceb4a6fe63f0471e073ada08b2cf1e5ad714e8ce79ef6ce62a19b117a52",
+    "rag.py": "a58a646753d849b638c4ffa6fd8640753299e1202a9fe11e7bb0b9a22ba1f8c0",
+    "retrieval_context.py": "d69ad458a1c3785cb21f3ed3a9d8d1c143a0dcf4f5acaea67fe624599675c05f",
+    "grounding.py": "0ede538fc0bed268a53eb343739e9209f99e5d6957de9d2e14f292d58a1d122e",
+    "index_store.py": "021aa85872fcff42d7b4a99677b06b148cb1a0def24a99fde823cb8eb77fd3fd",
+    "ingest.py": "56a04dc86fad48b805c0af2dd73d3339812001470bd6d0578a1cbc68afaddff7",
+    "embeddings.py": "4c798defd8224d80c7f598701b26447a1106ffb438b6c75764b7ebbe473f0e35",
+    "llm.py": "abc1f6554b0f0cde797af709dd12c515466c8009cecb5767a91d21ade1485454",
+    "tracing.py": "bae62df50c2fcf198889a72f7dc7cee9cc2a1a0b4bb32726d3b764dd526c1a92",
+    "eval/phase6.py": "55f74e6eadd1a71dfaf8a42818b361b8b85637de8c4e41bfaac75ed2866440e6",
+    "eval/ai_review.py": "abcca96baf6d897b62240da381936e718fb7522155356a3d56816263498d600c",
+    "eval/check_retrieval.py": "4f47dc90c4628dddff7822277896e75217bf04f34d4d325117c135b275777032",
+    "eval/evaluate.py": "f36d9ac9af138085e124dc13b3b258dba0f27d5e993c730c4f6160c7a9d47367",
+    "eval/benchmark.py": "35c83c700e9bc5d0c611159456d79f8acea705b6e8599160ae760f906120fe17",
+    "eval/quality.py": "6a080bdc6a66fcb8fce429bfd295a85ab4038a33a16b397a800fe313502fcd52",
+    "eval/expanded_cases.py": "97b6a18b90f1d2cfcb73e6b4530f11cec55cc95c0efa414ebfb2b72c7f923d58",
+    "eval/check_trace.py": "a59d31650be167de52eba05cee659e24df9364bdd5a5c5ff53bf112e12dc0aa0"
+  },
+  "config_overrides": {
+    "chunks5": {
+      "retrieval_mode": "chunks",
+      "top_k": 5,
+      "context_max_chars": 6000
+    },
+    "pages5": {
+      "retrieval_mode": "pages",
+      "top_k": 5,
+      "context_max_chars": 6000
+    }
+  },
+  "configurations": {
+    "chunks5": {
+      "provider": "anthropic",
+      "chat_model": "claude-sonnet-5-5",
+      "max_tokens": 2048,
+      "timeout_seconds": 30.0,
+      "top_k": 5,
+      "embedding": {
+        "provider": "fastembed",
+        "model": "intfloat/multilingual-e5-small",
+        "dimensions": 384,
+        "adapter_version": 1
+      },
+      "retrieval_mode": "chunks",
+      "context_max_chars": 6000,
+      "index_signature": {
+        "schema_version": 1,
+        "files": {
+          "01_purchase_process.pdf": "09b75af05d1e3eb9a5407e562b747a17ac75a2a4537d7e1bbc6c60d5dd7ba3be",
+          "02_approval_budget.pdf": "2c260deb0d342673eb44162e2d9af21437bcdfdf3f3ce597e37af1f7e47a6b47",
+          "03_it_security.pdf": "dc8851bde13b3530b56c5016f106495a71903b59cf8007da83c64582e6d4c767",
+          "04_contract_settlement.pdf": "e4dcdca62a1e08c7eb595467c672f7cb05cc7ef3a91f666ff99dbcc3c0ecf795"
+        },
+        "embedding": {
+          "provider": "fastembed",
+          "model": "intfloat/multilingual-e5-small",
+          "dimensions": 384,
+          "adapter_version": 1
+        },
+        "chunking": {
+          "size": 800,
+          "overlap": 120
+        },
+        "extraction_versions": {
+          "PyMuPDF": "1.28.2",
+          "langchain-text-splitters": "1.1.3"
+        },
+        "distance": "cosine"
+      },
+      "index_collection": "enterprise_rag_7b2aeb14ef4b4d8a95eeafd75383fe33",
+      "chunk_count": 22,
+      "python": "3.12.10",
+      "libraries": {
+        "anthropic": "1.13.0",
+        "fastembed": "0.9.0",
+        "chromadb": "1.5.9",
+        "langsmith": "0.14.8"
+      },
+      "source_sha256": {
+        "rag.py": "a58a646753d849b638c4ffa6fd8640753299e1202a9fe11e7bb0b9a22ba1f8c0",
+        "retrieval_context.py": "d69ad458a1c3785cb21f3ed3a9d8d1c143a0dcf4f5acaea67fe624599675c05f",
+        "grounding.py": "0ede538fc0bed268a53eb343739e9209f99e5d6957de9d2e14f292d58a1d122e",
+        "llm.py": "abc1f6554b0f0cde797af709dd12c515466c8009cecb5767a91d21ade1485454",
+        "embeddings.py": "4c798defd8224d80c7f598701b26447a1106ffb438b6c75764b7ebbe473f0e35",
+        "index_store.py": "021aa85872fcff42d7b4a99677b06b148cb1a0def24a99fde823cb8eb77fd3fd",
+        "tracing.py": "bae62df50c2fcf198889a72f7dc7cee9cc2a1a0b4bb32726d3b764dd526c1a92"
+      },
+      "tracing_requested": false
+    },
+    "pages5": {
+      "provider": "anthropic",
+      "chat_model": "claude-sonnet-5-5",
+      "max_tokens": 2048,
+      "timeout_seconds": 30.0,
+      "top_k": 5,
+      "embedding": {
+        "provider": "fastembed",
+        "model": "intfloat/multilingual-e5-small",
+        "dimensions": 384,
+        "adapter_version": 1
+      },
+      "retrieval_mode": "pages",
+      "context_max_chars": 6000,
+      "index_signature": {
+        "schema_version": 1,
+        "files": {
+          "01_purchase_process.pdf": "09b75af05d1e3eb9a5407e562b747a17ac75a2a4537d7e1bbc6c60d5dd7ba3be",
+          "02_approval_budget.pdf": "2c260deb0d342673eb44162e2d9af21437bcdfdf3f3ce597e37af1f7e47a6b47",
+          "03_it_security.pdf": "dc8851bde13b3530b56c5016f106495a71903b59cf8007da83c64582e6d4c767",
+          "04_contract_settlement.pdf": "e4dcdca62a1e08c7eb595467c672f7cb05cc7ef3a91f666ff99dbcc3c0ecf795"
+        },
+        "embedding": {
+          "provider": "fastembed",
+          "model": "intfloat/multilingual-e5-small",
+          "dimensions": 384,
+          "adapter_version": 1
+        },
+        "chunking": {
+          "size": 800,
+          "overlap": 120
+        },
+        "extraction_versions": {
+          "PyMuPDF": "1.28.2",
+          "langchain-text-splitters": "1.1.3"
+        },
+        "distance": "cosine"
+      },
+      "index_collection": "enterprise_rag_7b2aeb14ef4b4d8a95eeafd75383fe33",
+      "chunk_count": 22,
+      "python": "3.12.10",
+      "libraries": {
+        "anthropic": "1.13.0",
+        "fastembed": "0.9.0",
+        "chromadb": "1.5.9",
+        "langsmith": "0.14.8"
+      },
+      "source_sha256": {
+        "rag.py": "a58a646753d849b638c4ffa6fd8640753299e1202a9fe11e7bb0b9a22ba1f8c0",
+        "retrieval_context.py": "d69ad458a1c3785cb21f3ed3a9d8d1c143a0dcf4f5acaea67fe624599675c05f",
+        "grounding.py": "0ede538fc0bed268a53eb343739e9209f99e5d6957de9d2e14f292d58a1d122e",
+        "llm.py": "abc1f6554b0f0cde797af709dd12c515466c8009cecb5767a91d21ade1485454",
+        "embeddings.py": "4c798defd8224d80c7f598701b26447a1106ffb438b6c75764b7ebbe473f0e35",
+        "index_store.py": "021aa85872fcff42d7b4a99677b06b148cb1a0def24a99fde823cb8eb77fd3fd",
+        "tracing.py": "bae62df50c2fcf198889a72f7dc7cee9cc2a1a0b4bb32726d3b764dd526c1a92"
+      },
+      "tracing_requested": false
+    }
+  },
+  "answer_prompt_sha256": "a26710cf31171e13de999893e6fb627f7f1ec67dd91e709213bfdc53f7750dea",
+  "judge_prompt_sha256": "ddaf138e6d636653d48e9e7562a9c6814fc9a2fa0c4f6bd61e3ab55fdcbe79e0",
+  "judge": {
+    "model": "claude-sonnet-5-5",
+    "max_tokens": 4096,
+    "timeout_seconds": 60
+  },
+  "execution": {
+    "max_answers": 120,
+    "max_judge_calls": 120,
+    "judge_workers": 2,
+    "order": "alternate configuration order per question",
+    "automatic_retries": 0
+  },
+  "sha256": "3449071eec9e83b4be5e2d9d265a6b8982a50a5ecda23fe75af7b3809491a572"
+}

@@ -1,0 +1,31 @@
+{
+  "created_at": "2026-10-16T08:14:38.323961+00:00",
+  "scope": "All 60 previously inspected questions; offline retrieval only; no answer-accuracy claim.",
+  "source_directory": "..\\phase6_quality_20261016",
+  "base_answers_sha256": "ce7c729caef9f83eaa600cbaf7b5154bf5c3e99d0e6a29040f055e73ad8fd7ee",
+  "dataset_sha256": "2761fbcadb9316fb0e128c2101cd5e19dbfcdc2bc15df05735b71094ec7d3632",
+  "documents_sha256": {
+    "01_purchase_process.pdf": "09b75af05d1e3eb9a5407e562b747a17ac75a2a4537d7e1bbc6c60d5dd7ba3be",
+    "02_approval_budget.pdf": "2c260deb0d342673eb44162e2d9af21437bcdfdf3f3ce597e37af1f7e47a6b47",
+    "03_it_security.pdf": "dc8851bde13b3530b56c5016f106495a71903b59cf8007da83c64582e6d4c767",
+    "04_contract_settlement.pdf": "e4dcdca62a1e08c7eb595467c672f7cb05cc7ef3a91f666ff99dbcc3c0ecf795"
+  },
+  "source_sha256": {
+    "eval/selection.py": "d2513292777c0b622f991113d392974c3b43a876329ff1dfbdce84bd2f68e513",
+    "retrieval_context.py": "a0db5b1d714f1a0037b9872d880e791ab360e2e3e9239090f593d787457acf92",
+    "rag.py": "5314d350b56f05a654e71f9c41123278e2e5a378aa57f3c698b3d1107a0423c1",
+    "grounding.py": "4d3e4a3253d2873f6b2920ca027cb8f33b7bd1354e23d93c3d4604a789c9e838",
+    "tracing.py": "a0b87d3e52122fea9f7b067bab02195883dd77d37ce498abc8383b29f5d18d3b",
+    "config.py": "f47e7ceb4a6fe63f0471e073ada08b2cf1e5ad714e8ce79ef6ce62a19b117a52",
+    "embeddings.py": "4c798defd8224d80c7f598701b26447a1106ffb438b6c75764b7ebbe473f0e35",
+    "index_store.py": "021aa85872fcff42d7b4a99677b06b148cb1a0def24a99fde823cb8eb77fd3fd",
+    "ingest.py": "56a04dc86fad48b805c0af2dd73d3339812001470bd6d0578a1cbc68afaddff7",
+    "eval/check_retrieval.py": "4f47dc90c4628dddff7822277896e75217bf04f34d4d325117c135b275777032"
+  },
+  "before": "vector_rank",
+  "after": "rank_with_coverage_slot_v1",
+  "top_k": 5,
+  "candidate_k": 15,
+  "context_max_chars": 6000,
+  "sha256": "49d770e83a436b492479a2251580bd2a97ffd08367d01fb288b75fee6af6f02e"
+}

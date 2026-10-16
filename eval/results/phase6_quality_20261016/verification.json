@@ -1,0 +1,137 @@
+{
+  "created_at": "2026-10-16T07:53:49.880357+00:00",
+  "status": "verified_artifacts_grading_deferred",
+  "tests": {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest -q",
+    "passed": 305,
+    "seconds": 67.05,
+    "exit_code": 0,
+    "focused_recovery_tests": 8
+  },
+  "checks": {
+    "pip_check": "passed",
+    "historical_benchmark": "120 answers/120 reviews verified; human review pending",
+    "deployment_bundle": "valid; 22 chunks",
+    "current_quality_artifacts": "verified offline",
+    "historical_files_byte_identical": 90,
+    "evaluation_source_hashes_still_match": true
+  },
+  "protocol_sha256": "3449071eec9e83b4be5e2d9d265a6b8982a50a5ecda23fe75af7b3809491a572",
+  "answers_sha256": "ce7c729caef9f83eaa600cbaf7b5154bf5c3e99d0e6a29040f055e73ad8fd7ee",
+  "summary_sha256": "9b5106787f006b28c82f3bb3e605b6f4d5437d4aed2fa0f6fab63717a9eeab19",
+  "trace": {
+    "scope": "Local execution compared with remote LangSmith, not a Cloud app test. Private URLs and keys excluded.",
+    "attempts": [
+      {
+        "local_private_file": "data/trace_check_phase6_20261016.json",
+        "file_sha256": "3209d8bb9c1942322b69cdd230a9457e90a3c522aa72010b6ab7e3be895d29e0",
+        "status": "verification_failed",
+        "verified_fields": [],
+        "context_chars": 4134,
+        "token_usage": {
+          "input_tokens": 5887,
+          "output_tokens": 166,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0
+        }
+      },
+      {
+        "local_private_file": "data/trace_check_phase6_20261016_v2.json",
+        "file_sha256": "acf3d40f5b0790438ed079a1c2d8bf5b484761aaaf8d1d192365040bdc4914ec",
+        "status": "verification_failed",
+        "verified_fields": [],
+        "context_chars": 4134,
+        "token_usage": {
+          "input_tokens": 5887,
+          "output_tokens": 164,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0
+        }
+      },
+      {
+        "local_private_file": "data/trace_check_phase6_20261016_v3.json",
+        "file_sha256": "eb685149cab93ce029254d3053cd5d6d8c7ce86e04f156d60249068dd5a4cf96",
+        "status": "verified_remote",
+        "verified_fields": [
+          "hierarchy",
+          "settings",
+          "question",
+          "context",
+          "answer",
+          "prompt",
+          "token_usage"
+        ],
+        "context_chars": 4134,
+        "token_usage": {
+          "input_tokens": 5887,
+          "output_tokens": 166,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0
+        }
+      }
+    ],
+    "final_status": "verified_remote",
+    "generation_attempts": 3,
+    "diagnostic_transport_records_excluded": true
+  },
+  "evaluation": {
+    "answer_attempts": 120,
+    "validated_responses": 116,
+    "rag_errors": [
+      {
+        "configuration": "chunks5",
+        "id": "q56",
+        "error_type": "AnswerValidationError",
+        "error_stage": "validation"
+      },
+      {
+        "configuration": "pages5",
+        "id": "q25",
+        "error_type": "AnswerValidationError",
+        "error_stage": "validation"
+      },
+      {
+        "configuration": "pages5",
+        "id": "q30",
+        "error_type": "AnswerValidationError",
+        "error_stage": "validation"
+      },
+      {
+        "configuration": "pages5",
+        "id": "q56",
+        "error_type": "AnswerValidationError",
+        "error_stage": "validation"
+      }
+    ],
+    "review_records": 120,
+    "review_status_counts": {
+      "success": 29,
+      "error": 87,
+      "not_run": 4
+    },
+    "complete_answer_accuracy": null,
+    "interpretation": "14/60 confirmed AI passes per mode includes ungraded cases in the denominator; do not report this as an accuracy estimate. Known-case regression; same-model AI grading; no human or unseen evaluation."
+  },
+  "provider_diagnostic": {
+    "model_lookup": "available",
+    "minimal_message_http_status": 400,
+    "classified_reason": "insufficient_credit",
+    "raw_provider_text_stored": false
+  },
+  "owner_decision": {
+    "date": "2026-10-16",
+    "decision": "Do not recharge now; defer the remaining 87 AI reviews.",
+    "additional_live_calls_after_decision": 0,
+    "usability": "deferred",
+    "concurrency_testing": "excluded"
+  },
+  "recovery": {
+    "plan_sha256": "c082c4e36e889c837e37ca70afe8572eebd471fdd97a435ff726bdb739efb26e",
+    "targets": 87,
+    "plan_path": "../phase6_review_recovery_20261016/plan.json",
+    "live_run_executed": false,
+    "original_answers_regenerated": false
+  },
+  "publication": "Local changes only; no commit or push in this follow-up.",
+  "sha256": "485ada311aaf2a8737ec584d4fdf76ffd55671d52d5e16f67cbf9048baa5ed8e"
+}

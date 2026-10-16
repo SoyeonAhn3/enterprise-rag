@@ -1,0 +1,193 @@
+{
+  "created_at": "2026-10-16T08:19:21.314917+00:00",
+  "status": "verified_offline",
+  "tests": {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest -q",
+    "passed": 347,
+    "seconds": 18.36,
+    "exit_code": 0,
+    "new_focused_tests": 42
+  },
+  "checks": {
+    "selection_recomputed": true,
+    "historical_quality_verified": true,
+    "phase5_benchmark_verified": true,
+    "deployment_bundle": "valid; 22 chunks",
+    "historical_files_byte_identical": 336,
+    "answer_prompt_unchanged": true
+  },
+  "protocol_sha256": "49d770e83a436b492479a2251580bd2a97ffd08367d01fb288b75fee6af6f02e",
+  "comparison_sha256": "687f67ba15f401c002d390ed8a18f383d9207c58fbdc6f94667f203f2a0f5fc4",
+  "retrieval_summary": {
+    "metrics": {
+      "before": {
+        "complete_required_quotes": {
+          "passed": 47,
+          "total": 48,
+          "rate": 0.9791666666666666
+        },
+        "evidence_groups": {
+          "passed": 74,
+          "total": 75,
+          "rate": 0.9866666666666667
+        },
+        "multi_document_pages": {
+          "passed": 17,
+          "total": 18,
+          "rate": 0.9444444444444444
+        },
+        "mean_context_chars": 4222.516666666666,
+        "max_context_chars": 4708
+      },
+      "after": {
+        "complete_required_quotes": {
+          "passed": 48,
+          "total": 48,
+          "rate": 1.0
+        },
+        "evidence_groups": {
+          "passed": 75,
+          "total": 75,
+          "rate": 1.0
+        },
+        "multi_document_pages": {
+          "passed": 18,
+          "total": 18,
+          "rate": 1.0
+        },
+        "mean_context_chars": 4233.816666666667,
+        "max_context_chars": 4559
+      },
+      "candidate": {
+        "complete_required_quotes": {
+          "passed": 48,
+          "total": 48,
+          "rate": 1.0
+        },
+        "evidence_groups": {
+          "passed": 75,
+          "total": 75,
+          "rate": 1.0
+        },
+        "multi_document_pages": {
+          "passed": 18,
+          "total": 18,
+          "rate": 1.0
+        }
+      }
+    },
+    "gains": [
+      "q51"
+    ],
+    "regressions": [],
+    "changed_contexts": [
+      "q02",
+      "q06",
+      "q08",
+      "q09",
+      "q11",
+      "q13",
+      "q14",
+      "q16",
+      "q17",
+      "q18",
+      "q23",
+      "q26",
+      "q28",
+      "q29",
+      "q32",
+      "q35",
+      "q37",
+      "q38",
+      "q39",
+      "q41",
+      "q43",
+      "q44",
+      "q45",
+      "q46",
+      "q47",
+      "q48",
+      "q51",
+      "q52",
+      "q55",
+      "q56",
+      "q57",
+      "q60"
+    ],
+    "historical_candidates_checked": 57,
+    "historical_candidates_changed": [],
+    "historical_context_changes": [],
+    "model_calls": 0,
+    "answer_accuracy": null
+  },
+  "validation_diagnostics": {
+    "stable_rules": true,
+    "field_paths": true,
+    "response_length_and_sha256": true,
+    "rejected_text_added_to_local_error_records": false,
+    "historical_failures": [
+      {
+        "configuration": "chunks5",
+        "id": "q56",
+        "error_type": "AnswerValidationError",
+        "error_stage": "validation",
+        "rule": null,
+        "diagnostic_status": "unavailable_in_original_record",
+        "explanation": "Original rejected response and exact rule were not retained; no regeneration performed."
+      },
+      {
+        "configuration": "pages5",
+        "id": "q25",
+        "error_type": "AnswerValidationError",
+        "error_stage": "validation",
+        "rule": null,
+        "diagnostic_status": "unavailable_in_original_record",
+        "explanation": "Original rejected response and exact rule were not retained; no regeneration performed."
+      },
+      {
+        "configuration": "pages5",
+        "id": "q30",
+        "error_type": "AnswerValidationError",
+        "error_stage": "validation",
+        "rule": null,
+        "diagnostic_status": "unavailable_in_original_record",
+        "explanation": "Original rejected response and exact rule were not retained; no regeneration performed."
+      },
+      {
+        "configuration": "pages5",
+        "id": "q56",
+        "error_type": "AnswerValidationError",
+        "error_stage": "validation",
+        "rule": null,
+        "diagnostic_status": "unavailable_in_original_record",
+        "explanation": "Original rejected response and exact rule were not retained; no regeneration performed."
+      }
+    ],
+    "past_exact_causes_recovered": false
+  },
+  "recovery": {
+    "plan_path": "../phase6_review_recovery_selection_20261016/plan.json",
+    "plan_sha256": "110bb491bce4b816ca885d2f0aa1a81961b9f10737ebae700067b827c52993cf",
+    "targets": 87,
+    "current_source_verified": true,
+    "live_run_executed": false,
+    "original_plan_preserved": true
+  },
+  "live_model_calls": 0,
+  "remote_trace_requests": 0,
+  "answer_accuracy_measured": false,
+  "publication": "Local only; no commit, push, or Cloud change.",
+  "source_sha256": {
+    "grounding.py": "4d3e4a3253d2873f6b2920ca027cb8f33b7bd1354e23d93c3d4604a789c9e838",
+    "rag.py": "5314d350b56f05a654e71f9c41123278e2e5a378aa57f3c698b3d1107a0423c1",
+    "tracing.py": "a0b87d3e52122fea9f7b067bab02195883dd77d37ce498abc8383b29f5d18d3b",
+    "retrieval_context.py": "a0db5b1d714f1a0037b9872d880e791ab360e2e3e9239090f593d787457acf92",
+    "eval/benchmark.py": "e20e794f16816486af71e6a556ff983ff65542f1b067c2add630c41c354bb472",
+    "eval/evaluate.py": "c8b55ca3a552d0e478f36fdb410d1d5aa0b4d6d66a560cedf93d48a7c551cb66",
+    "eval/selection.py": "d2513292777c0b622f991113d392974c3b43a876329ff1dfbdce84bd2f68e513",
+    "tests/test_validation_diagnostics.py": "6350015aba4b42d330f345908cc6fd7de4ebf0d73b621912c4a3446bd7f9c0cd",
+    "tests/test_context_selection.py": "e2bbe9b108251d89700a5e4768d2cfd413ffb0beb14ee3cf63be78ef393e2136",
+    "tests/test_selection_report.py": "b2fbf5aa23f83a7c7a34bb8cffbb16f656bbf296faa57cb0603d50bfdabadfb3"
+  },
+  "sha256": "5abaffbffca457c9732e936fc25f2bfe41293893c41791e4ef99414458b00c06"
+}

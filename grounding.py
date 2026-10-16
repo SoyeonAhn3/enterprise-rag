@@ -66,8 +66,39 @@ quote는 해당 source의 text에서 연속된 원문을 그대로 복사하세�
 검증된 출처 표시와 답변 보류 문구는 프로그램이 붙입니다. 지정된 JSON 스키마만 반환하세요."""
 
 
+VALIDATION_RULES = {
+    "unspecified": "Validation failed without a recorded rule.",
+    "invalid_context": "Retrieved context must be a list within the source limit.",
+    "invalid_source_metadata": "Retrieved sources need sequential IDs and valid document/page/text metadata.",
+    "invalid_response_size": "Response must be text within the response-size limit.",
+    "invalid_json": "Response must contain one valid JSON document.",
+    "duplicate_json_key": "JSON object keys must be unique.",
+    "non_json_constant": "NaN and Infinity are not valid JSON values.",
+    "invalid_structure": "Object fields must exactly match the answer schema.",
+    "invalid_field_type": "The field has an invalid JSON type.",
+    "abstention_with_claims": "An abstention must have an empty claims list.",
+    "invalid_claim_count": "An answer must contain between one and six claims.",
+    "invalid_claim_text": "Claim text must be nonempty text of at most 1,000 characters without source markers or PDF names.",
+    "invalid_citation_count": "Each claim must contain between one and three citations.",
+    "unknown_source": "A citation must reference a source actually supplied to generation.",
+    "missing_quote": "A citation must contain a nonempty text quote.",
+    "quote_not_in_source": "A quote must match one contiguous passage in its cited source, ignoring whitespace only.",
+}
+
+
 class AnswerValidationError(RuntimeError):
-    """The model output cannot be accepted; this is not a successful abstention."""
+    """Rejected output with safe, stable diagnostics; never a successful abstention."""
+
+    def __init__(self, message=None, *, rule="unspecified", path=""):
+        self.rule = rule if rule in VALIDATION_RULES else "unspecified"
+        # Paths contain only schema fields and numeric positions, never model keys.
+        self.path = path if re.fullmatch(
+            r"(?:/(?:answerable|claims|text|evidence|source_id|quote|retrieved_chunks|[0-9]{1,6}))*", path
+        ) else ""
+        super().__init__(message or f"{VALIDATION_RULES[self.rule]} No answer was accepted.")
+
+    def diagnostic(self) -> dict:
+        return {"rule": self.rule, "path": self.path, "description": VALIDATION_RULES[self.rule]}
 
 
 def answer_schema(source_count: int = TOP_K) -> dict:
@@ -81,14 +112,16 @@ def answer_schema(source_count: int = TOP_K) -> dict:
 def source_map(chunks: list[dict], *, max_sources: int = TOP_K) -> dict[str, dict]:
     """Validate the retrieval handoff before sending or accepting evidence."""
     if not isinstance(chunks, list) or len(chunks) > max_sources:
-        raise AnswerValidationError("Invalid retrieved context; no answer was accepted.")
+        raise AnswerValidationError("Invalid retrieved context; no answer was accepted.",
+                                    rule="invalid_context", path="/retrieved_chunks")
     mapped = {}
     for position, chunk in enumerate(chunks, start=1):
         if (not isinstance(chunk, dict) or chunk.get("source_id") != f"S{position}"
                 or type(chunk.get("page")) is not int or chunk["page"] < 1
                 or any(not isinstance(chunk.get(key), str) or not chunk[key].strip()
                        for key in ("source_file", "chunk_id", "text"))):
-            raise AnswerValidationError("Invalid retrieved source metadata; no answer was accepted.")
+            raise AnswerValidationError("Invalid retrieved source metadata; no answer was accepted.",
+                                        rule="invalid_source_metadata", path=f"/retrieved_chunks/{position - 1}")
         mapped[chunk["source_id"]] = chunk
     return mapped
 
@@ -109,23 +142,27 @@ def _object(pairs: list[tuple]) -> dict:
     result = {}
     for key, value in pairs:
         if key in result:
-            raise ValueError("Duplicate JSON key.")
+            raise AnswerValidationError("Claude returned duplicate JSON keys; no answer was accepted.",
+                                        rule="duplicate_json_key")
         result[key] = value
     return result
 
 
 def _reject_constant(value: str):
-    raise ValueError("Non-JSON constant.")
+    raise AnswerValidationError("Claude returned a non-JSON constant; no answer was accepted.",
+                                rule="non_json_constant")
 
 
-def _require_keys(value, keys: set[str]) -> None:
+def _require_keys(value, keys: set[str], *, path="") -> None:
     if not isinstance(value, dict) or set(value) != keys:
-        raise AnswerValidationError("Claude returned an invalid answer structure; no answer was accepted.")
+        raise AnswerValidationError("Claude returned an invalid answer structure; no answer was accepted.",
+                                    rule="invalid_structure", path=path)
 
 
-def _original_quote(quote: str, text: str) -> str:
+def _original_quote(quote: str, text: str, *, path="") -> str:
     if not isinstance(quote, str) or not quote.strip():
-        raise AnswerValidationError("A citation has no evidence quote; no answer was accepted.")
+        raise AnswerValidationError("A citation has no evidence quote; no answer was accepted.",
+                                    rule="missing_quote", path=path)
     # Preserve original line breaks in the returned excerpt. Only whitespace is
     # ignored when matching: never normalize digits, punctuation, or negations.
     positions = [index for index, char in enumerate(text) if not char.isspace()]
@@ -133,7 +170,8 @@ def _original_quote(quote: str, text: str) -> str:
     needle = "".join(quote.split())
     start = normalized.find(needle)
     if start < 0:
-        raise AnswerValidationError("A citation quote does not match its retrieved source; no answer was accepted.")
+        raise AnswerValidationError("A citation quote does not match its retrieved source; no answer was accepted.",
+                                    rule="quote_not_in_source", path=path)
     return text[positions[start]:positions[start + len(needle) - 1] + 1]
 
 
@@ -141,38 +179,48 @@ def validate_answer(raw: str, chunks: list[dict], *, max_sources: int = TOP_K) -
     """Fail closed on malformed/uncited output; never repair or retry it silently."""
     mapped = source_map(chunks, max_sources=max_sources)
     if not isinstance(raw, str) or len(raw) > MAX_RESPONSE_CHARS:
-        raise AnswerValidationError("Claude returned an invalid response size; no answer was accepted.")
+        raise AnswerValidationError("Claude returned an invalid response size; no answer was accepted.",
+                                    rule="invalid_response_size")
     try:
         parsed = json.loads(raw, object_pairs_hook=_object, parse_constant=_reject_constant)
     except (ValueError, RecursionError):
-        raise AnswerValidationError("Claude returned invalid JSON; no answer was accepted.") from None
+        raise AnswerValidationError("Claude returned invalid JSON; no answer was accepted.", rule="invalid_json") from None
     _require_keys(parsed, {"answerable", "claims"})
     if type(parsed["answerable"]) is not bool or not isinstance(parsed["claims"], list):
-        raise AnswerValidationError("Claude returned invalid answer field types; no answer was accepted.")
+        raise AnswerValidationError("Claude returned invalid answer field types; no answer was accepted.",
+                                    rule="invalid_field_type",
+                                    path="/answerable" if type(parsed["answerable"]) is not bool else "/claims")
     if not parsed["answerable"]:
         if parsed["claims"]:
-            raise AnswerValidationError("Claude returned claims with an abstention; no answer was accepted.")
+            raise AnswerValidationError("Claude returned claims with an abstention; no answer was accepted.",
+                                        rule="abstention_with_claims", path="/claims")
         return abstention()
     if not 1 <= len(parsed["claims"]) <= MAX_CLAIMS:
-        raise AnswerValidationError("Claude returned an invalid number of claims; no answer was accepted.")
+        raise AnswerValidationError("Claude returned an invalid number of claims; no answer was accepted.",
+                                    rule="invalid_claim_count", path="/claims")
     claims, sources, lines = [], {}, []
-    for claim in parsed["claims"]:
-        _require_keys(claim, {"text", "evidence"})
+    for claim_index, claim in enumerate(parsed["claims"]):
+        claim_path = f"/claims/{claim_index}"
+        _require_keys(claim, {"text", "evidence"}, path=claim_path)
         text = claim["text"]
         if (not isinstance(text, str) or not text.strip() or len(text) > 1000
                 or re.search(r"\[\s*S\d+|\b\S+\.pdf\b", text, re.IGNORECASE)):
-            raise AnswerValidationError("Claude returned invalid claim text; no answer was accepted.")
+            raise AnswerValidationError("Claude returned invalid claim text; no answer was accepted.",
+                                        rule="invalid_claim_text", path=claim_path + "/text")
         evidence = claim["evidence"]
         if not isinstance(evidence, list) or not 1 <= len(evidence) <= TOP_K:
-            raise AnswerValidationError("A claim is missing valid citations; no answer was accepted.")
+            raise AnswerValidationError("A claim is missing valid citations; no answer was accepted.",
+                                        rule="invalid_citation_count", path=claim_path + "/evidence")
         checked, claim_ids = [], []
-        for citation in evidence:
-            _require_keys(citation, {"source_id", "quote"})
+        for citation_index, citation in enumerate(evidence):
+            citation_path = f"{claim_path}/evidence/{citation_index}"
+            _require_keys(citation, {"source_id", "quote"}, path=citation_path)
             identity = citation["source_id"]
             if not isinstance(identity, str) or identity not in mapped:
-                raise AnswerValidationError("A citation refers to an unknown source; no answer was accepted.")
+                raise AnswerValidationError("A citation refers to an unknown source; no answer was accepted.",
+                                            rule="unknown_source", path=citation_path + "/source_id")
             chunk = mapped[identity]
-            quote = _original_quote(citation["quote"], chunk["text"])
+            quote = _original_quote(citation["quote"], chunk["text"], path=citation_path + "/quote")
             checked.append({"source_id": identity, "quote": quote})
             if identity not in claim_ids:
                 claim_ids.append(identity)

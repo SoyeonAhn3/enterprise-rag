@@ -109,8 +109,13 @@ def test_actual_langsmith_sdk_sends_expected_http_tree(monkeypatch):
     assert len(creates) == len(updates) == 3
     payloads = [json.loads(call[2]["data"]) for call in creates]
     assert [payload["name"] for payload in payloads] == ["enterprise_rag", "retrieval", "generation"]
+    patches = [json.loads(call[2]["data"]) for call in updates]
+    # The remote service validates hierarchy on PATCH as well as POST.
+    # Omitting parent_run_id makes a child update look like a root run.
+    assert all(patch["parent_run_id"] == payloads[0]["id"] for patch in patches[:2])
+    assert patches[-1]["parent_run_id"] is None
     assert "sensitive-key-must-not-leak" not in json.dumps(payloads)
-    assert all(call[2]["timeout"] == (1.0, 1.0) for call in creates)
+    assert all(call[2]["timeout"] == (5.0, 5.0) for call in creates)
 
 
 def test_optional_trace_settings_preserve_secret_precedence_and_fail_open(tmp_path, monkeypatch):
@@ -126,21 +131,100 @@ def test_optional_trace_settings_preserve_secret_precedence_and_fail_open(tmp_pa
     assert load_settings(env_file=env).langsmith_api_key == "environment-secret"
 
 
-def test_trace_verification_requires_remote_children_and_matching_output():
+def remote_tree(chunks=None):
+    from copy import deepcopy
     from types import SimpleNamespace
+
+    client = TraceClient()
+    tracer = LangSmithTracer(configured(), client=client)
+    model = FakeClaude()
+    model.last_usage = {"input_tokens": 100, "output_tokens": 20,
+                        "cache_creation_input_tokens": 30, "cache_read_input_tokens": 40}
+    answer = RAGAssistant(FakeRetriever(chunks), model, tracer=tracer).answer("질문")
+    runs = {}
+    for operation, event in deepcopy(client.events):
+        if operation == "create":
+            runs[event["id"]] = dict(error=None, end_time=None, outputs=None, child_runs=[], parent_run_id=None)
+            runs[event["id"]].update(event)
+        else:
+            runs[event["run_id"]].update(event)
+    run, *children = [SimpleNamespace(**value) for value in runs.values()]
+    run.child_runs = children
+    client.read_run = lambda *a, **k: run
+    client.get_run_url = lambda **k: "https://smith.langchain.com/test-run"
+    return tracer, run, answer
+
+
+def test_trace_readback_checks_actual_context_prompt_answer_and_cached_tokens():
     from eval.check_trace import verify_remote_trace
 
-    run = SimpleNamespace(id="remote-id", error=None, end_time="done", outputs={"answer": "actual answer"},
-                          child_runs=[SimpleNamespace(name=name, error=None, end_time="done")
-                                      for name in ("retrieval", "generation")])
-    client = SimpleNamespace(read_run=lambda *a, **k: run,
-                             get_run_url=lambda **k: "https://smith.langchain.com/test-run")
-    tracer = SimpleNamespace(client=client, project="test")
-    reference = {"status": "enabled", "run_id": "remote-id"}
-    assert verify_remote_trace(tracer, reference, {"answer": "actual answer"})["status"] == "verified_remote"
-    run.child_runs.pop()
-    with pytest.raises(ValueError, match="incomplete"):
-        verify_remote_trace(tracer, reference, {"answer": "actual answer"})
+    tracer, run, answer = remote_tree()
+    verified = verify_remote_trace(tracer, answer["trace"], answer)
+    assert verified["status"] == "verified_remote"
+    assert verified["verified_children"] == ["generation", "retrieval"]
+    usage = run.child_runs[1].outputs["usage_metadata"]
+    assert usage == {"input_tokens": 170, "output_tokens": 20, "total_tokens": 190,
+                     "input_token_details": {"cache_creation": 30, "cache_read": 40}}
+
+
+@pytest.mark.parametrize("mutation", ["missing_child", "duplicate_child", "wrong_parent", "wrong_type",
+                                     "unfinished", "root_answer", "context", "prompt", "tokens", "settings"])
+def test_trace_readback_rejects_incomplete_or_mismatched_remote_evidence(mutation):
+    from eval.check_trace import verify_remote_trace
+
+    tracer, run, answer = remote_tree()
+    retrieval, generation = run.child_runs
+    if mutation == "missing_child": run.child_runs.pop()
+    elif mutation == "duplicate_child": run.child_runs.append(generation)
+    elif mutation == "wrong_parent": generation.parent_run_id = "another-run"
+    elif mutation == "wrong_type": generation.run_type = "chain"
+    elif mutation == "unfinished": generation.end_time = None
+    elif mutation == "root_answer": run.outputs["answer"] = "different answer"
+    elif mutation == "context": retrieval.outputs["retrieved_chunks"][0]["text"] += "extra"
+    elif mutation == "prompt": generation.inputs["prompt"] += "extra"
+    elif mutation == "tokens": generation.outputs["usage_metadata"]["input_tokens"] += 1
+    elif mutation == "settings": generation.extra["metadata"]["top_k"] += 1
+    with pytest.raises(ValueError):
+        verify_remote_trace(tracer, answer["trace"], answer)
+
+
+def test_empty_context_trace_is_verified_without_generation():
+    from eval.check_trace import verify_remote_trace
+
+    tracer, run, answer = remote_tree([])
+    assert answer["answerable"] is False
+    assert verify_remote_trace(tracer, answer["trace"], answer)["verified_children"] == ["retrieval"]
+
+
+def test_generation_failure_keeps_usage_without_inventing_an_answer():
+    client = TraceClient()
+    model = FakeClaude(error=ClaudeError("incomplete response"))
+    model.last_usage = {"input_tokens": 100, "output_tokens": 20}
+    assistant = RAGAssistant(FakeRetriever(), model, tracer=LangSmithTracer(configured(), client=client))
+    with pytest.raises(ClaudeError):
+        assistant.answer("질문")
+    generation = client.events[-2][1]
+    assert generation["error"] == "ClaudeError"
+    assert generation["outputs"]["usage_metadata"]["total_tokens"] == 120
+    assert "text" not in generation["outputs"]
+
+
+def test_preflight_never_initializes_network_clients_and_keeps_existing_output(tmp_path, monkeypatch):
+    import eval.check_trace as checker
+
+    monkeypatch.setattr(checker, "load_settings", lambda: replace(configured(), anthropic_api_key="hidden"))
+    monkeypatch.setattr(checker, "ClaudeClient", lambda *a: pytest.fail("preflight must be offline"))
+    monkeypatch.setattr(checker, "LangSmithTracer", lambda *a: pytest.fail("preflight must be offline"))
+    path = tmp_path / "readiness.json"
+    args = ["--preflight", "--output", str(path), "--retrieval-mode", "pages", "--top-k", "5"]
+    assert checker.main(args) == 0
+    before = path.read_bytes()
+    report = json.loads(before)
+    assert report["configuration"]["retrieval_mode"] == "pages"
+    assert report["configuration"]["top_k"] == 5
+    assert "hidden" not in before.decode() and "sensitive-key" not in before.decode()
+    assert checker.main(args) == 1
+    assert path.read_bytes() == before
 
 
 def test_unconfigured_trace_check_does_not_make_billable_calls(monkeypatch, capsys):

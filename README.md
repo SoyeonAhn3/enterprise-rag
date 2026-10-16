@@ -1,6 +1,8 @@
-[English](README.md) | [한국어](README_ko.md)
+🌐 [한국어](./README_ko.md) | [English](./README.md)
 
 # Enterprise RAG Assistant
+
+> Ask questions about company policy PDFs and get Korean answers with verified source citations.
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Open%20App-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://enterprise-rag-demo-project.streamlit.app/)
 
@@ -12,71 +14,132 @@
 > 🚀 **Try it now:** **[enterprise-rag-demo-project.streamlit.app](https://enterprise-rag-demo-project.streamlit.app/)** — no sign-up or API key needed.
 > If the app is asleep, click **"Yes, get this app back up!"** and wait about a minute.
 
-A portfolio project for answering questions about business policies with retrieval-augmented generation (RAG). The Streamlit app searches a fixed PDF collection, generates Korean answers from retrieved evidence, and displays the source document, page, and excerpt.
+## Overview
 
-The goal is to deliver a public Streamlit demo, source code, and measured evaluation results under the scope of a two-day MVP plan.
+**Problem.** Policy questions such as *"If a purchase is exactly ₩1,000,000 excluding VAT, who gives final approval?"* often depend on exact thresholds and conditions spread across several documents. An LLM answering from memory can invent rules or drop conditions.
 
-## Measured results
+**Approach.** The app retrieves evidence from a fixed set of PDFs, asks Claude to answer only from that evidence, and checks every cited quote against the retrieved text before showing it. When the documents do not contain the answer, it declines to answer.
 
-The original answer evaluation on **2026-10-14** used **4 synthetic Korean PDFs, 13 pages, 22 chunks, and 10 questions**. Automated checks were rerun on **2026-10-16**.
+**Purpose.** This is a portfolio project. It demonstrates RAG understanding and implementation, **measured** accuracy, precise evidence handling, and explainable improvements. Streamlit is the demonstration interface; usability expansion and concurrent-user testing are outside the current scope. All documents are synthetic policies of a fictional company, **Gaonbiz (가온비즈)**:
 
-| Measure | Recorded result | What was checked |
-| --- | --- | --- |
-| Retrieval Hit@3 | **8/8 (100%)** | At least one accepted evidence page in the top three chunks for each answerable question |
-| Multi-document page coverage | **2/2** | All required evidence groups had an accepted page among the retrieved chunks |
-| Abstention on unanswerable questions | **2/2** | Questions without a documented answer received an abstention |
-| AI-agent-reviewed correctness | **9/10 (90%)** | Grading against reference answers and criteria, including two correct abstentions |
-| Mean RAG response time | **3.33 seconds** | Retrieval and answer generation; model/index/client initialization excluded |
-| Automated tests | **267 passed** | Latest local Phase 6 checks on 2026-10-16, separate from answer evaluation |
+| Document | Pages | Topics |
+| --- | ---: | --- |
+| [Purchase requests and ordering](rag_mvp_sample_documents/01_purchase_process.pdf) | 3 | Requests, comparison quotes, purchase orders, emergency purchases |
+| [Approval authority and budget controls](rag_mvp_sample_documents/02_approval_budget.pdf) | 3 | Approval thresholds, budget reviews, split-purchase rules |
+| [IT assets and SaaS security reviews](rag_mvp_sample_documents/03_it_security.pdf) | 3 | Prior security reviews, free trials, asset registration |
+| [Contracts, acceptance, and settlement](rag_mvp_sample_documents/04_contract_settlement.pdf) | 4 | Legal reviews, delivery acceptance, payment schedules |
 
-Correctness was reviewed by an AI agent; **human grading has not been completed**. The answerable subset scored **7/8 (87.5%)**. These figures describe this small synthetic benchmark. The q08 answer omitted required detail despite supported conclusions; the [failure analysis](Phase/Phase5_EvaluationAndDeployment.md) records this limitation.
+![Local Streamlit home screen](docs/evidence/local-home.png)
 
-Inspect the [original evaluation run](eval/results/phase5_baseline.json), [baseline metrics](eval/results/phase5_metrics.json), [AI review](eval/results/phase5_agent_review.json), and [latest 267-test verification record](eval/results/phase6_20261016/verification.json) for the supporting evidence. The [earlier 243-test record](eval/results/phase5_v2_20261014/verification_20261016.json) is preserved.
+## Table of Contents
 
-The expanded evaluation also completed on 2026-10-14: **60 questions, 120 saved answers, and 120 AI grades**. Development-only retrieval selected B (800 characters / 120 overlap / k=5) for comparison with A (800/120/3). The app still defaults to k=3.
+- [How It Works](#how-it-works)
+- [Evaluation Results](#evaluation-results)
+- [Tech Stack](#tech-stack)
+- [AI Components](#ai-components)
+- [Quick Start](#quick-start)
+- [Tests](#tests)
+- [Project Structure](#project-structure)
+- [Current Status](#current-status)
+- [Limitations](#limitations)
+- [Roadmap](#roadmap)
+- [Documentation](#documentation)
 
-| Split | A AI correctness | B AI correctness |
-| --- | --- | --- |
-| Development, 40 questions | 35/40 (87.5%) | 39/40 (97.5%) |
-| Final check, 20 questions | 13/20 (65.0%) | 15/20 (75.0%) |
+## How It Works
 
-The same Claude model generated and graded answers in separate calls; human review remains pending. The [expanded report](eval/results/phase5_v2_20261014/report.md) includes failure analysis, checkpoint recovery, and a 34-entry review queue. On 2026-10-15, offline verification reproduced the metrics from the saved artifacts. Reports now expose failed/missing answers, handle zero successful responses, and protect human notes in the review CSV.
+The pipeline is **2-step RAG**: one retrieval step, then one answer-generation call.
 
-```powershell
-# Read-only validation; no model calls or credentials required.
-.\.venv\Scripts\python.exe -X utf8 -m eval.benchmark verify --output-dir eval/results/phase5_v2_20261014
+```text
+[Before deployment]  4 PDFs
+        ↓  ingest.py: extract text per page (PyMuPDF), split into ~800-char chunks with 120-char overlap
+     22 chunks, each tagged with source_file · page · chunk_id
+        ↓  embed with a local multilingual E5 model, store in Chroma (shipped as a precomputed bundle)
+
+[Per question]  User question in the Streamlit chat
+        ↓  rag.py: embed the question and retrieve the top-k chunks
+        ↓  (optional page mode: up to 5 distinct whole pages within a 6,000-char budget)
+        ↓  grounding.py + llm.py: one Claude call returns JSON claims, each with a quote and source ID
+        ↓  Validation: each quote must match the retrieved text; file names and pages come from stored metadata
+     Korean answer + sources (document · page · excerpt), or the abstention message
 ```
 
-## Current status
+## Evaluation Results
 
-**Phases 1–4 work locally. Phase 5 evaluation and tracing integration are implemented, and the public demo was deployed on 2026-10-16; formal deployment checks and a real LangSmith trace remain pending.**
+All figures come from a **small synthetic benchmark** (4 PDFs, 13 pages, 22 chunks). Correctness was graded by an AI agent; **human review is still pending**.
 
-The [2026-10-16 roadmap](Phase/DevelopmentStatusAndRoadmap.md) records the user's decision to defer remaining Phase 5 checks and proceed with [Phase 6](Phase/Phase6_RetrievalAndAnswerQuality.md), now implemented and verified locally. Optional page-context retrieval removes duplicate pages and preserves whole source text within a 6,000-character budget. The common answer prompt also makes required items, conditions, and timing explicit.
+| Evaluation | Questions | Setting compared | Result |
+| --- | --- | --- | --- |
+| Original baseline (2026-10-14) | 10 | chunks, k=3 | Retrieval Hit@3 **8/8** · abstention **2/2** · AI-graded correctness **9/10** · mean latency **3.33 s** |
+| Expanded, development split (2026-10-14) | 40 | chunks, k=3 → k=5 | AI-graded correctness **35/40 → 39/40** |
+| Expanded, final-check split (2026-10-14) | 20 | chunks, k=3 → k=5 | AI-graded correctness **13/20 → 15/20** |
+| Page-context retrieval (2026-10-16) | 32 answerable development questions | chunks k=3 → chunks k=5 → pages k=5 | Complete required evidence retrieved **24/32 → 26/32 → 32/32**; known regression cases AI-graded **6/6** |
+| Frozen paired comparison (2026-10-16) | 60 (48 answerable) | chunks k=5 → pages k=5 | Complete required evidence in context **37/48 → 47/48** · validated responses **59/60 → 57/60** · answer accuracy **not established** |
+| Final-page selection (2026-10-16, offline) | Same 60 known questions | Original pages k=5 → constrained query coverage | Complete required evidence **47/48 → 48/48** · no complete-evidence regressions · no new answers or grades |
 
-The [Phase 6 report](eval/results/phase6_20261016/report.md) records development complete-evidence coverage of **24/32 (chunks/k=3) → 26/32 (chunks/k=5) → 32/32 (pages/k=5)** and **6/6** same-model AI passes on known live regression cases. These are development diagnostics, not an independent accuracy estimate. Mean context characters increased **34.39%** versus chunks/k=5. All **267 tests** passed; existing evaluation files and the deployment bundle were preserved. Default retrieval settings remain chunks/k=3; server mode activation and rollout verification are pending. See the Phase 6 document to opt into `RAG_RETRIEVAL_MODE=pages`, `RAG_TOP_K=5`, and `RAG_CONTEXT_MAX_CHARS=6000`.
+The [latest implementation](Phase/Phase6_RetrievalAndAnswerQuality.md#validation-diagnostics-and-evidence-selection) adds safe validation-rule/field-location records and changes only the final page slot when it can cover more question terms without losing the old slot's unique query features. q51 now includes the account-change clause at candidate rank 9. This known-case retrieval result does not establish answer accuracy. The four old errors lack the original diagnostics and remain unexplained.
 
-| Available now | Details |
-| --- | --- |
-| MVP specification | Requirements, architecture, implementation sequence, and acceptance criteria |
-| Sample documents | Four Korean PDFs totaling 13 pages |
-| Evaluation dataset | Original ten-question baseline plus 60-question v2 with separate development/final splits |
-| Offline preprocessing | Four PDFs / 13 pages produce 22 chunks with source metadata |
-| Indexing and retrieval | Persistent Chroma, compatible-index reuse, explicit rebuilds, and top-three retrieval |
-| Local verification | 267 tests passed; includes bounded page context, provenance, comparison safeguards, and existing RAG/UI/evaluation/deployment checks |
-| Real model retrieval | Local E5 model; q01/q07/q08 all cover their required evidence groups, including the original quotes |
-| Grounded answers | `RAGAssistant.answer()` uses one retrieval and at most one Claude call; returns cited claims, original retrieval, and latency |
-| Live Claude checks | q01/q07/q08 answered with matched quotes; q09/q10 abstained; partial/conflicting evidence and document instructions checked |
-| Streamlit UI | Examples, chat history, source expanders, safe errors, and a ten-attempt session limit; three real browser questions verified |
-| Phase 5 evaluation | Original baseline plus 120 paired answers/AI grades, reproducible metrics, and 34 pending human-review entries |
-| Deployment | Portable precomputed-vector bundle and server settings; [deployment guide](DEPLOYMENT.md); deployed to Streamlit Community Cloud as a [public demo](https://enterprise-rag-demo-project.streamlit.app/) |
-| Phase 6 quality | Opt-in page context and required-item answers; development retrieval comparison and six known live/AI-reviewed cases |
-| Development phases | Six bilingual phase documents plus a current status audit and prioritized roadmap |
+How to read these numbers:
 
-`app.py` uses the verified `rag.py` pipeline; `grounding.py` validates claims and citations. `eval/evaluate.py` preserves the ten-question baseline, while `eval/benchmark.py` compares settings and verifies the expanded run. `tracing.py` isolates optional LangSmith failures. See the [Phase 4](Phase/Phase4_StreamlitInterface.md) and [Phase 5 reports](Phase/Phase5_EvaluationAndDeployment.md) for current evidence. Source repository: [SoyeonAhn3/enterprise-rag](https://github.com/SoyeonAhn3/enterprise-rag). Public demo: [enterprise-rag-demo-project.streamlit.app](https://enterprise-rag-demo-project.streamlit.app/), confirmed working in a private browser window on 2026-10-16.
+- **Do not read the 90% baseline alone.** On the 20-question final-check split, correctness was 65% (k=3) and 75% (k=5).
+- **Page mode improves retrieval, but its answer accuracy is still unknown.** The frozen comparison has 120 review records: 29 completed, 87 failed, and 4 were skipped after validation errors. A separate provider diagnostic confirmed insufficient credit. The owner deferred the remaining grading. The saved answers and an offline recovery plan let grading resume without regenerating answers. Do not read the partial pass counts as an accuracy rate.
+- **The same Claude model generated and graded the answers**, in separate calls. A queue of 34 entries is waiting for human review.
+- **These are known cases, not an independent test.** All 60 expanded questions were inspected during development, so the Phase 6 results are diagnostics, not an accuracy estimate. Page mode used 34.39% more context characters on average than chunks/k=5.
+- **Reference answers never reach answer generation.** Only the question goes into the pipeline; reference answers, evidence annotations, and grading criteria are used only for scoring.
 
-## Run locally
+Evidence: [baseline run](eval/results/phase5_baseline.json) · [AI review](eval/results/phase5_agent_review.json) · [60-question report](eval/results/phase5_v2_20261014/report.md) · [page-context report](eval/results/phase6_20261016/report.md) · [frozen comparison report](eval/results/phase6_quality_20261016/report.md) · [recovery plan](eval/results/phase6_review_recovery_selection_20261016/plan.json)
 
-With Python 3.12 and Git installed, use PowerShell to clone the project and install the runtime dependencies:
+To verify the saved results offline, without model calls or credentials:
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 -m eval.benchmark verify --output-dir eval/results/phase5_v2_20261014
+.\.venv\Scripts\python.exe -X utf8 -m eval.quality verify --output-dir eval/results/phase6_quality_20261016
+.\.venv\Scripts\python.exe -X utf8 -m eval.selection verify --output-dir eval/results/phase6_selection_20261016
+```
+
+## Tech Stack
+
+| Technology | Role | Why |
+| --- | --- | --- |
+| Python 3.12 | Runtime for app, pipeline, and evaluation | One language from PDF processing to UI; dependencies pinned and checked with `pip check` |
+| Streamlit 1.65 | Chat UI and server | UI and server code in one Python app, so no separate backend or frontend is needed |
+| Streamlit Community Cloud | Hosting for the public demo | Deploys straight from the GitHub repository; the API key stays in server secrets |
+| PyMuPDF | PDF text extraction | Extracts text-based PDFs page by page, so citations keep accurate page numbers without OCR |
+| LangChain (core, text-splitters, langchain-chroma) | Document and embedding interfaces, recursive chunking, Chroma wrapper | Standard interfaces let the local embedding model plug into Chroma; chunk settings are recorded in the index signature |
+| FastEmbed + ONNX Runtime, `intfloat/multilingual-e5-small` | Document and query embeddings (384 dimensions) | Runs locally on CPU without an API key and supports Korean; Anthropic does not provide an embeddings API |
+| Chroma | Persistent vector index | Local file-based index; reused when its signature matches, rebuilt only on request |
+| Anthropic Claude API (`claude-sonnet-5-5` by default) | Answer generation and AI grading | Generates Korean answers grounded in the evidence; the model can be changed via `ANTHROPIC_MODEL` |
+| LangSmith | Optional tracing of retrieval and generation | Records question, context, prompt, answer, settings, and token usage per run; tracing failures never block answers |
+| pytest | Automated tests | Uses test doubles, so the suite runs without credentials or model calls |
+
+## AI Components
+
+| Step | Input | Output | Performed by |
+| --- | --- | --- | --- |
+| Embedding | Chunk text or question | 384-dimensional vector | Local E5 model (`passage: ` / `query: ` prefixes) |
+| Answer generation | Question + retrieved evidence | JSON with answer, answerable flag, and claims with quotes and source IDs | Claude, at most one call per question |
+| AI grading (evaluation only) | Answer + reference answer + grading criteria | Grade and reviewer note | Claude, in a separate call |
+
+**Rule-based parts.** PDF extraction, chunking, similarity search, page-context assembly (duplicate pages removed, whole pages only, never truncated), quote validation (match ignores whitespace only), and source metadata. The model never supplies file names or page numbers.
+
+**Model selection.** Set `ANTHROPIC_MODEL` for answers and `EMBEDDING_MODEL` for embeddings. Changing the embedding model requires `ingest.py --rebuild`.
+
+**Failure handling.**
+- Insufficient evidence returns exactly `등록된 문서에서 해당 정보를 확인할 수 없습니다.` with no sources.
+- Invalid JSON, unknown source IDs, or quotes that do not match the evidence are rejected, and no answer is shown.
+- Claude calls use a 30-second timeout and no automatic retries. Provider errors are raised separately from abstentions, and the UI shows a safe error message.
+- Evaluation runs never retry automatically. Failed or skipped records stay in the denominators.
+
+**What the output means.** Answers are reference information drawn from synthetic documents. A matching quote proves where a claim came from, not that the answer is complete. Answers can still miss conditions, as the [Phase 5 failure analysis](Phase/Phase5_EvaluationAndDeployment.md) shows.
+
+## Quick Start
+
+### Prerequisites
+
+- Python 3.12 and Git. Commands below use Windows PowerShell.
+- An Anthropic API key for answer generation. Retrieval and indexing need no key.
+- About 487 MB of disk space for the embedding model, downloaded on first start.
+
+### Install
 
 ```powershell
 git clone https://github.com/SoyeonAhn3/enterprise-rag.git
@@ -88,252 +151,140 @@ if (-not (Test-Path -LiteralPath .env)) {
 }
 ```
 
-Set `ANTHROPIC_API_KEY` in the local `.env`, then run these commands from the repository root. Keep an existing `.env` and its settings. The app imports the bundled vectors automatically and downloads the public query-embedding model on its first start; building a document index is optional for this fixed corpus.
+### Configure
+
+Set `ANTHROPIC_API_KEY` in `.env`. Other settings are optional:
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `ANTHROPIC_API_KEY` | (empty) | Required for answers |
+| `ANTHROPIC_MODEL` | `claude-sonnet-5-5` | Claude model for answers |
+| `RAG_TOP_K` | `3` | Number of retrieved chunks or pages |
+| `RAG_RETRIEVAL_MODE` | `chunks` | Set to `pages` for page-context retrieval |
+| `RAG_CONTEXT_MAX_CHARS` | `6000` | Context budget in page mode |
+| `EMBEDDING_LOCAL_FILES_ONLY` | `false` | Set to `true` after the first download to load the model offline |
+| `LANGSMITH_TRACING`, `LANGSMITH_API_KEY` | `false`, (empty) | Optional tracing |
+| `SESSION_QUESTION_LIMIT` | `10` | Question attempts per session, including failed ones |
+
+Settings are read in this order: environment variables → Streamlit secrets → `.env` → defaults. See [`.env.example`](.env.example) for the full list.
+
+### Run
 
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 deployment.py check
 .\.venv\Scripts\python.exe -X utf8 -m streamlit run app.py
 ```
 
-Open the local URL printed by Streamlit and try a sample question. Answer generation uses the operator's Claude key and incurs API usage. Visitors do not enter credentials. For server settings and public deployment checks, follow [DEPLOYMENT.md](DEPLOYMENT.md).
+Open the local URL that Streamlit prints. On first start, the app imports the bundled vectors from `deployment/index_bundle.json` and downloads the query-embedding model, so you do not need to build an index. Each answer uses your Claude key and incurs API usage.
 
-### Offline checks and development
+### Command line (optional)
 
-These checks use local documents, saved evaluation results, and test doubles. They require no API credentials or new model calls:
+```powershell
+# Build or reuse the local index (no API key). Use --rebuild after changing PDFs, embedding model, or chunk settings.
+.\.venv\Scripts\python.exe -X utf8 ingest.py
+# Retrieval only (no API key)
+.\.venv\Scripts\python.exe -X utf8 rag.py "부가세 제외 구매 금액이 정확히 100만원이라면 최종 결재권자는 누구인가요?"
+# Grounded answer (uses the Claude key)
+.\.venv\Scripts\python.exe -X utf8 rag.py --answer "부가세 제외 구매 금액이 정확히 100만원이라면 최종 결재권자는 누구인가요?"
+# Check Claude access without generating an answer
+.\.venv\Scripts\python.exe -X utf8 llm.py --check
+# Check LangSmith tracing configuration only (no network or model calls)
+.\.venv\Scripts\python.exe -X utf8 -m eval.check_trace --preflight --retrieval-mode pages --top-k 5 --context-max-chars 6000
+```
+
+For the live trace check, Streamlit Community Cloud setup, secrets, and page-mode activation, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+## Tests
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
-.\.venv\Scripts\python.exe -X utf8 ingest.py --dry-run
 .\.venv\Scripts\python.exe -X utf8 -m pytest -q
-.\.venv\Scripts\python.exe -X utf8 -m eval.benchmark verify --output-dir eval/results/phase5_v2_20261014
+# Preview chunking without embeddings or API calls (writes data/chunks_preview.json)
+.\.venv\Scripts\python.exe -X utf8 ingest.py --dry-run
 ```
 
-The dry run creates `data/chunks_preview.json` without API credentials or embedding requests. The current corpus produces **4 documents, 13 text pages, 0 skipped pages, and 22 chunks**. The preview is generated locally and excluded from Git.
+The latest recorded run on 2026-10-16 passed **347 tests** ([verification record](eval/results/phase6_selection_20261016/verification.json)). They cover ingestion, retrieval, page context, grounding validation, the UI, trace hierarchy and token usage, frozen-evaluation and review-recovery safeguards, and deployment. Tests use test doubles and make no model calls. They check software behavior, not answer accuracy.
 
-### Indexing and command-line answers
-
-Indexing and retrieval need no API key. The first run downloads the public `intfloat/multilingual-e5-small` model into `data/embedding_models/` (about 487 MB locally); subsequent runs reuse it on CPU. Both `.env` and the model cache are ignored by Git.
-
-```powershell
-# No API key needed. The first build downloads the local model.
-.\.venv\Scripts\python.exe -X utf8 ingest.py
-.\.venv\Scripts\python.exe -X utf8 rag.py "부가세 제외 구매 금액이 정확히 100만원이라면 최종 결재권자는 누구인가요?"
-.\.venv\Scripts\python.exe -X utf8 -m eval.check_retrieval
-```
-
-Use `ingest.py --rebuild` when PDFs, embedding model/dimensions, or chunk settings change, including migration from an old OpenAI index. A matching index is reused without loading the embedding model or embedding documents again. The default local model produces 384-dimensional vectors with `passage: ` and `query: ` prefixes. Configuration priority is environment → supplied server secrets → `.env` → defaults. After the initial download, set `EMBEDDING_LOCAL_FILES_ONLY=true` for offline loading; leave it `false` on a new machine until the model is cached.
-
-The smoke check writes `data/retrieval_smoke.json` for q01/q07/q08, retaining all retrieved chunks and separately checking source pages and evidence quotes. The real local model passed all three checks, including offline fresh-process reload with document embedding disabled. For the fixed offline workflow, stop the application before rebuilding and restart its retriever afterwards; old inactive collections remain stored and are not queried.
-
-Set `ANTHROPIC_API_KEY` locally for Claude, then run `.\.venv\Scripts\python.exe -X utf8 llm.py --check`. This checks model access without generating an answer. `ANTHROPIC_MODEL` defaults to `claude-sonnet-5-5`; calls have a 30-second timeout, zero automatic retries, and a configurable output limit of 2048 tokens by default. An OpenAI key cannot be used as a Claude key. [Anthropic does not provide embeddings](https://platform.claude.com/docs/en/build-with-claude/embeddings), so local search remains independent of Claude credentials.
-
-```powershell
-# One grounded answer; requires the configured Claude key and incurs API usage.
-.\.venv\Scripts\python.exe -X utf8 rag.py --answer "부가세 제외 구매 금액이 정확히 100만원이라면 최종 결재권자는 누구인가요?"
-# Five live questions; saves the complete result to data/answer_smoke.json.
-.\.venv\Scripts\python.exe -X utf8 -m eval.check_answers
-```
-
-Without `--answer`, `rag.py` keeps its retrieval-only behavior. For Python integration, use `RAGAssistant(retriever, client).answer(question)` and close the caller-owned `Retriever` and `ClaudeClient` when finished; a full example is in the [Phase 3 report](Phase/Phase3_GroundedAnswers.md). Results include `answer`, `answerable`, claim-level quotes, validated `sources`, all `retrieved_chunks`, and search/generation/total latency. Initialization time is excluded.
-
-Insufficient evidence returns exactly `등록된 문서에서 해당 정보를 확인할 수 없습니다.` with no cited sources. Provider failures and invalid output raise distinct exceptions instead of becoming successful abstentions. Quotes must match the retrieved text, ignoring whitespace only; filenames/pages come from stored metadata. Matching quotes establishes provenance, while semantic correctness still requires review.
-
-## Start with the project materials
-
-For the local chat interface, run:
-
-```powershell
-.\.venv\Scripts\python.exe -X utf8 -m streamlit run app.py
-```
-
-The server reads `.env` or Streamlit Secrets. Visitors never enter a key. On a fresh checkout, the app imports `deployment/index_bundle.json` without embedding documents, then downloads the public local query model once. A cached resource reuses the model/index/client. Each session allows ten attempts by default, including failures; provider-level budget controls are still needed for public sharing.
-
-![Local Streamlit home screen](docs/evidence/local-home.png)
-
-The [chat screenshot](docs/evidence/local-chat.png) shows real local answers, source excerpts, and abstention. Public Cloud setup, secrets, restart checks, and optional trace verification are described in [DEPLOYMENT.md](DEPLOYMENT.md).
-
-Source excerpts reconnect PDF-split Korean words when their complete form is found in the fixed documents, and use word-based wrapping. Original evidence is retained. The [line-wrap fix report](Phase/Phase4_StreamlitInterface.md#source-excerpt-line-wrapping--2026-10-14) includes desktop/mobile screenshots and regression results.
-
-1. Read the [MVP plan](plan/enterprise_rag_assistant_streamlit_mvp_plan.md) for the implementation requirements and planned deployment workflow.
-2. Review the [sample-document guide](rag_mvp_sample_documents/README.md) for corpus details and evidence-matching rules.
-3. Inspect the [runtime evaluation dataset](eval/questions.json) for the questions, reference answers, and grading criteria. The reviewed original remains in the sample-document folder.
-
-The plan, document guide, PDFs, and evaluation content are written in Korean.
-
-## Sample documents
-
-The corpus describes purchasing, approvals, IT security, contracts, and settlement at the fictional company **Gaonbiz (가온비즈)**. All four documents use version `1.0` and the effective date `2026-09-01`.
-
-| Document | ID | Pages | Coverage |
-| --- | --- | ---: | --- |
-| [Purchase requests and ordering](rag_mvp_sample_documents/01_purchase_process.pdf) | GB-PUR-01 | 3 | Requests, comparison quotes, purchase orders, and emergency purchases |
-| [Approval authority and budget controls](rag_mvp_sample_documents/02_approval_budget.pdf) | GB-APR-02 | 3 | Approval thresholds, budget reviews, and aggregation of related purchases |
-| [IT assets and SaaS security reviews](rag_mvp_sample_documents/03_it_security.pdf) | GB-SEC-03 | 3 | Prior security reviews, free trials, review timelines, and asset registration |
-| [Contracts, acceptance, and settlement](rag_mvp_sample_documents/04_contract_settlement.pdf) | GB-CON-04 | 4 | Legal reviews, delivery acceptance, payment documents, and settlement schedules |
-
-These are synthetic demonstration documents. Their policies and monetary thresholds do not describe a real company's rules and must not be used for actual purchasing or contracts.
-
-## MVP architecture
-
-The implemented pipeline uses **2-Step RAG: one retrieval step followed by answer generation**.
-
-1. Extract each PDF page, split its text, and retain `source_file`, `page`, and `chunk_id` metadata.
-2. Generate document embeddings and build a fixed Chroma index before deployment.
-3. Embed a user's question and retrieve the top three relevant chunks.
-4. Generate a Korean answer from the retrieved evidence, or abstain when the evidence is insufficient.
-5. Display validated source references with filenames, 1-based page numbers, and excerpts.
-6. Record retrieval and generation traces, then evaluate the application against the prepared questions.
-
-Initial chunking settings are approximately **800 characters per chunk** with **120 characters of overlap**. These are starting settings from the plan, not measured optimal values.
-
-| Area | Technology / status |
-| --- | --- |
-| Application and UI | Python, Streamlit |
-| PDF extraction | PyMuPDF |
-| RAG pipeline and chunking | LangChain, langchain-text-splitters |
-| Vector index | Chroma, langchain-chroma |
-| Embeddings | FastEmbed / ONNX Runtime, local multilingual E5 |
-| Answer generation | Anthropic Claude API, official Python SDK |
-| Tracing | LangSmith integration implemented; real remote trace pending |
-| Evaluation | Python, JSON, AI grading; human review pending |
-| Deployment | Streamlit Community Cloud, [public demo](https://enterprise-rag-demo-project.streamlit.app/) since 2026-10-16; formal checks pending |
-
-The application is verified locally on Windows / Python 3.12.10 with pinned dependencies. Streamlit 1.65.0 was added without replacing existing packages; `pip check` passes. LangSmith HTTP contracts and disabled/failing tracing are tested, but the real trace needs an operator key. The app has run on Streamlit Community Cloud since 2026-10-16, but Cloud memory, model-cache startup, and restart behavior remain unverified. The Linux Docker daemon was unavailable locally.
-
-## Evaluation design
-
-The original dataset contains **six single-document questions, two multi-document questions, and two unanswerable questions**. It covers amount boundaries, deadlines, approval and review requirements, and abstention. The separate [v2 dataset](eval/questions_v2.json) expands to 40 development and 20 final-check questions under the [Phase 5 protocol](Phase/Phase5_EvaluationAndDeployment.md).
-
-Each answerable question has `evidence_groups` for the facts needed to answer it. Groups are combined with **AND**; candidates within a group's `any_of` are combined with **OR**. Each candidate records `document`, `page`, and an original `quote`. A valid alternative source is accepted without requiring every alternative page.
-
-For example, q07 requires both an approval-authority source and a security-review source. The security requirement can be supported by page 1 or page 3 of `03_it_security.pdf`.
-
-| Original baseline measure | Definition |
-| --- | --- |
-| Retrieval Hit@3 | Among the eight answerable questions, the proportion with at least one accepted document/page in the top three retrieved chunks |
-| Multi-document Coverage | For each of the two multi-document questions, whether every required evidence group has at least one candidate page in the top three |
-| Answer Correctness | Manual assessment of all ten answers using the reference answers and `grading_criteria`, including whether key claims are supported by retrieved evidence |
-| Abstention | Whether the application appropriately declines to answer the two questions whose answers are absent from the corpus |
-| Latency | Mean response time across the ten questions |
-
-Page matches alone do not establish that the relevant passage was retrieved. The actual chunks must also be reviewed for supporting evidence. `answer_keywords` are review aids, not an automatic correctness test.
-
-**Do not index the evaluation dataset or send reference answers, evidence annotations, or grading criteria to generation.** A check forwards only the current question to RAG; retrieved PDF text supplies the evidence. Unanswerable questions have empty `evidence_groups`; they are excluded from retrieval and multi-document coverage measures, and an empty list does not count as successful evidence retrieval.
-
-The Phase 2 smoke check measured q01/q07/q08 with real local E5. Phase 5 now records all ten questions below. This small synthetic dataset does not establish performance on real enterprise documents.
-
-The [2026-10-14 baseline](eval/results/phase5_baseline.json) used `claude-sonnet-5-5` and the unchanged 22-chunk index. All ten requests completed without error. [Agent review](eval/results/phase5_agent_review.json) is explicitly distinguished from the pending [human review](eval/results/phase5_human_review.template.json).
-
-| Measured result | Value |
-| --- | --- |
-| Retrieval Hit@3 / multi-document coverage | 8/8 / 2/2 |
-| All required reference quotes retrieved | 8/8 |
-| Unanswerable-question abstention | 2/2 |
-| Mean RAG latency | 3326.96 ms, initialization excluded |
-| Agent-reviewed correctness / grounding | 9/10 / 10/10 |
-
-q08 gives the supported CFO/legal-review conclusion but omits the general threshold and explicit timing required by the full rubric. Those general clauses were not retrieved. It is recorded as incorrect under that rubric, rather than turning retrieval success into a correctness claim. No reference answers are sent to the model. See the [Phase 5 analysis](Phase/Phase5_EvaluationAndDeployment.md).
-
-```powershell
-# Ten new billable requests; checkpointed results use a new timestamped filename.
-.\.venv\Scripts\python.exe -X utf8 -m eval.evaluate
-# Offline recomputation; no API calls.
-.\.venv\Scripts\python.exe -X utf8 -m eval.evaluate --report eval/results/phase5_baseline.json --review eval/results/phase5_agent_review.json
-```
-
-For tracing, set `LANGSMITH_TRACING=true` and `LANGSMITH_API_KEY` locally, then run `python -m eval.check_trace` with the project virtual environment. Missing/failed tracing does not block answers; the verifier requires remote retrieval/generation runs. The key and actual trace are currently absent.
-
-## Development sequence and scope
-
-The [MVP plan](plan/enterprise_rag_assistant_streamlit_mvp_plan.md) defines the scope. Phase 4 is locally complete. Phase 5 stays in progress while real tracing and public deployment checks remain unverified. Full human grading is deferred under the decision recorded in Phase 5 and remains explicitly unverified. The [current roadmap](Phase/DevelopmentStatusAndRoadmap.md) details remaining release work and proposed later milestones.
-
-| Phase | Goal | Status |
-| --- | --- | --- |
-| [1 — Foundation](Phase/Phase1_Foundation.md) | Verify the environment, fixed corpus, page metadata, and chunking | ✅ Completed; 35 tests passed |
-| [2 — Indexing and retrieval](Phase/Phase2_IndexingAndRetrieval.md) | Build/reload a Chroma index and retrieve the top three chunks | ✅ Completed with real local embeddings |
-| [3 — Grounded answers](Phase/Phase3_GroundedAnswers.md) | Generate supported answers, validate sources, and abstain | ✅ Completed with live Claude checks |
-| [4 — Streamlit interface](Phase/Phase4_StreamlitInterface.md) | Provide chat, source display, loading/errors, and usage controls | ✅ Local browser verified |
-| [5 — Evaluation and deployment](Phase/Phase5_EvaluationAndDeployment.md) | Preserve the ten-question baseline, compare 60 questions, verify tracing, and publish the demo | 🚧 Expanded AI evaluation and offline verification complete; human review and remote checks pending |
-| [6 — Retrieval and answer quality](Phase/Phase6_RetrievalAndAnswerQuality.md) | Bounded original-page context and condition-preserving answers | ✅ Local implementation/tests complete; opt-in; Cloud activation pending |
-
-The original two-day target maps Phases 1–4 to local operation on Day 1 and Phase 5 to evaluation/deployment on Day 2. Completion is based on verification evidence, not elapsed time. Each Phase document contains English first and Korean second.
-
-The MVP uses a fixed corpus. User uploads, OCR, complex table recognition, authentication and document permissions, agentic or repeated retrieval, hybrid search, reranking, and long-term memory are outside the current scope.
-
-## Current project structure
+## Project Structure
 
 ```text
 Enterprise-rag/
-├── Phase/
-│   ├── DevelopmentStatusAndRoadmap.md       # Current audit and prioritized next work
-│   ├── Phase1_Foundation.md                 # ✅ Completed
-│   ├── Phase2_IndexingAndRetrieval.md       # ✅ Local model acceptance complete
-│   ├── Phase3_GroundedAnswers.md            # ✅ Grounded answers verified
-│   ├── Phase4_StreamlitInterface.md         # ✅ Local browser verified
-│   ├── Phase5_EvaluationAndDeployment.md    # 🚧 Remote completion gates pending
-│   └── Phase6_RetrievalAndAnswerQuality.md  # ✅ Local candidate verified; Cloud activation pending
-├── .streamlit/                             # Theme and server-secret template
-├── deployment/index_bundle.json            # Reviewed portable precomputed vectors
-├── docs/evidence/                          # Actual local browser screenshots
-├── documents/                              # Four runtime PDFs
-├── eval/
-│   ├── __init__.py
-│   ├── check_retrieval.py                  # q01/q07/q08 retrieval smoke check
-│   ├── check_answers.py                    # Five live grounded-answer checks
-│   ├── evaluate.py                         # Ten-question runner and offline metrics
-│   ├── benchmark.py                        # Paired evaluation, summarize, read-only verify
-│   ├── phase6.py                           # Local retrieval comparison and known-case live smoke
-│   ├── ai_review.py                        # Reference-based AI grading and pilot
-│   ├── expanded_cases.py                   # Versioned dataset and PDF-reference checks
-│   ├── render_report.py                    # Verified Markdown/CSV exports
-│   ├── check_trace.py                      # Read back actual LangSmith child runs
-│   ├── results/                            # Baseline, metrics, agent/human review files
-│   ├── questions.json                      # Original ten evaluation questions
-│   └── questions_v2.json                   # 40 development / 20 final-check questions
-├── plan/
-│   └── enterprise_rag_assistant_streamlit_mvp_plan.md
-├── rag_mvp_sample_documents/                # Reviewed source materials
-├── tests/
-│   ├── __init__.py
-│   ├── fakes.py                            # Isolated test embeddings
-│   ├── test_ingest.py
-│   ├── test_config_and_embeddings.py
-│   ├── test_claude.py
-│   ├── test_index_and_retrieval.py
-│   ├── test_retrieval_checks.py
-│   ├── test_grounding.py
-│   ├── test_answers.py
-│   ├── test_answer_checks.py
-│   ├── test_evaluation.py
-│   ├── test_benchmark.py
-│   ├── test_benchmark_artifacts.py
-│   ├── test_page_context.py
-│   ├── test_phase6.py
-│   ├── test_tracing.py
-│   ├── test_deployment.py
-│   ├── test_app.py
-│   └── test_source_display.py
-├── app.py                                  # Korean Streamlit chat interface
-├── app_runtime.py                          # Cached RAG resources and lifecycle
-├── source_display.py                       # Evidence-preserving excerpt presentation
-├── config.py
-├── embeddings.py
-├── deployment.py                           # Export/import/check portable index
-├── tracing.py                              # Optional LangSmith spans
-├── grounding.py                            # Prompt, strict JSON, citation validation
-├── llm.py                                  # Claude backend and connection check
-├── index_store.py
-├── ingest.py                               # Preview, index build/reuse, rebuild
-├── rag.py                                  # Retrieval and grounded answers (--answer)
-├── retrieval_context.py                    # Bounded original-page context; no extra vector search
-├── .env.example
-├── .gitignore
-├── .python-version
-├── requirements.txt
-├── requirements-dev.txt
-├── README.md
-├── DEPLOYMENT.md                           # English/Korean deployment instructions
-└── README_ko.md
+├── app.py                    # Streamlit chat UI (Korean)
+├── app_runtime.py            # Cached model, index, and client shared across sessions
+├── rag.py                    # Retriever and RAGAssistant; CLI for retrieval or --answer
+├── retrieval_context.py      # Page-context assembly within a character budget
+├── grounding.py              # Answer prompt, strict JSON parsing, quote and citation checks
+├── llm.py                    # Claude client and --check connection test
+├── ingest.py                 # PDF extraction, chunking, index build/reuse, --rebuild, --dry-run
+├── embeddings.py             # Local FastEmbed E5 embeddings
+├── index_store.py            # Chroma index with signature and integrity checks
+├── config.py                 # Settings loader
+├── deployment.py             # Export, import, and check the portable vector bundle
+├── tracing.py                # Optional LangSmith spans with settings and token usage
+├── source_display.py         # Source excerpt formatting for the UI
+├── documents/                # The 4 PDFs used at runtime
+├── deployment/               # Precomputed vector bundle (index_bundle.json)
+├── eval/                     # Question sets, evaluation runners, trace check, AI grading, saved results
+├── tests/                    # pytest suite
+├── Phase/                    # Phase 1–6 reports and roadmap (English + Korean)
+├── plan/                     # MVP plan (Korean)
+├── rag_mvp_sample_documents/ # Reviewed source PDFs and corpus guide
+├── docs/evidence/            # Screenshots of the running app
+├── .streamlit/               # Theme and secrets template
+├── DEPLOYMENT.md             # Deployment guide (English + Korean)
+├── .env.example              # Settings template
+├── requirements.txt          # Runtime dependencies
+└── requirements-dev.txt      # Test dependencies
 ```
 
-`documents/` and `eval/questions.json` are runtime copies of the reviewed sample materials. Keep them aligned when data changes. Credentials, generated previews/check results, model downloads, the local Chroma database, and the virtual environment are excluded from Git.
+Credentials, the local Chroma database, model downloads, private trace files, generated previews, and check results are excluded from Git.
+
+## Current Status
+
+| Phase | Status | Deliverable |
+| --- | --- | --- |
+| [1 — Foundation](Phase/Phase1_Foundation.md) | ✅ Done | Page-level extraction of 4 PDFs into 22 chunks with source metadata |
+| [2 — Indexing and retrieval](Phase/Phase2_IndexingAndRetrieval.md) | ✅ Done | Local E5 embeddings, persistent Chroma index, reuse and explicit rebuild |
+| [3 — Grounded answers](Phase/Phase3_GroundedAnswers.md) | ✅ Done | One Claude call per question, quote-validated citations, abstention |
+| [4 — Streamlit interface](Phase/Phase4_StreamlitInterface.md) | ✅ Done (local) | Chat with sources, example questions, safe errors, per-session limit |
+| [5 — Evaluation and deployment](Phase/Phase5_EvaluationAndDeployment.md) | 🔧 In progress | 10- and 60-question evaluations; [public demo](https://enterprise-rag-demo-project.streamlit.app/) deployed 2026-10-16; LangSmith trace verified against remote records for local execution. Human review and broader Cloud checks are deferred |
+| [6 — Retrieval and answer quality](Phase/Phase6_RetrievalAndAnswerQuality.md) | ✅ Done (local); grading partly deferred | Opt-in page context (pages, k=5, 6,000 chars); answer prompt spells out required items, conditions, and timing; frozen 60-question paired evaluator with offline audit and review recovery |
+
+- The code default is `chunks` with k=3. The owner reports that the live demo runs page mode (pages, k=5, 6,000 chars) after a reboot; this has not been independently verified.
+- This revision includes the Phase 6 tracing fixes, frozen evaluator, validation diagnostics, final-page selection, and review recovery. The latest checks were local; Cloud behavior has not been reverified for these changes.
+
+## Limitations
+
+- **Small synthetic corpus.** 4 PDFs and 13 pages. Results do not show performance on real enterprise documents.
+- **Page-mode answer accuracy is unknown.** AI grading of the frozen comparison is incomplete.
+- **No human grading yet.** Correctness scores come from the same model that generated the answers.
+- **No unseen test set.** All 60 expanded questions were inspected during development, so the final-check split is not a holdout.
+- **Fixed corpus.** No document upload, OCR, table recognition, authentication, or document permissions.
+- **Demo-scale serving.** Requests are serialized by a shared lock. The question limit is per session, not a provider-wide budget. Concurrent use has not been tested.
+- **Cloud behavior only partly verified.** Tracing was verified for local execution, not for the deployed app. Restart, startup time, and memory use on Streamlit Community Cloud have not been checked.
+
+## Roadmap
+
+From the [development status and roadmap](Phase/DevelopmentStatusAndRoadmap.md):
+
+Validation-rule logging and final-page selection are implemented and tested locally. The next step is to **prepare fresh independent questions**, with references and scoring frozen before evaluation. When the owner resumes API use, check actual diagnostic capture and answer quality under the new selector.
+
+The refreshed recovery plan covers the same 87 saved old answers; completing those grades will not measure the new selector. The previous plan and all earlier results remain intact.
+
+Deferred by the owner: the 87 failed AI reviews (resume with `eval.recover_reviews` once API access is funded) and the 34-entry human review. Optional later work: Cloud resource checks, CI, and SDK maintenance. Deferred or excluded: Phase 7 usability and concurrency testing.
+
+## Documentation
+
+| Document | Contents |
+| --- | --- |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | Cloud setup, secrets, page-mode activation, LangSmith verification (English + Korean) |
+| [Development status and roadmap](Phase/DevelopmentStatusAndRoadmap.md) | Latest audit, quality findings, prioritized next work |
+| [Phase reports](Phase/) | Design, implementation, and verification evidence for each phase (English + Korean) |
+| [MVP plan](plan/enterprise_rag_assistant_streamlit_mvp_plan.md) | Requirements, architecture, acceptance criteria (Korean) |
+| [Sample document guide](rag_mvp_sample_documents/README.md) | Corpus details and evidence-matching rules (Korean) |
+| [60-question evaluation report](eval/results/phase5_v2_20261014/report.md) | k=3 vs k=5 comparison, failure analysis, review queue (Korean) |
+| [Page-context report](eval/results/phase6_20261016/report.md) | Retrieval comparison and known-case checks (Korean) |
+| [Frozen comparison report](eval/results/phase6_quality_20261016/report.md) | chunks/k=5 vs pages/k=5 on 60 questions, with full denominators (Korean) |
+
+---
+<p align="center">Made with AI-assisted development</p>

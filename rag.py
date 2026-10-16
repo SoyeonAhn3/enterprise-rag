@@ -3,6 +3,7 @@
 import argparse
 from dataclasses import asdict, dataclass
 from pathlib import Path
+import hashlib
 import sys
 import json
 from time import perf_counter
@@ -14,8 +15,8 @@ from embeddings import EmbeddingError
 from index_store import IndexErrorBase, load_index
 from grounding import SYSTEM_PROMPT, AnswerValidationError, abstention, answer_schema, build_prompt, validate_answer
 from llm import ClaudeClient, ClaudeError
-from tracing import LangSmithTracer
-from retrieval_context import PageContext
+from tracing import LangSmithTracer, generation_inputs, generation_outputs
+from retrieval_context import PAGE_SELECTION_POLICY, PageContext
 
 
 class RetrievalError(RuntimeError):
@@ -78,13 +79,15 @@ class Retriever:
             for position, (document, distance) in enumerate(matches, start=1)
         ]
         ranked = [asdict(chunk) for chunk in chunks]
-        context = (self.page_context.assemble(ranked, max_sources=self.top_k, max_chars=self.context_max_chars)
+        context = (self.page_context.assemble(ranked, question=question,
+                                             max_sources=self.top_k, max_chars=self.context_max_chars)
                    if self.page_context is not None else ranked)
         return {
             "question": question,
             "retrieved_chunks": context,
             "ranked_chunks": ranked,
             "retrieval_mode": self.retrieval_mode,
+            "context_selection": PAGE_SELECTION_POLICY if self.page_context is not None else "vector_rank",
             "search_k": search_k,
             "context_chars": sum(len(chunk["text"]) for chunk in context),
             "retrieval_latency_ms": round((perf_counter() - started) * 1000, 2),
@@ -114,6 +117,7 @@ class RAGAssistant:
         record.clear()
         record.update({"question": question, "retrieved_chunks": [], "stage": "retrieval"})
         trace = self.tracer.start(question)
+        raw = None
         try:
             with trace:
                 with trace.stage("retrieval", {"question": question}) as span:
@@ -129,9 +133,12 @@ class RAGAssistant:
                     record["stage"] = "generation"
                     generation_started = perf_counter()
                     try:
-                        with trace.stage("generation", {"system": SYSTEM_PROMPT, "prompt": prompt}) as span:
-                            raw = self.client.generate(prompt, system=SYSTEM_PROMPT, response_schema=answer_schema(len(chunks)))
-                            span["text"] = raw
+                        with trace.stage("generation", generation_inputs(SYSTEM_PROMPT, prompt)) as span:
+                            raw = None
+                            try:
+                                raw = self.client.generate(prompt, system=SYSTEM_PROMPT, response_schema=answer_schema(len(chunks)))
+                            finally:
+                                span.update(generation_outputs(raw, getattr(self.client, "last_usage", None)))
                     finally:
                         generation_ms = round((perf_counter() - generation_started) * 1000, 2)
                         record["generation_latency_ms"] = generation_ms
@@ -153,6 +160,15 @@ class RAGAssistant:
             record.update(result)
             record["stage"] = "complete"
             return result
+        except AnswerValidationError as exc:
+            record["validation_error"] = exc.diagnostic()
+            if record["stage"] == "validation":
+                record["response_metadata"] = {
+                    "chars": len(raw) if isinstance(raw, str) else None,
+                    "sha256": hashlib.sha256(raw.encode("utf-8", errors="surrogatepass")).hexdigest()
+                    if isinstance(raw, str) else None,
+                }
+            raise
         finally:
             record["latency_ms"] = round((perf_counter() - started) * 1000, 2)
             record["trace"] = trace.reference()

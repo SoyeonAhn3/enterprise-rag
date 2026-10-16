@@ -14,7 +14,8 @@ The local environment is Python **3.12.10** with the pinned `requirements.txt`. 
 | Source | `SoyeonAhn3/enterprise-rag`, branch `main`, entrypoint `app.py`; repository made public on 2026-10-16 |
 | Server secrets | Entered by the owner from [.streamlit/secrets.toml.example](.streamlit/secrets.toml.example); values are not recorded here |
 | Checked | The owner opened the app in a private browser window and it worked; an anonymous request reached the app without sign-in |
-| Not yet recorded | Steps 5–6 below (q01/q07/q09 acceptance, reboot), startup time and memory, provider usage limits, and a real LangSmith trace |
+| Phase 6 operator update | Owner reported applying pages/5/6000 and rebooting on 2026-10-16; effective runtime behavior has not been independently checked |
+| Not yet recorded | Formal q01/q07/q09 acceptance and restart checks, startup time and memory, provider usage limits, and a real LangSmith trace; broad service checks are not current RAG demonstration criteria |
 
 ### Precomputed index
 
@@ -46,7 +47,9 @@ The first model download and ONNX memory use can affect Cloud startup. A success
 
 Community Cloud monitors the connected GitHub branch and automatically reflects code changes ([official update guide](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/edit-your-app)). Pushing `main` can therefore update the common answer prompt as well as add the optional retrieval mode. It does not change server Secrets. Remote rollout and page-mode activation have not been verified in this push workflow.
 
-To select the locally tested Phase 6 candidate, set these non-secret values in the existing server Secrets and restart the app, preserving the operator's other settings:
+On 2026-10-16 the owner reported applying the Phase 6 settings and rebooting the app. Code is published as [b89ed76](https://github.com/SoyeonAhn3/enterprise-rag/commit/b89ed76b615a02c13c5e9ce80928a4ae9bcdadaa). This records the owner's completed action; effective Cloud runtime behavior has not been independently checked. The project demonstrates RAG logic and measured quality. Phase 7 usability is deferred and concurrency testing is excluded from the current scope. The procedure below is retained for reference.
+
+In the [Community Cloud workspace](https://share.streamlit.io/), locate this app, open its **⋮ → Settings → Secrets**, and add or edit the following top-level values. Replace an existing entry rather than adding a duplicate key; keep these values outside any `[section]` and preserve the operator's API key and other settings:
 
 ```toml
 RAG_RETRIEVAL_MODE = "pages"
@@ -54,17 +57,26 @@ RAG_TOP_K = 5
 RAG_CONTEXT_MAX_CHARS = 6000
 ```
 
-The default remains `chunks`/`3`. No index rebuild is required. See the [Phase 6 results](Phase/Phase6_RetrievalAndAnswerQuality.md) for the 267-test verification, development coverage, and six known live cases; formal Cloud checks remain deferred.
+Click **Save**, then use the app's **⋮ → Reboot** to reload settings and cached resources. This is the Cloud workspace menu, not the running app's display-settings menu. See the official [Settings](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/app-settings) and [Reboot](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/reboot-your-app) instructions.
+
+`pages` expands selected hits to their original PDF pages where the budget allows. `5` limits context to at most five distinct page sources, with whole-chunk fallback; `6000` limits their combined text characters, not tokens or output-answer length. The default remains `chunks`/`3`. No index rebuild is required. See the [Phase 6 results](Phase/Phase6_RetrievalAndAnswerQuality.md) for the 267-test verification, development coverage, and six known live cases; formal Cloud checks remain deferred. A reboot for activation does not complete the broader restart/resource validation.
 
 ### Optional LangSmith verification
 
 Set `LANGSMITH_TRACING=true`, `LANGSMITH_API_KEY`, `LANGSMITH_PROJECT`, and the appropriate regional `LANGSMITH_ENDPOINT` in the server environment or local `.env`. Tracing sends question/context/output payloads, so this demo uses synthetic public documents. Keys and settings objects are never included in trace payloads. Missing configuration or a failed write disables the sink while answers continue; restart the process after correcting a failed trace configuration.
 
+Create a personal API key at [LangSmith](https://smith.langchain.com/) → Settings → API Keys, then save it directly in `.env` or Cloud Secrets. The key is displayed once; do not put it in source control or chat. Local `.env` and Cloud Secrets are separate. See the [official account/key instructions](https://docs.langchain.com/langsmith/create-account-api-key).
+
 ```powershell
-.\.venv\Scripts\python.exe -X utf8 -m eval.check_trace
+# Offline readiness only: no network or model requests.
+.\.venv\Scripts\python.exe -X utf8 -m eval.check_trace --preflight --retrieval-mode pages --top-k 5 --context-max-chars 6000
+# One live answer; use a new output filename for each deliberate attempt.
+.\.venv\Scripts\python.exe -X utf8 -m eval.check_trace --retrieval-mode pages --top-k 5 --context-max-chars 6000 --output data/trace_check_new.json
 ```
 
-This makes one Claude call, then reads the root and retrieval/generation child runs back from LangSmith. The private run URL is saved locally in ignored `data/trace_check.json`. It does not publish a trace or enable a public share link. Without a configured key, the command stops before making a billable generation. See [LangSmith custom instrumentation](https://docs.langchain.com/langsmith/annotate-code).
+The live check makes at most one Claude call, then verifies the remote hierarchy, settings, question, actual context, prompt, answer, and token usage. It makes up to three readback attempts without repeating generation. Existing output is protected; the private run URL stays in ignored `data/trace_check*.json`. It does not create a public share link. Without configured tracing and keys, it stops before generation. Each network connection/read has a five-second timeout and trace writes have no automatic retries. See [LangSmith custom instrumentation](https://docs.langchain.com/langsmith/annotate-code).
+
+**Verified locally against remote LangSmith on 2026-10-16:** pages/5/6000 with real retrieval and Claude generation. The live check exposed a missing `parent_run_id` on child completion requests; this is fixed and covered by the SDK payload test. Two earlier unsuccessful trace attempts are preserved locally. This verifies the local client and remote service, not the deployed Cloud app. The API key alone does not enable persistent tracing: also set `LANGSMITH_TRACING=true` in the environment where the app runs.
 
 ## 한국어
 
@@ -80,7 +92,8 @@ This makes one Claude call, then reads the root and retrieval/generation child r
 | 소스 | `SoyeonAhn3/enterprise-rag`, 브랜치 `main`, 진입 파일 `app.py`. 2026-10-16 저장소 공개 전환 |
 | 서버 시크릿 | 사용자가 [.streamlit/secrets.toml.example](.streamlit/secrets.toml.example)을 기준으로 입력. 값은 기록하지 않음 |
 | 확인한 것 | 사용자가 시크릿 창에서 앱 동작 확인. 로그인 없는 요청으로 앱 접근 확인 |
-| 아직 기록하지 않은 것 | 아래 5~6단계(q01·q07·q09 인수 검사, 재시작), 시작 시간·메모리, 제공업체 사용량 제한, 실제 LangSmith Trace |
+| Phase 6 운영자 보고 | 사용자가 2026-10-16 pages/5/6000 적용·Reboot 완료를 보고했다. 실제 실행 동작은 별도로 확인하지 않았다 |
+| 아직 기록하지 않은 것 | 정식 q01·q07·q09 인수·재시작 검사, 시작 시간·메모리, 제공업체 사용량 제한, 실제 LangSmith Trace. 폭넓은 서비스 검사는 현재 RAG 시연 완료 기준이 아니다 |
 
 ### 사전 생성 인덱스
 
@@ -112,7 +125,9 @@ PDF 해시, 임베딩·청크 설정, 추출 라이브러리 버전, 벡터 차�
 
 Community Cloud는 연결된 GitHub 브랜치의 코드 변경을 자동 반영한다([공식 업데이트 안내](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/edit-your-app)). 따라서 `main` 푸시는 선택형 검색 모드를 추가하고 공통 답변 프롬프트도 갱신할 수 있다. 서버 Secrets 값은 바꾸지 않는다. 이번 푸시 작업에서 실제 원격 반영과 페이지 모드 활성화를 검증하지는 않는다.
 
-로컬 검증을 마친 Phase 6 후보를 사용하려면 기존 서버 Secrets의 다른 설정을 보존하면서 아래 비밀값이 아닌 설정을 추가·수정하고 앱을 재시작한다.
+2026-10-16 사용자가 Phase 6 설정 적용과 Reboot 완료를 보고했다. 코드는 [b89ed76](https://github.com/SoyeonAhn3/enterprise-rag/commit/b89ed76b615a02c13c5e9ce80928a4ae9bcdadaa)으로 게시했다. 사용자가 완료한 작업을 기록한 것이며 실제 Cloud 실행 동작은 별도로 확인하지 않았다. 프로젝트 목표는 RAG 로직과 측정한 품질을 보여주는 것이다. Phase 7 사용성은 보류하고 동시 접속 검사는 현재 범위에서 제외한다. 아래 절차는 참고용으로 보존한다.
+
+[Community Cloud 관리 화면](https://share.streamlit.io/)에서 해당 앱의 **⋮ → Settings → Secrets**를 열고 아래 최상위 설정을 추가·수정한다. 이미 같은 키가 있으면 중복 추가하지 말고 기존 값을 바꾼다. `[section]` 내부에 넣지 않으며 운영자의 API 키와 나머지 설정은 보존한다.
 
 ```toml
 RAG_RETRIEVAL_MODE = "pages"
@@ -120,14 +135,23 @@ RAG_TOP_K = 5
 RAG_CONTEXT_MAX_CHARS = 6000
 ```
 
-기본값은 `chunks`/`3`이며 인덱스 재생성은 필요 없다. 테스트 267개·개발용 근거 포함률·알려진 실제 사례 6건은 [Phase 6 결과](Phase/Phase6_RetrievalAndAnswerQuality.md)를 참고한다. 정식 Cloud 검사는 계속 보류한다.
+**Save**로 저장한 뒤 해당 앱의 **⋮ → Reboot**로 설정과 캐시된 자원을 다시 읽게 한다. 실행 화면의 표시 설정 메뉴가 아니라 Cloud 관리 화면의 메뉴를 사용한다. 공식 [Settings 안내](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/app-settings)와 [Reboot 안내](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/reboot-your-app)를 참고한다.
+
+`pages`는 검색 결과를 한도가 허용하는 범위에서 원래 PDF 페이지 본문으로 확장한다. `5`는 서로 다른 페이지의 근거를 최대 5개까지 구성한다는 뜻이며 페이지 전체가 안 들어가면 청크 전체를 사용한다. `6000`은 근거 본문의 합산 글자 수로, 토큰 수나 출력 답변 길이가 아니다. 코드 기본값은 `chunks`/`3`이며 인덱스 재생성은 필요 없다. 테스트 267개·개발용 근거 포함률·알려진 실제 사례 6건은 [Phase 6 결과](Phase/Phase6_RetrievalAndAnswerQuality.md)를 참고한다. 정식 Cloud 검사는 계속 보류한다. 활성화를 위한 재시작만으로 별도의 재시작·자원 검증까지 완료한 것은 아니다.
 
 ### 선택적 LangSmith 검증
 
 서버 환경 또는 로컬 `.env`에 `LANGSMITH_TRACING=true`, `LANGSMITH_API_KEY`, `LANGSMITH_PROJECT`, 해당 지역의 `LANGSMITH_ENDPOINT`를 설정한다. 질문·문맥·출력을 전송하므로 공개 합성 문서를 사용한다. 키와 설정 객체를 추적 내용에 포함하지 않는다. 설정 누락 또는 전송 실패 시 추적을 중단해도 답변은 계속 동작한다. 실패한 추적 설정을 수정한 뒤에는 프로세스를 재시작한다.
 
+[LangSmith](https://smith.langchain.com/) 로그인 → Settings → API Keys에서 개인용 API 키를 발급하고 `.env` 또는 Cloud Secrets에 직접 저장한다. 키는 한 번만 표시되므로 복사하되 Git이나 채팅에 넣지 않는다. 로컬 `.env`와 Cloud Secrets는 서로 전달되지 않는다. [공식 계정·키 안내](https://docs.langchain.com/langsmith/create-account-api-key)를 참고한다.
+
 ```powershell
-.\.venv\Scripts\python.exe -X utf8 -m eval.check_trace
+# 설정 존재 여부만 확인. 네트워크·모델 호출 없음.
+.\.venv\Scripts\python.exe -X utf8 -m eval.check_trace --preflight --retrieval-mode pages --top-k 5 --context-max-chars 6000
+# 실제 답변 1회. 의도적으로 다시 검사할 때는 새 출력 파일명 사용.
+.\.venv\Scripts\python.exe -X utf8 -m eval.check_trace --retrieval-mode pages --top-k 5 --context-max-chars 6000 --output data/trace_check_new.json
 ```
 
-Claude 1회 호출 후 LangSmith에서 루트와 검색·생성 하위 실행을 다시 읽어 검증한다. 비공개 실행 URL은 Git에서 제외한 `data/trace_check.json`에 저장한다. 추적을 공개하거나 공개 공유 링크를 만들지 않는다. 키가 없으면 과금되는 생성 전에 중단한다. [LangSmith 공식 계측 안내](https://docs.langchain.com/langsmith/annotate-code)를 참고한다.
+실제 검사는 Claude 최대 1회 호출 후 원격 계층·설정·질문·실제 문맥·프롬프트·답변·토큰 수를 대조한다. 원격 조회는 최대 3회이며 답변은 재생성하지 않는다. 기존 출력을 보호하고 비공개 실행 URL은 Git에서 제외한 `data/trace_check*.json`에 보관한다. 공개 공유 링크는 만들지 않는다. 추적 설정이나 키가 없으면 생성 전에 중단한다. 각 네트워크 연결·읽기는 5초로 제한하며 추적 전송은 자동 재시도하지 않는다. [LangSmith 공식 계측 안내](https://docs.langchain.com/langsmith/annotate-code)를 참고한다.
+
+**2026-10-16 로컬 실행과 실제 원격 LangSmith 대조 완료:** pages/5/6000으로 실제 검색과 Claude 생성을 수행했다. 하위 실행 완료 요청에서 `parent_run_id`가 빠진 오류를 발견·수정하고 SDK 전송 테스트에 반영했다. 앞선 추적 실패 2회는 로컬에 보존했다. 로컬 코드와 원격 서비스 연결 검증이며 배포된 Cloud 앱 검증은 아니다. 키 입력만으로 상시 추적이 켜지지는 않으므로 앱 실행 환경에 `LANGSMITH_TRACING=true`도 설정한다.

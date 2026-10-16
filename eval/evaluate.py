@@ -201,6 +201,10 @@ def run_evaluation(assistant: RAGAssistant, questions: list[dict], configuration
                 "latency_ms": round((perf_counter() - started) * 1000, 2),
                 "trace": record.get("trace", {"status": "unavailable", "run_id": None}),
             }
+            result.update({key: record[key] for key in (
+                "validation_error", "response_metadata", "ranked_chunks", "retrieval_mode", "context_selection",
+                "context_chars", "search_k", "token_usage",
+            ) if key in record})
         result["evidence_check"] = check_evidence(result["retrieved_chunks"], question["evidence_groups"])
         report["results"].append(result)
         report["metrics"] = calculate_metrics(report)

@@ -1,0 +1,1092 @@
+{
+  "protocol_sha256": "3449071eec9e83b4be5e2d9d265a6b8982a50a5ecda23fe75af7b3809491a572",
+  "answers_sha256": "ce7c729caef9f83eaa600cbaf7b5154bf5c3e99d0e6a29040f055e73ad8fd7ee",
+  "scope": "Known-case regression; all 60 v2 questions were previously inspected. Same-model AI grading, no completed human review, no unseen holdout. Page mode changes both candidate depth and context assembly.",
+  "metrics": {
+    "chunks5": {
+      "page_hit_at_k": {
+        "passed": 48,
+        "total": 48,
+        "rate": 1.0
+      },
+      "complete_quote_coverage": {
+        "passed": 37,
+        "total": 48,
+        "rate": 0.7708333333333334
+      },
+      "evidence_group_recall": {
+        "passed": 62,
+        "total": 75,
+        "rate": 0.8266666666666667
+      },
+      "multi_page_coverage": {
+        "passed": 13,
+        "total": 18,
+        "rate": 0.7222222222222222
+      },
+      "expected": 60,
+      "attempted": 60,
+      "successful": 59,
+      "rag_errors": [
+        "q56"
+      ],
+      "missing": [],
+      "judge_errors": [
+        "q16",
+        "q17",
+        "q18",
+        "q19",
+        "q20",
+        "q21",
+        "q22",
+        "q23",
+        "q24",
+        "q25",
+        "q26",
+        "q27",
+        "q28",
+        "q29",
+        "q30",
+        "q31",
+        "q32",
+        "q33",
+        "q34",
+        "q35",
+        "q36",
+        "q37",
+        "q38",
+        "q39",
+        "q40",
+        "q41",
+        "q42",
+        "q43",
+        "q44",
+        "q45",
+        "q46",
+        "q47",
+        "q48",
+        "q49",
+        "q50",
+        "q51",
+        "q52",
+        "q53",
+        "q54",
+        "q55",
+        "q56",
+        "q57",
+        "q58",
+        "q59",
+        "q60"
+      ],
+      "ai_correctness": {
+        "passed": 14,
+        "total": 60,
+        "rate": 0.23333333333333334
+      },
+      "ai_answerable_correctness": {
+        "passed": 12,
+        "total": 48,
+        "rate": 0.25
+      },
+      "ai_grounding_substantive": {
+        "passed": 12,
+        "total": 43,
+        "rate": 0.27906976744186046
+      },
+      "abstention_contract": {
+        "passed": 12,
+        "total": 12,
+        "rate": 1.0
+      },
+      "answerable_abstentions": [
+        "q31",
+        "q51",
+        "q53",
+        "q55"
+      ],
+      "latency_ms": {
+        "successful_mean": 4022.1003389830507,
+        "p50": 3463.02,
+        "p95": 9327.04
+      },
+      "generation_tokens": {
+        "input_tokens": 294912,
+        "output_tokens": 24563,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0
+      },
+      "judge_tokens": {
+        "input_tokens": 99918,
+        "output_tokens": 4317,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0
+      },
+      "mean_context_chars": 3153.4,
+      "ai_criteria_satisfied": {
+        "passed": 28,
+        "total": 107,
+        "rate": 0.2616822429906542
+      }
+    },
+    "pages5": {
+      "page_hit_at_k": {
+        "passed": 48,
+        "total": 48,
+        "rate": 1.0
+      },
+      "complete_quote_coverage": {
+        "passed": 47,
+        "total": 48,
+        "rate": 0.9791666666666666
+      },
+      "evidence_group_recall": {
+        "passed": 74,
+        "total": 75,
+        "rate": 0.9866666666666667
+      },
+      "multi_page_coverage": {
+        "passed": 17,
+        "total": 18,
+        "rate": 0.9444444444444444
+      },
+      "expected": 60,
+      "attempted": 60,
+      "successful": 57,
+      "rag_errors": [
+        "q25",
+        "q30",
+        "q56"
+      ],
+      "missing": [],
+      "judge_errors": [
+        "q15",
+        "q16",
+        "q17",
+        "q18",
+        "q19",
+        "q20",
+        "q21",
+        "q22",
+        "q23",
+        "q24",
+        "q25",
+        "q26",
+        "q27",
+        "q28",
+        "q29",
+        "q30",
+        "q31",
+        "q32",
+        "q33",
+        "q34",
+        "q35",
+        "q36",
+        "q37",
+        "q38",
+        "q39",
+        "q40",
+        "q41",
+        "q42",
+        "q43",
+        "q44",
+        "q45",
+        "q46",
+        "q47",
+        "q48",
+        "q49",
+        "q50",
+        "q51",
+        "q52",
+        "q53",
+        "q54",
+        "q55",
+        "q56",
+        "q57",
+        "q58",
+        "q59",
+        "q60"
+      ],
+      "ai_correctness": {
+        "passed": 14,
+        "total": 60,
+        "rate": 0.23333333333333334
+      },
+      "ai_answerable_correctness": {
+        "passed": 12,
+        "total": 48,
+        "rate": 0.25
+      },
+      "ai_grounding_substantive": {
+        "passed": 12,
+        "total": 44,
+        "rate": 0.2727272727272727
+      },
+      "abstention_contract": {
+        "passed": 12,
+        "total": 12,
+        "rate": 1.0
+      },
+      "answerable_abstentions": [
+        "q51"
+      ],
+      "latency_ms": {
+        "successful_mean": 4090.104385964912,
+        "p50": 3859.07,
+        "p95": 6904.35
+      },
+      "generation_tokens": {
+        "input_tokens": 359721,
+        "output_tokens": 24049,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0
+      },
+      "judge_tokens": {
+        "input_tokens": 113612,
+        "output_tokens": 3634,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0
+      },
+      "mean_context_chars": 4222.516666666666,
+      "ai_criteria_satisfied": {
+        "passed": 28,
+        "total": 107,
+        "rate": 0.2616822429906542
+      }
+    }
+  },
+  "diagnostics": {
+    "chunks5": [
+      {
+        "id": "q08",
+        "flags": [
+          "ai_incorrect_with_complete_evidence",
+          "ai_unsupported_answer"
+        ],
+        "failed_criteria": [
+          "c4"
+        ],
+        "issues": [
+          {
+            "kind": "unsupported_claim",
+            "answer_span": "이 계약은 550만원 구간과 같이 CFO 최종 결재와 재무팀 예산 사전검토 대상 구간에 해당합니다.",
+            "missing_fact": "",
+            "reason": "S2는 550만원 사례에만 재무팀 예산 사전검토를 명시하고 720만원 계약에는 적용하지 않음. 720만원 계약이 재무팀 예산 사전검토 대상이라는 직접 근거가 없고, 구간 동일 적용은 추론에 불과함.",
+            "evidence": [
+              {
+                "source": "S2",
+                "quote": "공급가액 550만원\nCFO 최종 결재 + 재무팀 예산 사전검토"
+              },
+              {
+                "source": "S2",
+                "quote": "월 60만원, 계약기간 12개월\n총 720만원으로 계산하여 CFO 최종 결재"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "q16",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q17",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q18",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q19",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q20",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q21",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q22",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q23",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q24",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q25",
+        "flags": [
+          "reference_quote_missing",
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q26",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q27",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q28",
+        "flags": [
+          "reference_quote_missing",
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q29",
+        "flags": [
+          "reference_quote_missing",
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q30",
+        "flags": [
+          "reference_quote_missing",
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q31",
+        "flags": [
+          "reference_quote_missing",
+          "judge_error_or_missing",
+          "answerable_abstention"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q32",
+        "flags": [
+          "reference_quote_missing",
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q33",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q34",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q35",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q36",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q37",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q38",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q39",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q40",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q41",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q42",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q43",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q44",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q45",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q46",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q47",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q48",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q49",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q50",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q51",
+        "flags": [
+          "reference_quote_missing",
+          "judge_error_or_missing",
+          "answerable_abstention"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q52",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q53",
+        "flags": [
+          "reference_quote_missing",
+          "judge_error_or_missing",
+          "answerable_abstention"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q54",
+        "flags": [
+          "reference_quote_missing",
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q55",
+        "flags": [
+          "reference_quote_missing",
+          "judge_error_or_missing",
+          "answerable_abstention"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q56",
+        "flags": [
+          "reference_quote_missing",
+          "rag_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q57",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q58",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q59",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q60",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      }
+    ],
+    "pages5": [
+      {
+        "id": "q15",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q16",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q17",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q18",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q19",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q20",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q21",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q22",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q23",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q24",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q25",
+        "flags": [
+          "rag_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q26",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q27",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q28",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q29",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q30",
+        "flags": [
+          "rag_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q31",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q32",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q33",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q34",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q35",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q36",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q37",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q38",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q39",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q40",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q41",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q42",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q43",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q44",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q45",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q46",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q47",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q48",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q49",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q50",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q51",
+        "flags": [
+          "reference_quote_missing",
+          "judge_error_or_missing",
+          "answerable_abstention"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q52",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q53",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q54",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q55",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q56",
+        "flags": [
+          "rag_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q57",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q58",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q59",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "q60",
+        "flags": [
+          "judge_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      }
+    ]
+  },
+  "paired": {
+    "assessed": 14,
+    "gains": [
+      "q08"
+    ],
+    "regressions": [],
+    "unassessed": [
+      "q15",
+      "q16",
+      "q17",
+      "q18",
+      "q19",
+      "q20",
+      "q21",
+      "q22",
+      "q23",
+      "q24",
+      "q25",
+      "q26",
+      "q27",
+      "q28",
+      "q29",
+      "q30",
+      "q31",
+      "q32",
+      "q33",
+      "q34",
+      "q35",
+      "q36",
+      "q37",
+      "q38",
+      "q39",
+      "q40",
+      "q41",
+      "q42",
+      "q43",
+      "q44",
+      "q45",
+      "q46",
+      "q47",
+      "q48",
+      "q49",
+      "q50",
+      "q51",
+      "q52",
+      "q53",
+      "q54",
+      "q55",
+      "q56",
+      "q57",
+      "q58",
+      "q59",
+      "q60"
+    ]
+  },
+  "sha256": "9b5106787f006b28c82f3bb3e605b6f4d5437d4aed2fa0f6fab63717a9eeab19"
+}

@@ -14,6 +14,7 @@ data/retrieval_smoke.json
 data/answer_smoke.json
 data/grounding_smoke.json
 data/trace_check.json
+data/trace_check_*.json
 data/deployment_check.json
 data/embedding_models/
 
