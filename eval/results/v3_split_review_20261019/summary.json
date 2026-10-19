@@ -1,0 +1,91 @@
+{
+  "protocol_sha256": "e2e6bb878a979abd3030cd3319f7089ad524656b5b078252eb88610cd7e3b662",
+  "records_sha256": "d28e36216f69a8d399f7ea90e367c0c1cb8fedf33f7c016fafb95bec2c337e9c",
+  "complete": false,
+  "rows": [
+    {
+      "configuration": "before",
+      "question_id": "v3_d07",
+      "answer_status": "success",
+      "accurate": null,
+      "grounded": null,
+      "citation_complete": null,
+      "uncertain": null,
+      "overall_pass": null
+    },
+    {
+      "configuration": "before",
+      "question_id": "v3_d10",
+      "answer_status": "success",
+      "accurate": null,
+      "grounded": null,
+      "citation_complete": null,
+      "uncertain": null,
+      "overall_pass": null
+    },
+    {
+      "configuration": "before",
+      "question_id": "v3_d11",
+      "answer_status": "success",
+      "accurate": null,
+      "grounded": null,
+      "citation_complete": null,
+      "uncertain": null,
+      "overall_pass": null
+    },
+    {
+      "configuration": "before",
+      "question_id": "v3_d12",
+      "answer_status": "success",
+      "accurate": null,
+      "grounded": null,
+      "citation_complete": null,
+      "uncertain": null,
+      "overall_pass": null
+    },
+    {
+      "configuration": "after",
+      "question_id": "v3_d07",
+      "answer_status": "success",
+      "accurate": null,
+      "grounded": null,
+      "citation_complete": null,
+      "uncertain": null,
+      "overall_pass": null
+    },
+    {
+      "configuration": "after",
+      "question_id": "v3_d10",
+      "answer_status": "success",
+      "accurate": null,
+      "grounded": null,
+      "citation_complete": null,
+      "uncertain": null,
+      "overall_pass": null
+    },
+    {
+      "configuration": "after",
+      "question_id": "v3_d11",
+      "answer_status": "success",
+      "accurate": null,
+      "grounded": null,
+      "citation_complete": null,
+      "uncertain": null,
+      "overall_pass": null
+    },
+    {
+      "configuration": "after",
+      "question_id": "v3_d12",
+      "answer_status": "success",
+      "accurate": null,
+      "grounded": null,
+      "citation_complete": null,
+      "uncertain": null,
+      "overall_pass": null
+    }
+  ],
+  "model_calls": 1,
+  "review_errors": 1,
+  "unassessed_answers": 8,
+  "sha256": "6c4e5ef18a4264826a4c4a2bfb862c7cadeb7c8d51fdc791f4000610867ef6eb"
+}

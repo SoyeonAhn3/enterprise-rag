@@ -1,0 +1,51 @@
+{
+  "protocol_sha256": "29130cecf1888c0dce4b091bcf42070edc119e0859ad25f797f51300ac69f778",
+  "records_sha256": "504f1f7386b64f4dc512577ba2008c94b8011389723c91448d14bc116168c1b8",
+  "complete": false,
+  "rows": [
+    {
+      "configuration": "before",
+      "question_id": "v3_d07",
+      "answer_status": "success",
+      "accurate": true,
+      "grounded": true,
+      "citation_complete": false,
+      "uncertain": false,
+      "overall_pass": false
+    },
+    {
+      "configuration": "before",
+      "question_id": "v3_d12",
+      "answer_status": "success",
+      "accurate": true,
+      "grounded": true,
+      "citation_complete": false,
+      "uncertain": false,
+      "overall_pass": false
+    },
+    {
+      "configuration": "after",
+      "question_id": "v3_d07",
+      "answer_status": "success",
+      "accurate": null,
+      "grounded": null,
+      "citation_complete": null,
+      "uncertain": null,
+      "overall_pass": null
+    },
+    {
+      "configuration": "after",
+      "question_id": "v3_d12",
+      "answer_status": "success",
+      "accurate": null,
+      "grounded": null,
+      "citation_complete": null,
+      "uncertain": null,
+      "overall_pass": null
+    }
+  ],
+  "model_calls": 5,
+  "review_errors": 1,
+  "unassessed_answers": 2,
+  "sha256": "f8c60f276dbcfa1d992972d3f8e4cabbe3c7341d065f7f7b8fed339403ef1a05"
+}

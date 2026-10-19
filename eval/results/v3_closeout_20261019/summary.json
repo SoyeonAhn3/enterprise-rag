@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-19T03:00:52.104683+00:00",
+  "status": "bounded_evaluation_complete_with_known_limitations",
+  "reviewer_kind": "codex_source_review_not_independent_human",
+  "human_review_status": "pending",
+  "software_tests_passed": 484,
+  "dev": {
+    "passed": 5,
+    "total": 6,
+    "validation_rejections": 1
+  },
+  "final": {
+    "questions": 20,
+    "valid_outputs": 20,
+    "provider_errors": 0,
+    "validation_rejections": 0,
+    "complete_retrieval": {
+      "passed": 12,
+      "total": 16,
+      "rate": 0.75
+    },
+    "content_requirements_met": {
+      "passed": 15,
+      "total": 20,
+      "rate": 0.75
+    },
+    "answerable_content_requirements_met": {
+      "passed": 11,
+      "total": 16,
+      "rate": 0.6875
+    },
+    "strict_overall_pass": {
+      "passed": 13,
+      "total": 20,
+      "rate": 0.65
+    },
+    "proper_unanswerable_abstention": {
+      "passed": 4,
+      "total": 4,
+      "rate": 1.0
+    },
+    "answerable_abstentions": 3,
+    "generated_answers": 13,
+    "claim_citations_complete": {
+      "passed": 11,
+      "total": 13,
+      "rate": 0.8461538461538461
+    },
+    "latency_seconds": {
+      "mean": 5.193,
+      "median": 4.341,
+      "max": 11.198
+    },
+    "failures": {
+      "v3_f01": "retrieval_abstention",
+      "v3_f03": "claim_citation_gap",
+      "v3_f04": "retrieval_and_omission",
+      "v3_f05": "claim_citation_gap",
+      "v3_f07": "retrieval_abstention",
+      "v3_f08": "generation_omission",
+      "v3_f09": "retrieval_abstention"
+    }
+  },
+  "actual_answer_calls": 26,
+  "actual_judge_calls": 0,
+  "models_api_checks": 2,
+  "automatic_retries": 0,
+  "tokens_all_26_answers": {
+    "input_tokens": 163233,
+    "output_tokens": 17920,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+  },
+  "final_runtime_tuning": false,
+  "final_same_corpus_not_external_holdout": true,
+  "publication": "Local only; no commit/push or Cloud update in this closeout.",
+  "sha256": "b92e5730e5e729dde62cf8c170a3abc28af0a1e68edcd1ba73f5b1ce1433dbb9"
+}

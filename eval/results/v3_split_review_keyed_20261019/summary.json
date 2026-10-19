@@ -1,0 +1,71 @@
+{
+  "protocol_sha256": "8d4b64e76569be895255861698746846babcf466c57cd0edec81925680f5cb23",
+  "records_sha256": "a4026b417ec89b74cd8e6282b4f8fa7a98cc2088ebf57985d046f84f09f64f85",
+  "complete": false,
+  "rows": [
+    {
+      "configuration": "before",
+      "question_id": "v3_d07",
+      "answer_status": "success",
+      "accurate": true,
+      "grounded": true,
+      "citation_complete": false,
+      "uncertain": true,
+      "overall_pass": null
+    },
+    {
+      "configuration": "before",
+      "question_id": "v3_d10",
+      "answer_status": "success",
+      "accurate": null,
+      "grounded": null,
+      "citation_complete": null,
+      "uncertain": null,
+      "overall_pass": null
+    },
+    {
+      "configuration": "before",
+      "question_id": "v3_d12",
+      "answer_status": "success",
+      "accurate": null,
+      "grounded": null,
+      "citation_complete": null,
+      "uncertain": null,
+      "overall_pass": null
+    },
+    {
+      "configuration": "after",
+      "question_id": "v3_d07",
+      "answer_status": "success",
+      "accurate": null,
+      "grounded": null,
+      "citation_complete": null,
+      "uncertain": null,
+      "overall_pass": null
+    },
+    {
+      "configuration": "after",
+      "question_id": "v3_d10",
+      "answer_status": "success",
+      "accurate": null,
+      "grounded": null,
+      "citation_complete": null,
+      "uncertain": null,
+      "overall_pass": null
+    },
+    {
+      "configuration": "after",
+      "question_id": "v3_d12",
+      "answer_status": "success",
+      "accurate": null,
+      "grounded": null,
+      "citation_complete": null,
+      "uncertain": null,
+      "overall_pass": null
+    }
+  ],
+  "model_calls": 3,
+  "review_errors": 1,
+  "unassessed_answers": 6,
+  "sha256": "16b0bad7e9feda64e61315f029d7913f291fa9b483b940a144b5de9383eaaed9"
+}

@@ -11,7 +11,7 @@ from config import pdf_fingerprints
 from index_store import IndexErrorBase
 from ingest import extract_pages
 
-PAGE_SELECTION_POLICY = "query_and_section_coverage_v2"
+PAGE_SELECTION_POLICY = "query_and_section_topics_v3"
 
 
 def query_features(text: str) -> set[str]:
@@ -42,10 +42,33 @@ def _source(chunk, rank, text, page_text, position):
     }
 
 
+def rule_topics(text: str) -> set[str]:
+    """Normalize business-rule wording, without document IDs or amount rules.
+
+    A policy assertion in the scenario also needs evidence, even when the last
+    sentence asks a different question. Ordinary approval mentions alone do not
+    imply that an authority table is needed.
+    """
+    compact = re.sub(r"\s+", "", unicodedata.normalize("NFKC", text).casefold())
+    patterns = {
+        "authority": r"(?:승인|결재|전결)(?:권자|권한|자|구간|라인)|approver|approval(?:authority|band|limit)",
+        "budget": r"예산|budget",
+        "quotation": r"견적|quotation|quotes?",
+        "security": r"보안|security",
+        "privacy": r"개인정보|privacy",
+        "legal": r"법무|legal",
+        "acceptance": r"검수|acceptance",
+        "settlement": r"정산|settlement",
+        "request_form": r"요청서|requestform",
+    }
+    return {"@" + name for name, pattern in patterns.items() if re.search(pattern, compact)}
+
+
 def section_features(text: str) -> set[str]:
     """Features of numbered/Markdown section titles, never rewritten evidence."""
     titles = re.findall(r"(?m)^\s*(?:\d{1,3}[.)]|\#{1,6})\s+([^\n]{1,120})", text)
-    return query_features(" ".join(titles))
+    headings = " ".join(titles)
+    return query_features(headings) | rule_topics(headings)
 
 
 class PageContext:
@@ -98,19 +121,22 @@ class PageContext:
         than preceding scenario details. Require new direct section coverage.
         This is a bounded lexical heuristic, not semantic completeness proof.
         """
-        wanted = query_features(question)
-        focus = query_features(re.split(r"[.!?。？！]\s+", question.strip())[-1])
+        wanted = query_features(question) | rule_topics(question)
+        request = re.split(r"[.!?。？！]\s+", question.strip())[-1]
+        # Scenario facts (e.g. no personal data) are not extra rule requests.
+        # A claimed approval role/band is a policy assertion that needs checking.
+        focus = query_features(request) | rule_topics(request) | (rule_topics(question) & {"@authority"})
         if not wanted:
             return selected
         keys = {(c["source_file"], c["page"]) for c in ranked_chunks}
-        features = [query_features(self.pages[key]) & wanted for key in keys]
+        features = [(query_features(self.pages[key]) | rule_topics(self.pages[key])) & wanted for key in keys]
         weights = {term: 1 + math.log((1 + len(features)) /
                                      (1 + sum(term in f for f in features))) for term in wanted}
         cache = {}
 
         def covered(text):
             if text not in cache:
-                cache[text] = (query_features(text) & wanted, section_features(text) & focus)
+                cache[text] = ((query_features(text) | rule_topics(text)) & wanted, section_features(text) & focus)
             return cache[text]
 
         def score(sources):
@@ -119,7 +145,8 @@ class PageContext:
                 plain, headings = covered(source["text"])
                 words.update(plain)
                 titles.update(headings)
-            return words, titles, (sum(weights[t] for t in sorted(titles)),
+            return words, titles, (sum(t.startswith("@") for t in titles),
+                                   sum(weights[t] for t in sorted(titles)),
                                    sum(weights[t] for t in sorted(words)))
 
         # At most one accepted improvement per replaceable slot. No extra search.
@@ -144,7 +171,13 @@ class PageContext:
                     candidate = _source(chunk, rank, text, page_text, position + 1)
                     trial = [candidate if i == position else c for i, c in enumerate(selected)]
                     words, titles, value = score(trial)
-                    if (required <= words and required_titles < titles and value > best_score):
+                    # Whole rule topics outrank incidental Korean character-pair
+                    # overlaps (e.g. 법무팀/재무팀 share 무팀). Keep every existing
+                    # requested topic and literal non-Korean section term.
+                    protected = {t for t in required_titles if not re.search(r"[가-힣]", t)}
+                    topics_added = {t for t in titles - required_titles if t.startswith("@")}
+                    retains_titles = required_titles <= titles or (topics_added and protected <= titles)
+                    if (required <= words and retains_titles and titles - required_titles and value > best_score):
                         best_score = value
                         candidate.update(selection_reason="query_and_section_coverage",
                                          replaced_seed_rank=selected[position]["seed_rank"])

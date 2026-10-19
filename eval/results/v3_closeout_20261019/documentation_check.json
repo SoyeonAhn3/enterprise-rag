@@ -1,0 +1,20 @@
+{
+  "created_at": "2026-10-19T03:09:08.372576+00:00",
+  "status": "passed",
+  "documents": [
+    "README.md",
+    "README_ko.md",
+    "Phase\\Phase6_RetrievalAndAnswerQuality.md",
+    "Phase\\DevelopmentStatusAndRoadmap.md",
+    "eval\\results\\v3_closeout_20261019\\report.md"
+  ],
+  "local_links_checked": 319,
+  "missing_links": [],
+  "bilingual_readme_commands_match": true,
+  "readme_command_count": 22,
+  "tested_code_unchanged": true,
+  "historical_files_unchanged": 554,
+  "sealed_new_json_checked": 38,
+  "scope": "Documentation and preservation audit; no new model calls or semantic regrading.",
+  "sha256": "a276a303e106e4f493e2e1a3023c837742911d94e60ffb86a08d3e9180bc280f"
+}

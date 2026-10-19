@@ -1,0 +1,325 @@
+{
+  "protocol_sha256": "8d4b64e76569be895255861698746846babcf466c57cd0edec81925680f5cb23",
+  "kind": "correctness",
+  "configuration": "before",
+  "question_id": "v3_d07",
+  "state": "completed",
+  "started_at": "2026-10-19T02:27:54.937127+00:00",
+  "sha256": "e4627ac26e537dbf7fcacaeb52fb83465cbd277508f5204bfbe410edef8fcffc",
+  "completed_at": "2026-10-19T02:28:03.826328+00:00",
+  "payload": {
+    "configuration": "before",
+    "question_id": "v3_d07",
+    "result_sha256": "f9274cde671ef529a706d18b4764cb6bf49a1f3f30c0e96b0bfd625af913b000",
+    "stage": "correctness",
+    "input": {
+      "question": "월 공급가액 40만원인 신규 유료 SaaS를 15개월 약정합니다. 계산 총액, 최종 승인자, 예산·법무·보안 사전검토를 각각 알려주세요.",
+      "answerable": true,
+      "answer": "정기 구독은 약정 기간 전체 금액(VAT 제외)으로 계산하므로 40만원 × 15개월 = 600만원입니다. [S4] [S1]\n\n총액 600만원은 500만원 초과 구간이므로 최종 승인자는 재무책임자(CFO)입니다. [S4]\n\n예산 사전검토는 필요합니다. 500만원 초과 CFO 결재 구간의 사례에서 CFO 최종 결재와 함께 재무팀 예산 사전검토가 요구되며, 600만원도 같은 구간입니다. [S3]\n\n법무 사전검토는 필요합니다. 계약기간 12개월 이상이거나 공급가액 500만원 이상이면 체결 전에 법무지원팀 사전검토를 받아야 하는데, 이 계약은 15개월 약정이고 총액이 600만원이어서 두 조건에 모두 해당합니다. [S1]\n\n보안 사전검토는 필요합니다. 신규 유료 SaaS는 금액과 관계없이 발주·계약 전에 정보보안팀 검토를 받아야 합니다. [S5]",
+      "claims": [
+        {
+          "id": "c1",
+          "text": "정기 구독은 약정 기간 전체 금액(VAT 제외)으로 계산하므로 40만원 × 15개월 = 600만원입니다."
+        },
+        {
+          "id": "c2",
+          "text": "총액 600만원은 500만원 초과 구간이므로 최종 승인자는 재무책임자(CFO)입니다."
+        },
+        {
+          "id": "c3",
+          "text": "예산 사전검토는 필요합니다. 500만원 초과 CFO 결재 구간의 사례에서 CFO 최종 결재와 함께 재무팀 예산 사전검토가 요구되며, 600만원도 같은 구간입니다."
+        },
+        {
+          "id": "c4",
+          "text": "법무 사전검토는 필요합니다. 계약기간 12개월 이상이거나 공급가액 500만원 이상이면 체결 전에 법무지원팀 사전검토를 받아야 하는데, 이 계약은 15개월 약정이고 총액이 600만원이어서 두 조건에 모두 해당합니다."
+        },
+        {
+          "id": "c5",
+          "text": "보안 사전검토는 필요합니다. 신규 유료 SaaS는 금액과 관계없이 발주·계약 전에 정보보안팀 검토를 받아야 합니다."
+        }
+      ],
+      "expected_answerable": true,
+      "expected_answer": "약정 총액 600만원으로 계산하고 CFO가 최종 결재한다. 500만원 초과이므로 금액별 결재 전에 재무팀 예산 사전검토가 필요하다. 500만원 이상 또는 12개월 이상 조건으로 계약 전 법무 사전검토가 필요하다. 두 조건 동시 충족이 필수라고 하지 않는다. 신규 유료 SaaS는 금액과 관계없이 발주·계약 전에 정보보안팀 검토가 필요하다.",
+      "criteria": [
+        {
+          "id": "r1",
+          "text": "약정 총액 600만원으로 계산하고 CFO가 최종 결재한다."
+        },
+        {
+          "id": "r2",
+          "text": "500만원 초과이므로 금액별 결재 전에 재무팀 예산 사전검토가 필요하다."
+        },
+        {
+          "id": "r3",
+          "text": "500만원 이상 또는 12개월 이상 조건으로 계약 전 법무 사전검토가 필요하다. 두 조건 동시 충족이 필수라고 하지 않는다."
+        },
+        {
+          "id": "r4",
+          "text": "신규 유료 SaaS는 금액과 관계없이 발주·계약 전에 정보보안팀 검토가 필요하다."
+        }
+      ],
+      "references": [
+        {
+          "source_id": "R1",
+          "text": "월 구독처럼 주기적으로 지급하는 계약은 최초 약정한 총 계약기간 비용으로 판단한다."
+        },
+        {
+          "source_id": "R2",
+          "text": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+        },
+        {
+          "source_id": "R3",
+          "text": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수 예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수 예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재"
+        },
+        {
+          "source_id": "R4",
+          "text": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토"
+        },
+        {
+          "source_id": "R5",
+          "text": "가온비즈에서 회사 업무용으로 구매하는 노트북·데스크톱·서버·네트워크 장비, 신규 유료 SaaS, 회사 명의의 외부 IT 서비스 계약은 금액과 관계없이 발주·계약 전에 정보보안팀 검토를 받아야 한다."
+        }
+      ]
+    },
+    "input_sha256": "bcad54123806925057397207c573490d5d086faa37dd9bcb9ee8ca090a5c96f6",
+    "prompt_sha256": "30ba2ce709682d362a2fbb626d3649403b7cc81bc1ed123b147920e00fc86b85",
+    "model": "claude-sonnet-5-5",
+    "response_schema": {
+      "type": "object",
+      "properties": {
+        "criterion_results": {
+          "type": "object",
+          "properties": {
+            "r1": {
+              "type": "object",
+              "properties": {
+                "satisfied": {
+                  "type": "boolean"
+                },
+                "reason": {
+                  "type": "string"
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "source_id": {
+                        "type": "string"
+                      },
+                      "quote": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "source_id",
+                      "quote"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "satisfied",
+                "reason",
+                "evidence"
+              ],
+              "additionalProperties": false
+            },
+            "r2": {
+              "type": "object",
+              "properties": {
+                "satisfied": {
+                  "type": "boolean"
+                },
+                "reason": {
+                  "type": "string"
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "source_id": {
+                        "type": "string"
+                      },
+                      "quote": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "source_id",
+                      "quote"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "satisfied",
+                "reason",
+                "evidence"
+              ],
+              "additionalProperties": false
+            },
+            "r3": {
+              "type": "object",
+              "properties": {
+                "satisfied": {
+                  "type": "boolean"
+                },
+                "reason": {
+                  "type": "string"
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "source_id": {
+                        "type": "string"
+                      },
+                      "quote": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "source_id",
+                      "quote"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "satisfied",
+                "reason",
+                "evidence"
+              ],
+              "additionalProperties": false
+            },
+            "r4": {
+              "type": "object",
+              "properties": {
+                "satisfied": {
+                  "type": "boolean"
+                },
+                "reason": {
+                  "type": "string"
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "source_id": {
+                        "type": "string"
+                      },
+                      "quote": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "source_id",
+                      "quote"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "satisfied",
+                "reason",
+                "evidence"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "r1",
+            "r2",
+            "r3",
+            "r4"
+          ],
+          "additionalProperties": false
+        },
+        "rubric_uncertain": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "criterion_results",
+        "rubric_uncertain",
+        "notes"
+      ],
+      "additionalProperties": false
+    },
+    "response_schema_sha256": "6d9674dae0b25faf818a3607573eb702626064fdc30fc2427d2f353eec02de32",
+    "token_usage": {
+      "input_tokens": 3837,
+      "output_tokens": 961,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0
+    },
+    "raw_response": "{\"criterion_results\":{\"r1\":{\"satisfied\":true,\"reason\":\"답변은 15개월 약정 전체 기준으로 40만원×15개월=600만원을 계산했고, 500만원 초과 구간의 최종 승인자를 CFO로 제시했다. 참고 규정의 총 계약기간 비용 판단 원칙 및 CFO 구간(500만원 초과~2,000만원 이하)과 일치한다.\",\"evidence\":[{\"source_id\":\"R1\",\"quote\":\"월 구독처럼 주기적으로 지급하는 계약은 최초 약정한 총 계약기간 비용으로 판단한다.\"},{\"source_id\":\"R2\",\"quote\":\"500만원 초과 ~ 2,000만원 이하 재무책임자(CFO)\"}]},\"r2\":{\"satisfied\":true,\"reason\":\"답변은 600만원이 500만원 초과 구간이라는 이유로 재무팀 예산 사전검토가 필요하다고 설명했다. 참고 규정의 요건과 일치한다. 결재 전이라는 시점 표현은 약하지만 CFO 결재와 함께 요구된다고 했으므로 실질적으로 충족한다.\",\"evidence\":[{\"source_id\":\"R3\",\"quote\":\"공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수\"}]},\"r3\":{\"satisfied\":true,\"reason\":\"답변은 법무 사전검토가 필요하다고 답했고 근거로 12개월 이상 또는 500만원 이상 조건을 제시했다. 이 계약이 두 조건에 모두 해당한다고 언급했지만, 둘 중 하나만 충족해도 된다는 취지의 '이거나'를 명시했으므로 동시 충족이 필수라고 하지 않았다.\",\"evidence\":[{\"source_id\":\"R4\",\"quote\":\"다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다.\"}]},\"r4\":{\"satisfied\":true,\"reason\":\"답변은 신규 유료 SaaS가 금액과 관계없이 발주·계약 전에 정보보안팀 검토 대상이라고 정확히 제시했다.\",\"evidence\":[{\"source_id\":\"R5\",\"quote\":\"신규 유료 SaaS, 회사 명의의 외부 IT 서비스 계약은 금액과 관계없이 발주·계약 전에 정보보안팀 검토를 받아야 한다.\"}]}},\"rubric_uncertain\":false,\"notes\":\"모든 기준을 충족한다. 답변의 예산 검토 설명은 '사례'라는 표현을 쓰지만 결론은 참고 규정과 일치한다. 인용 완전성은 평가 대상이 아니다.\"}",
+    "status": "success",
+    "decision": {
+      "criterion_results": [
+        {
+          "id": "r1",
+          "satisfied": true,
+          "reason": "답변은 15개월 약정 전체 기준으로 40만원×15개월=600만원을 계산했고, 500만원 초과 구간의 최종 승인자를 CFO로 제시했다. 참고 규정의 총 계약기간 비용 판단 원칙 및 CFO 구간(500만원 초과~2,000만원 이하)과 일치한다.",
+          "evidence": [
+            {
+              "source_id": "R1",
+              "quote": "월 구독처럼 주기적으로 지급하는 계약은 최초 약정한 총 계약기간 비용으로 판단한다."
+            },
+            {
+              "source_id": "R2",
+              "quote": "500만원 초과 ~ 2,000만원 이하 재무책임자(CFO)"
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "satisfied": true,
+          "reason": "답변은 600만원이 500만원 초과 구간이라는 이유로 재무팀 예산 사전검토가 필요하다고 설명했다. 참고 규정의 요건과 일치한다. 결재 전이라는 시점 표현은 약하지만 CFO 결재와 함께 요구된다고 했으므로 실질적으로 충족한다.",
+          "evidence": [
+            {
+              "source_id": "R3",
+              "quote": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수"
+            }
+          ]
+        },
+        {
+          "id": "r3",
+          "satisfied": true,
+          "reason": "답변은 법무 사전검토가 필요하다고 답했고 근거로 12개월 이상 또는 500만원 이상 조건을 제시했다. 이 계약이 두 조건에 모두 해당한다고 언급했지만, 둘 중 하나만 충족해도 된다는 취지의 '이거나'를 명시했으므로 동시 충족이 필수라고 하지 않았다.",
+          "evidence": [
+            {
+              "source_id": "R4",
+              "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다."
+            }
+          ]
+        },
+        {
+          "id": "r4",
+          "satisfied": true,
+          "reason": "답변은 신규 유료 SaaS가 금액과 관계없이 발주·계약 전에 정보보안팀 검토 대상이라고 정확히 제시했다.",
+          "evidence": [
+            {
+              "source_id": "R5",
+              "quote": "신규 유료 SaaS, 회사 명의의 외부 IT 서비스 계약은 금액과 관계없이 발주·계약 전에 정보보안팀 검토를 받아야 한다."
+            }
+          ]
+        }
+      ],
+      "rubric_uncertain": false,
+      "notes": "모든 기준을 충족한다. 답변의 예산 검토 설명은 '사례'라는 표현을 쓰지만 결론은 참고 규정과 일치한다. 인용 완전성은 평가 대상이 아니다."
+    },
+    "latency_ms": 8886.21
+  }
+}

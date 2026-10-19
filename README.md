@@ -77,21 +77,22 @@ All figures come from a **small synthetic benchmark** (4 PDFs, 13 pages, 22 chun
 | Final-page selection (2026-10-16, offline) | Same 60 known questions | Original pages k=5 → constrained query coverage | Complete required evidence **47/48 → 48/48** · no complete-evidence regressions · no new answers or grades |
 | V3 development evaluation (2026-10-19) | 20 (16 answerable) | chunks k=5 → pages k=5 | Original AI pass **14/20 → 15/20** · complete required evidence **10/16 → 12/16** · validated responses **20/20 → 19/20** |
 | V3 development refinement (2026-10-19) | Same 20 dev questions | Saved pages → refined pages, same revised judge | AI pass **17/20 → 17/20** · required evidence **12/16 → 14/16** · validated responses **19/20 → 20/20** |
+| V3 bounded final check (2026-10-19) | 20 (16 answerable) | Frozen pages/k=5/6,000 chars; Codex source review | Required evidence **12/16** · content **15/20** · content plus complete claim citations **13/20** · unanswerable abstention **4/4** |
 
-The [latest implementation](Phase/Phase6_RetrievalAndAnswerQuality.md#v3-development-refinement--2026-10-19) uses requested section titles to replace redundant context while preserving existing query coverage and leading hits. It retrieves the missing budget and quotation clauses on dev and keeps known-v2 coverage at 48/48. Generation instructions clarify contiguous table quotes and rule-based inference; strict output validation remains. The four historical errors still lack their original diagnostics.
+The [earlier implementation](Phase/Phase6_RetrievalAndAnswerQuality.md#separate-grading-and-complete-rule-selection--2026-10-19) separates correctness from retrieved-only grounding review and normalizes rule topics during context selection. Offline dev required evidence improves **14/16 to 16/16**, retaining known-v2 **48/48**. The live grading pilot is partial: 10 requests, 6 accepted stages, 3 validation rejections and 1 provider error. Same-model judgment inconsistencies remain; no new answer-accuracy improvement is claimed.
 
 How to read these numbers:
 
 - **Do not read the 90% baseline alone.** On the 20-question final-check split, correctness was 65% (k=3) and 75% (k=5).
 - **Compare implementations under the same judge.** The refinement reused 20 saved page answers, generated 20 new ones and made 39 review calls (59 total new model calls). Both sets passed 17/20 under the revised judge. The saved baseline originally scored 15/20 under older instructions; its regrade is not an implementation gain. Evidence/validation improved, but overall accuracy improvement is not established. Reference contamination and inconsistent inference judgments still need review.
 - **The earlier 60-question comparison remains incompletely graded.** It has 29 completed reviews, 87 failures caused by insufficient credit, and 4 skipped validation failures. Those saved answers were not regraded in the v3 run; partial historical pass counts are not accuracy rates.
-- **The same Claude model generated and graded the answers**, in separate calls. A queue of 34 entries is waiting for human review.
+- **Earlier evaluations used the same Claude model to generate and grade answers**, in separate calls. A queue of 34 entries is waiting for human review.
 - **These are known cases, not an independent test.** All 60 expanded questions were inspected during development, so the Phase 6 results are diagnostics, not an accuracy estimate. Page mode used 34.39% more context characters on average than chunks/k=5.
 - **Reference answers never reach answer generation.** Only the question goes into the pipeline; reference answers, evidence annotations, and grading criteria are used only for scoring.
 
 Evidence: [baseline run](eval/results/phase5_baseline.json) · [AI review](eval/results/phase5_agent_review.json) · [60-question report](eval/results/phase5_v2_20261014/report.md) · [page-context report](eval/results/phase6_20261016/report.md) · [frozen comparison report](eval/results/phase6_quality_20261016/report.md) · [recovery plan](eval/results/phase6_review_recovery_selection_20261016/plan.json)
 
-Latest evidence: [refinement report](eval/results/v3_refinement_dev_20261019/report.md) · [case analysis](eval/results/v3_refinement_dev_20261019/analysis.json) · [verification](eval/results/v3_refinement_dev_20261019/verification.json). The [initial v3 dev report](eval/results/v3_dev_20261019_1003/report.md) remains intact; v3 final questions remain unexecuted.
+Latest evidence: [bounded final report and human-review items](eval/results/v3_closeout_20261019/report.md) · [summary](eval/results/v3_closeout_20261019/summary.json) · [verification](eval/results/v3_closeout_20261019/verification.json). Six dev and twenty final answers were generated, with no separate judge calls. Final mean latency was 5.193 seconds. Codex source review is not independent human validation; final results were not used for another tuning pass.
 
 To verify the saved results offline, without model calls or credentials:
 
@@ -209,15 +210,15 @@ For the live trace check, Streamlit Community Cloud setup, secrets, and page-mod
 .\.venv\Scripts\python.exe -X utf8 ingest.py --dry-run
 ```
 
-The latest recorded run on 2026-10-19 passed **439 tests** ([test record](eval/results/v3_refinement_checks_20261019/software_tests.json)). They cover ingestion, retrieval, section-aware page selection, grounding validation, the UI, tracing, dataset/split validation, request limits, saved-answer comparison and recovery safeguards, and deployment. Tests use test doubles and make no live model calls. They check software behavior, not answer accuracy.
+The latest recorded run on 2026-10-19 passed **484 tests** ([test output](eval/results/v3_closeout_20261019/pytest.txt)). The closeout adds safe provider category/HTTP status propagation and retains existing ingestion, retrieval, generation, UI, tracing and evaluation checks. Tests use test doubles and make no live model calls; they do not establish answer accuracy.
 
-The new [v3 dataset](eval/questions_v3.json) contains 20 development and 20 reserved final questions. Each split has four boundary, composite, exception, timing, and unanswerable cases. Validate its structure, PDF quotes and duplicate wording without model calls:
+The new [v3 dataset](eval/questions_v3.json) contains 20 development and 20 final questions. The final set has now been run once and is no longer unobserved. Each split has four boundary, composite, exception, timing, and unanswerable cases. Validate its structure, PDF quotes and duplicate wording without model calls:
 
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 -m eval.quality validate --dataset eval/questions_v3.json --against eval/questions_v2.json
 ```
 
-The evaluator accepts explicit dataset/split selection and frozen request limits; incomplete grading is shown separately. Legacy 60-question answer reports remain reproducible. [Refinement comparison](Phase/Phase6_RetrievalAndAnswerQuality.md#v3-development-refinement--2026-10-19) reuses saved dev answers and grades old/new answers under one frozen judge. V3 dev refinement, software tests and offline artifact checks are complete; final evaluation is pending. Historical selector replays have a current-source guard; use the saved [current replay evidence](eval/results/v3_refinement_checks_20261019/retrieval_replay.json) for this revision.
+The evaluator accepts explicit dataset/split selection and frozen request limits; incomplete grading is shown separately. Legacy 60-question answer reports remain reproducible. [Refinement comparison](Phase/Phase6_RetrievalAndAnswerQuality.md#v3-development-refinement--2026-10-19) reuses saved dev answers and grades old/new answers under one frozen judge. V3 dev refinement and the bounded final evaluation are recorded; known failures and human-review limits are documented in the latest report. Historical selector replays have a current-source guard; use the saved [historical replay evidence](eval/results/v3_refinement_checks_20261019/retrieval_replay.json) for that revision.
 
 ## Project Structure
 
@@ -262,17 +263,17 @@ Credentials, the local Chroma database, model downloads, private trace files, ge
 | [3 — Grounded answers](Phase/Phase3_GroundedAnswers.md) | ✅ Done | One Claude call per question, quote-validated citations, abstention |
 | [4 — Streamlit interface](Phase/Phase4_StreamlitInterface.md) | ✅ Done (local) | Chat with sources, example questions, safe errors, per-session limit |
 | [5 — Evaluation and deployment](Phase/Phase5_EvaluationAndDeployment.md) | 🔧 In progress | 10- and 60-question evaluations; [public demo](https://enterprise-rag-demo-project.streamlit.app/) deployed 2026-10-16; LangSmith trace verified against remote records for local execution. Human review and broader Cloud checks are deferred |
-| [6 — Retrieval and answer quality](Phase/Phase6_RetrievalAndAnswerQuality.md) | ✅ Dev refinement/tests; grading and final evaluation pending | Section-aware page context, quotation/inference guidance, frozen same-judge comparison of saved/new answers, 439 tests and measured dev results |
+| [6 — Retrieval and answer quality](Phase/Phase6_RetrievalAndAnswerQuality.md) | ✅ Local tests; bounded final check recorded | 484 tests; final content 15/20 and content/citations 13/20 by Codex; known failures and human review pending |
 
 - The code default is `chunks` with k=3. The owner reports that the live demo runs page mode (pages, k=5, 6,000 chars) after a reboot; this has not been independently verified.
-- This revision changes local page selection, generation/judge instructions and evaluation tooling. It has not been published or checked in Cloud.
+- This source revision includes the latest page selection, generation/judge instructions and bounded final evaluation. Effective Cloud runtime behavior still needs confirmation after rollout.
 
 ## Limitations
 
 - **Small synthetic corpus.** 4 PDFs and 13 pages. Results do not show performance on real enterprise documents.
 - **Dev scores have limits.** The same-judge page comparison is 85%→85%; grading still shows reference contamination and inconsistent inference decisions. This does not establish general accuracy improvement. The earlier 60-question comparison remains incompletely graded.
-- **No human grading yet.** Correctness scores come from the same model that generated the answers.
-- **Final evaluation is pending.** All 60 v2 cases and the 20 v3 dev results are now observed. The 20 v3 final questions remain unexecuted; they share the same PDF rules and are not an external blind benchmark. Independent human review of the rubrics is pending.
+- **No independent human grading yet.** Historical scores used a Claude judge; the latest final answers were reviewed against the PDFs by Codex. Both are AI assessments.
+- **Final evaluation has limited scope.** Twenty same-corpus final questions were run once. Four answerable questions lacked complete retrieved evidence; one additional answer omitted a required item despite retrieving it; two content-correct answers had incomplete claim citations. The final set is now observed and is not an external benchmark.
 - **Fixed corpus.** No document upload, OCR, table recognition, authentication, or document permissions.
 - **Demo-scale serving.** Requests are serialized by a shared lock. The question limit is per session, not a provider-wide budget. Concurrent use has not been tested.
 - **Cloud behavior only partly verified.** Tracing was verified for local execution, not for the deployed app. Restart, startup time, and memory use on Streamlit Community Cloud have not been checked.
@@ -281,7 +282,7 @@ Credentials, the local Chroma database, model downloads, private trace files, ge
 
 From the [development status and roadmap](Phase/DevelopmentStatusAndRoadmap.md):
 
-Dev refinement and testing are complete. Next, separate grounding review from reference-answer correctness so unseen references cannot supply missing evidence; calibrate disputed cases with independent review. Address missing approval tables and complete each claim's source links, reevaluate dev, then freeze code/scoring before the reserved final split. Do not tune on final results and continue calling them unseen. The completed refinement used 59 model calls; a fresh paired 20-question split permits up to 80. Request limits are not currency budgets.
+The owner limited completion to six dev checks, one final 20-question run and a demo check; these are recorded. Further judge development and repeated paid evaluation are deferred. Next owner action, if independent human validation is desired: review the [20-item report](eval/results/v3_closeout_20261019/report.md), especially f03/f05/f08. Fixing recorded limitations is optional follow-up and must treat final cases as regression cases. The preceding published snapshot was [8686fff](https://github.com/SoyeonAhn3/enterprise-rag/commit/8686fff76349cd1a2b615a5b365c80471941d390); this source revision includes the subsequent changes, while Cloud rollout remains unverified.
 
 The 87-review historical backlog concerns old answers, not the current selector. Both source and judge prompts changed: recovery needs a compatible original judge/version, not just a new plan. Earlier plans and results remain intact.
 
@@ -291,6 +292,7 @@ The owner resumed API use on 2026-10-19. The 87 historical failed reviews remain
 
 | Document | Contents |
 | --- | --- |
+| [Bounded final report](eval/results/v3_closeout_20261019/report.md) | Frozen final results, failures, timings and all 20 human-review items |
 | [DEPLOYMENT.md](DEPLOYMENT.md) | Cloud setup, secrets, page-mode activation, LangSmith verification (English + Korean) |
 | [Development status and roadmap](Phase/DevelopmentStatusAndRoadmap.md) | Latest audit, quality findings, prioritized next work |
 | [Phase reports](Phase/) | Design, implementation, and verification evidence for each phase (English + Korean) |

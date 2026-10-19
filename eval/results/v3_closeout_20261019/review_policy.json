@@ -1,0 +1,23 @@
+{
+  "created_at": "2026-10-19T02:54:44.889672+00:00",
+  "reviewer_kind": "codex_source_review_not_independent_human",
+  "purpose": "Bounded portfolio closeout; no new automated semantic grader.",
+  "rules": [
+    "Compare each answer with the actual question, retrieved original PDF text and each attached claim citation.",
+    "Separate correctness, requested-item completeness, retrieved-context support, claim-citation completeness and abstention.",
+    "A literal rule may be applied to scenario amounts and periods; examples alone do not establish an unstated general rule.",
+    "Preserve applicable thresholds, exceptions, required departments and timing. Do not require irrelevant facts or verbatim restatement of a true premise.",
+    "When a policy premise is used in an answer, verify it against the sources; unsupported assertions and invented exceptions fail.",
+    "For answerable questions overall_pass requires a validated non-abstaining answer and all four semantic dimensions; for unanswerable questions it requires validated abstention.",
+    "Provider/validation errors are execution failures, not correct abstentions. Report missing outcomes separately.",
+    "Freeze policy before final outputs; no tuning on final outcomes; preserve original dataset and historical scores."
+  ],
+  "dev_adjudication": {
+    "v3_d07": "600만원 = 40 x 15; authority and budget rules must be explicit. A 550만원 example alone is insufficient. Legal conditions are OR; security review precedes order/contract.",
+    "v3_d10": "Emergency team-lead interim approval is distinct from CFO final approval. Formal request within one business day; immediate finance consultation; preserve emergency follow-up.",
+    "v3_d11": "The question already states the 80만원 team-lead band. Correct rejection of unapproved advance payment plus separate finance review satisfies the requested answer without repeating that premise. If repeated it needs support.",
+    "v3_d12": "Sole-supplier exception needs reason record and purchasing approval; insufficient budget separately requires finance review regardless of amount. A combined claim needs both source rules."
+  },
+  "human_review_status": "pending; agent review is not human signoff",
+  "sha256": "447f85f401a3117dd10318b7dd4ee20b11c3cef0cc4d0309bf7403819ffdef9d"
+}

@@ -1,10 +1,14 @@
 # Development Status and Roadmap
 
 **Reviewed**: 2026-10-19 (Asia/Seoul)\
-**Current milestone**: Phases 1–4 and Phase 6 implementation verified locally; Cloud settings/reboot are owner-reported. Real local-to-remote tracing is verified. V3 dev refinement and 439 software tests are complete locally; grading consistency and final evaluation remain pending. The earlier 87 failed reviews remain a separate backlog.\
+**Current milestone**: Bounded closeout recorded: 484 tests, six dev answers and one frozen final 20-question run. Codex source review: content 15/20, content with complete claim citations 13/20. Independent human review is pending. Demo replay/local restart passed; no further evaluator expansion is required for this scope. This source revision contains the closeout; 8686fff was the preceding published snapshot. Cloud rollout is not yet verified.\
 **Planning assumption**: The user clarified that this project demonstrates RAG understanding, implementation, precision, and measured accuracy. Concurrency testing is excluded from the current scope and Phase 7 usability remains deferred.
 
-**Latest refinement — 2026-10-19:** Implemented section-aware context selection, clearer quote/inference instructions, revised grading instructions and saved-answer comparison. **439 software tests passed**. The live dev comparison reused 20 page answers and made **20 new answer + 39 review calls = 59 calls**. Required evidence improved **12/16 → 14/16** and validated outputs **19/20 → 20/20**, but AI passes under the same revised judge remained **17/20 → 17/20**. The original baseline's 15/20 becoming 17/20 on regrade is not an implementation gain. All 434 protected files, including 427 historical evaluation files, were preserved. See [implementation and limits](Phase6_RetrievalAndAnswerQuality.md#v3-development-refinement--2026-10-19), [report](../eval/results/v3_refinement_dev_20261019/report.md) and [verification](../eval/results/v3_refinement_dev_20261019/verification.json). Next: isolate evidence-support grading from reference answers, independently adjudicate disputed cases, and improve remaining approval-table retrieval and claim citations before another dev comparison. Final 20 questions remain unexecuted; no publication or Cloud changes were made.
+**Latest bounded closeout — 2026-10-19:** [Report and owner review](../eval/results/v3_closeout_20261019/report.md), [verification](../eval/results/v3_closeout_20261019/verification.json). Final complete evidence 12/16, content 15/20, content/citations 13/20, unanswerable abstention 4/4; mean 5.193 seconds. Actual calls: 26 answers, zero AI judges. All 554 old files preserved. Safe API diagnostics added; no retrieval/prompt tuning after final outcomes. Agent-reviewed same-corpus results are not independent human or external validation.
+
+**Earlier split-grading checkpoint — 2026-10-19:** [Split grading and rule selection](Phase6_RetrievalAndAnswerQuality.md#separate-grading-and-complete-rule-selection--2026-10-19) separate reference-based correctness from retrieved-only support. Every item is required in the response schema; citations are constrained to existing claim evidence. Dev coverage improves **14/16→16/16** with known-v2 **48/48** retained. **483 tests** passed. Ten live review requests yielded six accepted stages, three validation rejections and one provider error; the comparison is incomplete and semantic judgment inconsistencies remain. No new answers or final questions were evaluated. All 522 protected files, including 515 historical evaluation files, remain unchanged. See [verification](../eval/results/v3_split_checks_20261019/verification.json).
+
+**Earlier refinement — 2026-10-19:** Implemented section-aware context selection, clearer quote/inference instructions, revised grading instructions and saved-answer comparison. **439 software tests passed**. The live dev comparison reused 20 page answers and made **20 new answer + 39 review calls = 59 calls**. Required evidence improved **12/16 → 14/16** and validated outputs **19/20 → 20/20**, but AI passes under the same revised judge remained **17/20 → 17/20**. The original baseline's 15/20 becoming 17/20 on regrade is not an implementation gain. All 434 protected files, including 427 historical evaluation files, were preserved. See [implementation and limits](Phase6_RetrievalAndAnswerQuality.md#v3-development-refinement--2026-10-19), [report](../eval/results/v3_refinement_dev_20261019/report.md) and [verification](../eval/results/v3_refinement_dev_20261019/verification.json). Next: isolate evidence-support grading from reference answers, independently adjudicate disputed cases, and improve remaining approval-table retrieval and claim citations before another dev comparison. Final 20 questions remain unexecuted; no publication or Cloud changes were made.
 
 **Initial v3 dev evaluation — 2026-10-19:** Dataset tooling and v3 preparation passed **409 software tests**, then the unchanged implementation completed a live comparison on the **20 dev questions**. Original AI passes were **14/20 chunks versus 15/20 pages**; complete required-quote coverage was **10/16 versus 12/16**. Actual use was **40 answers + 39 reviews = 79 model calls**, with one page quote-validation failure and no provider/judge errors. Offline artifact verification and report reproduction passed; all 376 baseline files were preserved. Software tests were not rerun in that evaluation turn. See [results and analysis](Phase6_RetrievalAndAnswerQuality.md#v3-development-evaluation--2026-10-19), [report](../eval/results/v3_dev_20261019_1003/report.md) and [verification](../eval/results/v3_dev_20261019_1003/verification.json). Those baseline results remain intact. Historical review recovery was not run; future recovery requires both a new plan and compatibility with the original judge/version.
 
@@ -76,21 +80,16 @@ The evidence supports three priorities:
 
 ## Development order
 
-The latest [v3 dev refinement and limits](Phase6_RetrievalAndAnswerQuality.md#v3-development-refinement--2026-10-19) supersede earlier release proposals. The initial audit above is historical; its missing-key/trace status is no longer current.
+The owner approved bounded completion instead of further evaluator development. These priorities supersede the earlier proposals; historical scores and unfinished reviews remain intact.
 
-| Priority | Remaining work | Reason and current status |
+| State | Work | Result / boundary |
 | --- | --- | --- |
-| Completed locally | Safe validation-rule and field-location records | Runtime/evaluators retain rule/path and response length/hash. Strict checks remain; four historical causes are unavailable because the original details were not recorded. |
-| Completed locally | Improve context selection | Section-aware selection retrieves the missing `d07` budget and `d08` quotation clauses. Dev coverage improves 12/16 to 14/16 without coverage regressions; known-v2 coverage remains 48/48. |
-| Separate backlog | Recover 87 failed historical reviews | Credits were replenished, but those old answers were not regraded. Later recovery needs a new plan and compatibility with the original judge/version; a new plan alone is insufficient. |
-| Deferred human review | Preserve the existing 34-entry queue | AI review is not human validation. Resume only when the owner requests it; preserve earlier scores and notes. |
-| Completed locally | Dataset tooling, v3 preparation and saved-answer comparison | 40 scenarios, split selection and frozen same-judge comparison; 439 software tests. Same-judge dev passes remain 17/20 before and after; original scores and raw results retained. |
-| Completed locally | Quote and inference instructions with strict validation | New outputs validated in 20/20 cases, including `d04`. One observed run does not prove the quote issue is eliminated; the old rejected raw answer remains unavailable. |
-| 1 | Isolate evidence-support grading and independently adjudicate | The revised judge still uses unseen reference evidence in `d07`, accepts example interpolation in `d10`, and inconsistently handles combined rules in `d12`. `d11` has a question-premise rubric dispute. Preserve raw scores and calibrate against independent review. |
-| 2 | Retrieve explicit approval rules and complete claim citations | `d10` and `d11` still miss the amount/approver table. `d12` combines relevant rules but one claim does not directly cite both supporting sources. Improve dev behavior without weakening abstention or inserting reference answers into runtime. |
-| 3 | Reevaluate dev, freeze code/scoring, then evaluate final | Final 20 results remain unobserved. Keep the shared-corpus and same-model limits; once final results inform changes, treat them as regression cases. |
-| Optional supporting work | Cloud resource checks, CI and SDK maintenance | Useful later; not current RAG demonstration requirements. |
-| Explicitly deferred/excluded | Phase 7 usability / concurrency testing | Usability remains deferred; concurrent-user testing is outside the goal. |
+| Recorded | 1. Review disputed dev cases | Codex source review; 5/6 met requirements, one malformed quote blocked. Human adjudication remains distinct. |
+| Recorded | 2. Freeze code/scoring and run final once | 20 validated outputs, content 15/20, content/citations 13/20; all failures retained and no tuning after final observation. |
+| Recorded | 3. Explain results and check the demo | Full review report, timings/tokens, saved-answer UI replay, two local server starts and 484 software tests. |
+| Owner review | Independent human confirmation | Review all 20 final items to claim human validation; f03/f05/f08 merit attention. No additional model calls needed. |
+| Optional | Fix recorded retrieval, answer omission and citation gaps | Use these observed final questions as regression cases. No automatic new development cycle. |
+| Deferred / separate | Evaluator expansion, old 87 reviews and 34-item human queue; publication and Cloud checks | Not required for this bounded technical closeout. New work remains local; Phase 7 deferred and concurrency excluded. |
 
 ## Earlier work sequence and decisions — 2026-10-16
 
@@ -129,16 +128,22 @@ For future Cloud setup, select the repository, branch, entrypoint, Python versio
 | 2026-10-19 | Implemented and tested dataset tooling and v3 preparation (409 tests). Preserved original data, reports and runtime RAG behavior. Next: explicitly resumed live dev/final evaluation; no API calls or publication. History recorded here because dev-log is unavailable. |
 | 2026-10-19 | Recorded resumed API use and completed v3 dev evaluation: 79 model calls, original passes 14/20 versus 15/20, coverage 10/16 versus 12/16. Verified artifacts and preserved baseline files; prioritized grading clarity, context selection, quote generation and fixed-code final evaluation. No runtime edits or publication; dev-log unavailable. |
 | 2026-10-19 | Completed dev refinement and saved-answer comparison: 439 tests, 59 new model calls, evidence 12/16→14/16 and validated outputs 19/20→20/20; same-judge passes unchanged at 17/20. Preserved 434 files. Prioritized grading isolation, disputed-case review, approval-table retrieval and claim citations; final evaluation/publication pending. Dev-log unavailable; history recorded here. |
+| 2026-10-19 | Published 192 reviewed files as 8686fff, then implemented separate grading and rule-topic selection locally. 483 tests; dev evidence 14/16→16/16, known-v2 48/48 retained. Live review partial: 10 requests, 6 accepted stages, 3 validation rejections, 1 provider error. Preserved 522 files; new answers/final evaluation and independent adjudication pending. Dev-log unavailable; recorded here. |
+| 2026-10-19 | Bounded closeout: 484 tests, 26 answers/no judges; final content 15/20 and strict 13/20 by Codex. Demo replay/restart passed, 554 old files retained; human review/publication separate. Further evaluator work deferred; dev-log unavailable. |
 
 ---
 
 # 개발 현황 및 향후 개발 계획
 
 **점검일**: 2026-10-19 (한국 시간)\
-**현재 단계**: Phase 1~4와 Phase 6 로컬 구현·검증 완료. Cloud 설정·Reboot는 사용자 보고 기준이다. 로컬 실행의 실제 원격 추적을 검증했다. v3 개발 개선과 소프트웨어 테스트 439개를 완료했고 채점 일관성 점검·최종 평가는 대기 중이다. 과거 채점 실패 87건은 별도 과제로 남아 있다.\
+**현재 단계**: 제한한 마무리 기록 완료. 테스트 484개, 개발 답변 6개·고정한 최종 20문항 1회 실행. Codex 원문 대조 기준 내용 15/20·주장 인용까지 13/20이며 독립 사람 검토는 미완료다. 시연 재생·로컬 재시작 통과, 이 범위에서 추가 평가기 확장은 필요하지 않다. 이번 소스 개정에 마무리 작업이 포함되며 이전 게시본은 8686fff다. Cloud 반영은 아직 미검증이다.\
 **계획 전제**: 사용자가 목표를 RAG 이해·구현·정교함·측정한 정확도를 보여주는 것으로 명확히 했다. 동시 접속 검사는 현재 범위에서 제외하며 Phase 7 사용성은 계속 보류한다.
 
-**최신 후속 개선 — 2026-10-19:** 절 제목을 활용한 문맥 선택, 인용·추론 지시, 채점 지시와 저장 답변 비교 도구를 구현했다. **소프트웨어 테스트 439개를 통과**했다. 실제 개발용 비교는 이전 페이지 답변 20개를 재사용하고 **새 답변 20회 + 채점 39회 = 모델 59회**를 호출했다. 필수 근거는 **12/16 → 14/16**, 출력 검증은 **19/20 → 20/20**으로 개선했지만 같은 새 채점 기준의 AI 통과는 **17/20 → 17/20**이다. 이전 답변의 원래 15/20이 재채점에서 17/20이 된 것은 구현 개선이 아니다. 보호 대상 434개, 그중 과거 평가 파일 427개를 보존했다. [구현과 한계](Phase6_RetrievalAndAnswerQuality.md#v3-개발-후속-개선--2026-10-19), [보고서](../eval/results/v3_refinement_dev_20261019/report.md), [검증](../eval/results/v3_refinement_dev_20261019/verification.json)을 참고한다. 다음은 참고 정답과 근거성 채점 분리, 논쟁 사례의 독립 판정, 남은 결재 금액표 검색·주장별 인용 개선 후 개발용 재비교다. 최종 20문항은 미실행이며 게시·Cloud 변경은 하지 않았다.
+**최신 제한 점검 — 2026-10-19:** [보고서·사용자 검토표](../eval/results/v3_closeout_20261019/report.md), [검증](../eval/results/v3_closeout_20261019/verification.json). 최종 근거 12/16, 내용 15/20, 인용까지 13/20, 답변 불가 보류 4/4, 평균 5.193초다. 실제 호출은 답변 26회·별도 AI 채점 0회이며 과거 파일 554개를 보존했다. 안전한 API 진단만 보완했고 최종 결과 확인 후 검색·프롬프트를 조정하지 않았다. 동일 문서의 에이전트 검토 결과이며 독립 사람·외부 검증은 아니다.
+
+**이전 채점 분리 점검 — 2026-10-19:** [채점 분리·규정 선택](Phase6_RetrievalAndAnswerQuality.md#채점-분리와-규정-선택-보완--2026-10-19)으로 참고 정답 기반 정확성과 검색 근거만의 근거성을 분리했다. 응답의 모든 항목을 필수화하고 인용은 기존 주장 근거에 한정한다. 개발용 근거 **14/16→16/16**, 알려진 v2 **48/48** 유지, **테스트 483개** 통과다. 실제 채점 10회 중 6개 단계를 채택하고 3개는 검증에서 거부했으며 1개는 제공업체 오류다. 비교는 미완료이고 의미 판정 불일치도 남았다. 새 답변·최종 문항은 평가하지 않았다. 과거 평가 515개를 포함한 보호 파일 522개를 보존했다. [검증](../eval/results/v3_split_checks_20261019/verification.json)을 참고한다.
+
+**이전 후속 개선 — 2026-10-19:** 절 제목을 활용한 문맥 선택, 인용·추론 지시, 채점 지시와 저장 답변 비교 도구를 구현했다. **소프트웨어 테스트 439개를 통과**했다. 실제 개발용 비교는 이전 페이지 답변 20개를 재사용하고 **새 답변 20회 + 채점 39회 = 모델 59회**를 호출했다. 필수 근거는 **12/16 → 14/16**, 출력 검증은 **19/20 → 20/20**으로 개선했지만 같은 새 채점 기준의 AI 통과는 **17/20 → 17/20**이다. 이전 답변의 원래 15/20이 재채점에서 17/20이 된 것은 구현 개선이 아니다. 보호 대상 434개, 그중 과거 평가 파일 427개를 보존했다. [구현과 한계](Phase6_RetrievalAndAnswerQuality.md#v3-개발-후속-개선--2026-10-19), [보고서](../eval/results/v3_refinement_dev_20261019/report.md), [검증](../eval/results/v3_refinement_dev_20261019/verification.json)을 참고한다. 다음은 참고 정답과 근거성 채점 분리, 논쟁 사례의 독립 판정, 남은 결재 금액표 검색·주장별 인용 개선 후 개발용 재비교다. 최종 20문항은 미실행이며 게시·Cloud 변경은 하지 않았다.
 
 **최초 v3 개발용 평가 — 2026-10-19:** 평가 도구·v3 준비에서 **소프트웨어 테스트 409개**를 통과한 뒤 같은 구현으로 **개발용 20문항**의 실제 비교를 완료했다. 원본 AI 통과는 **청크 14/20·페이지 15/20**, 필수 인용 근거 전체 확보는 **10/16·12/16**이다. 실제 **답변 40회 + 채점 39회 = 모델 79회**를 호출했으며 페이지 인용 검증 실패 1건 외에 제공업체·채점 오류는 없었다. 오프라인 산출물 검사·보고서 재현을 통과했고 기준 파일 376개를 보존했다. 당시 평가에서는 소프트웨어 테스트를 반복하지 않았다. [결과·분석](Phase6_RetrievalAndAnswerQuality.md#v3-개발용-평가--2026-10-19), [보고서](../eval/results/v3_dev_20261019_1003/report.md), [검증](../eval/results/v3_dev_20261019_1003/verification.json)을 참고한다. 최초 결과는 그대로 보존했다. 과거 채점 복구는 실행하지 않았으며 이후 새 계획과 원래 채점기·버전의 호환을 함께 확인해야 한다.
 
@@ -210,21 +215,16 @@ PDF 추출·청크 분할·임베딩·검색·문맥 구성·근거 기반 생�
 
 ## 앞으로 개발할 순서
 
-최신 [v3 개발 후속 개선과 한계](Phase6_RetrievalAndAnswerQuality.md#v3-개발-후속-개선--2026-10-19)가 과거 배포 제안보다 우선한다. 위 최초 점검은 과거 기록이며, 당시의 키·실제 추적 미확인 상태는 현재와 다르다.
+사용자가 평가 도구를 더 개발하는 대신 제한한 마무리를 승인했다. 아래 순서는 이전 제안을 대체하며 과거 점수와 미완료 검토는 보존한다.
 
-| 우선순위 | 남은 작업 | 이유와 현재 상태 |
+| 상태 | 작업 | 결과 / 범위 |
 | --- | --- | --- |
-| 로컬 완료 | 검증 규칙·발생 위치의 안전한 기록 | 실행기·평가기에서 규칙·위치와 응답 길이·해시를 보존한다. 엄격한 검사는 유지하며 원래 상세를 기록하지 않은 과거 4건의 원인은 알 수 없음으로 남긴다. |
-| 로컬 완료 | 문맥 선택 개선 | 절 제목을 활용해 빠졌던 `d07` 예산·`d08` 견적 조항을 확보했다. 개발용은 12/16→14/16이며 전체 근거 확보 악화는 없고 알려진 v2는 48/48을 유지했다. |
-| 별도 과제 | 과거 실패한 AI 채점 87건 복구 | 충전은 완료했지만 해당 과거 답변은 재채점하지 않았다. 이후 새 계획과 원래 채점기·버전의 호환이 필요하며 새 계획만으로는 충분하지 않다. |
-| 사람 검토 보류 | 기존 검토 목록 34건 보존 | AI 판정은 사람 검증이 아니다. 요청 시 재개하고 기존 점수·메모는 유지한다. |
-| 로컬 완료 | 평가 도구·v3 준비·저장 답변 비교 | 40문항, 묶음 선택·고정한 동일 채점기 비교, 소프트웨어 테스트 439개. 동일 기준 개발용 AI 통과는 전후 17/20이며 원래 점수·원본 결과를 유지한다. |
-| 로컬 완료 | 엄격한 검증을 유지한 인용·추론 지시 | `d04`를 포함해 새 출력 20/20이 검증을 통과했다. 단일 관측으로 인용 문제가 완전히 사라졌다고 단정하지 않으며 과거 거부 원문은 여전히 없다. |
-| 1 | 근거성 채점 분리·독립 판정 | 새 채점 지시에도 `d07` 미검색 참고 근거 사용, `d10` 사례 보간 허용, `d12` 규정 결합 판정 불일치가 남았다. `d11`은 질문 전제의 채점 기준 논쟁도 있다. 원본 점수를 보존하고 독립 검토로 기준을 점검한다. |
-| 2 | 명시적 결재 규정 검색·주장별 인용 완성 | `d10`·`d11`은 금액별 결재 표가 아직 빠진다. `d12`는 규정을 결합했지만 한 주장에서 두 근거를 직접 인용하지 않았다. 보류 규칙을 약화하거나 정답을 실행기에 넣지 않고 개발용으로 개선한다. |
-| 3 | 개발용 재평가 → 코드·채점 기준 고정 → 최종 평가 | 최종 20문항 성적은 아직 확인하지 않았다. 같은 문서·동일 모델 한계를 유지하며 최종 결과로 변경하면 이후는 회귀 사례로 다룬다. |
-| 선택적 보조 작업 | Cloud 자원 검사·CI·SDK 유지보수 | 이후 도움이 되지만 현재 RAG 시연의 필수 요건은 아니다. |
-| 명시적 보류·제외 | Phase 7 사용성 / 동시 접속 검사 | 사용성은 보류, 동시 접속 검사는 목표 범위 밖이다. |
+| 기록 완료 | 1. 개발 논쟁 사례 검토 | Codex 원문 대조 기준 5/6 충족, 잘못된 인용 1개 차단. 독립 사람 판정과 구분한다. |
+| 기록 완료 | 2. 코드·기준 고정 후 최종 1회 실행 | 출력 검증 20/20, 내용 15/20·인용까지 13/20. 실패를 보존하고 최종 결과로 재조정하지 않았다. |
+| 기록 완료 | 3. 결과 설명·시연 점검 | 전체 검토표, 시간·토큰, 저장 실답변 화면 재생, 로컬 시작·재시작 및 테스트 484개를 기록했다. |
+| 사용자 확인 | 독립 사람 검토 | 사람 검증으로 표시하려면 최종 20문항을 확인한다. f03·f05·f08을 우선 볼 만하다. 추가 모델 호출은 필요 없다. |
+| 선택적 후속 | 기록된 검색·답변 누락·인용 실패 보완 | 관측한 최종 문항은 회귀 사례로 다룬다. 자동으로 다음 개발을 시작하지 않는다. |
+| 보류 / 별도 | 평가기 확장·과거 채점 87건·검토 34건; 게시·Cloud 검사 | 제한한 기술적 마무리의 필수 요건에서 제외한다. 변경은 로컬이며 Phase 7 보류·동시 접속 제외를 유지한다. |
 
 ## 이전 작업 순서와 결정 사항 — 2026-10-16
 
@@ -263,3 +263,5 @@ Cloud 설정 시 저장소·브랜치·진입 파일·Python·서버 시크릿�
 | 2026-10-19 | 평가 도구 확장과 v3 준비 구현·테스트 409개 통과. 원본 데이터·보고서·실행 RAG 동작 유지. 다음은 명시적 API 재개 후 개발·최종 평가이며 이번에는 API 호출·게시하지 않았다. 별도 dev-log 미설치로 여기에 기록. |
 | 2026-10-19 | API 사용 재개와 v3 개발용 평가 완료 기록. 모델 79회 호출, 원본 통과 14/20·15/20, 근거 확보 10/16·12/16. 산출물 검증·기준 파일 보존 완료. 채점 해석·문맥 선택·인용 생성 개선 후 코드 고정 최종 평가를 우선했다. 실행 코드 수정·게시 없음. dev-log 미설치로 여기에 기록. |
 | 2026-10-19 | 개발 개선·저장 답변 비교 완료. 테스트 439개, 새 모델 호출 59회, 근거 12/16→14/16·유효 출력 19/20→20/20이나 같은 기준 AI 통과는 17/20으로 동일. 파일 434개 보존. 채점 분리·논쟁 사례 검토·결재 표 검색·주장별 인용을 우선하고 최종 평가·게시 대기. dev-log 미설치로 여기에 기록. |
+| 2026-10-19 | 검토한 파일 192개를 8686fff로 게시한 뒤 채점 분리·규정 주제 선택을 로컬 구현했다. 테스트 483개, 개발용 근거 14/16→16/16·v2 48/48 유지. 실제 채점은 요청 10회·채택 6개 단계·검증 거부 3개·API 오류 1개로 부분 완료. 파일 522개 보존, 새 답변·최종 평가·독립 판정 대기. dev-log 미설치로 여기에 기록. |
+| 2026-10-19 | 제한한 마무리: 테스트 484개·생성 26회·별도 채점 없음, Codex 기준 최종 내용 15/20·인용까지 13/20. 시연 재생·재시작 통과, 원본 554개 보존. 사람 검토·게시 별도, 추가 평가기 개발 보류. dev-log 미설치. |

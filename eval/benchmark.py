@@ -153,7 +153,7 @@ def answer_once(assistant, question):
                   "retrieved_chunks": record.get("retrieved_chunks", []), "token_usage": record.get("token_usage"),
                   "latency_ms": round((perf_counter() - started) * 1000, 2)}
         result.update({key: record[key] for key in (
-            "validation_error", "response_metadata", "ranked_chunks", "retrieval_mode", "context_selection",
+            "validation_error", "provider_error", "response_metadata", "ranked_chunks", "retrieval_mode", "context_selection",
             "context_chars", "search_k", "retrieval_latency_ms", "generation_latency_ms", "trace",
         ) if key in record})
     result["evidence_check"] = check_evidence(result["retrieved_chunks"], question["evidence_groups"])

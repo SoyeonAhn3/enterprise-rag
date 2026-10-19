@@ -91,6 +91,11 @@ def test_claude_errors_are_bounded_and_sanitized(failure, expected):
             client.close()
     assert len(requests) == 1
     assert "unit-secret-must-not-leak" not in str(caught.value)
+    category = {401: "authentication", 429: "rate_limit", "timeout": "timeout", "connection": "connection"}.get(failure, "api_error")
+    assert caught.value.diagnostic() == {
+        "category": category, "http_status": failure if isinstance(failure, int) else None,
+    }
+    assert "unit-secret-must-not-leak" not in json.dumps(caught.value.diagnostic())
 
 
 @pytest.mark.parametrize("reply", [

@@ -1,0 +1,15 @@
+{
+  "created_at": "2026-10-19T03:17:38.381241+00:00",
+  "reviewer_kind": "project_owner_reported_spot_check",
+  "question_ids": [
+    "v3_f03",
+    "v3_f05",
+    "v3_f08"
+  ],
+  "feedback_verbatim_ko": "위의 3개 확인했는데 문제 없는것 같은데",
+  "scope": "Owner reports checking three selected cases. This does not establish review of all 20 final questions.",
+  "score_changes": false,
+  "grading_interpretation": "No numeric scores changed; the brief feedback does not explicitly distinguish acceptance of answers from acceptance of grading notes.",
+  "remaining_final_items_not_owner_confirmed": 17,
+  "sha256": "4480669b6ccf0d77154516402820dcbb03e4c4b065bc63797f9c47cbf820becf"
+}

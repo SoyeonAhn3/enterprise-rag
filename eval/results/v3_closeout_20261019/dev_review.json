@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-19T02:56:36.285872+00:00",
+  "answers_sha256": "9343ca05909ca7135c0afd0838a1c3dd101bb4e63e38f44d48a824895e6dcd70",
+  "review_policy_sha256": "447f85f401a3117dd10318b7dd4ee20b11c3cef0cc4d0309bf7403819ffdef9d",
+  "results": [
+    {
+      "id": "v3_d01",
+      "execution_status": "success",
+      "correct": true,
+      "complete": true,
+      "grounded": true,
+      "claim_citations_complete": true,
+      "overall_pass": true,
+      "notes_ko": "VAT 제외 필수 설치비를 합산한 100만원과 팀장 구간을 원문 규칙에 적용했다. 계산·승인자 인용이 각각 충분하다.",
+      "reviewer_kind": "codex_source_review_not_independent_human"
+    },
+    {
+      "id": "v3_d04",
+      "execution_status": "success",
+      "correct": true,
+      "complete": true,
+      "grounded": true,
+      "claim_citations_complete": true,
+      "overall_pass": true,
+      "notes_ko": "정확히 500만원에서 부서장, 별도 예산 검토 비필수, 법무 검토 필수를 구분했다. 이상/초과 및 검토 시점을 보존했다.",
+      "reviewer_kind": "codex_source_review_not_independent_human"
+    },
+    {
+      "id": "v3_d07",
+      "execution_status": "success",
+      "correct": true,
+      "complete": true,
+      "grounded": true,
+      "claim_citations_complete": true,
+      "overall_pass": true,
+      "notes_ko": "총액 600만원, CFO, 재무팀 사전검토, 법무 OR 조건, 신규 유료 SaaS 보안검토를 모두 실제 규칙과 연결했다. 예시를 일반화하지 않았다.",
+      "reviewer_kind": "codex_source_review_not_independent_human"
+    },
+    {
+      "id": "v3_d10",
+      "execution_status": "success",
+      "correct": true,
+      "complete": true,
+      "grounded": true,
+      "claim_citations_complete": true,
+      "overall_pass": true,
+      "notes_ko": "팀장 임시 승인과 CFO 최종 승인을 구분하고 1영업일 등록, 사후 보완, 재무팀 즉시 협의를 설명했다. 금액표와 긴급 규정이 모두 인용됐다.",
+      "reviewer_kind": "codex_source_review_not_independent_human"
+    },
+    {
+      "id": "v3_d11",
+      "execution_status": "success",
+      "correct": true,
+      "complete": true,
+      "grounded": true,
+      "claim_citations_complete": true,
+      "overall_pass": true,
+      "notes_ko": "팀장 구간을 확인하고 무승인 선결제의 원칙적 불인정 및 재무팀 별도 검토를 답했다. 소액 자동 면제를 주장하지 않았다.",
+      "reviewer_kind": "codex_source_review_not_independent_human"
+    },
+    {
+      "id": "v3_d12",
+      "execution_status": "error",
+      "correct": null,
+      "complete": null,
+      "grounded": null,
+      "claim_citations_complete": null,
+      "overall_pass": false,
+      "notes_ko": "인용에 원문에 없는 세로줄을 넣어 quote_not_in_source로 차단됐다. 답변 내용이 그럴듯해도 성공이나 올바른 보류로 집계하지 않는다. 원문에는 필요한 규정이 검색됐다.",
+      "reviewer_kind": "codex_source_review_not_independent_human"
+    }
+  ],
+  "passed": 5,
+  "total": 6,
+  "validation_rejections": 1,
+  "proceed_to_final": true,
+  "reason": "One malformed quote was safely rejected. Preserve the observed failure; no runtime or scoring changes before final. No evidence of an accepted materially incorrect answer in the six-case check.",
+  "human_review_status": "pending",
+  "sha256": "24244e920f03abf0c2aae8a7591db4278bc0b09f18a3c9fea47c2b505a0b11a7"
+}

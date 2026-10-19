@@ -109,3 +109,38 @@ def test_unavailable_section_title_in_unsent_page_cannot_trigger_replacement():
     chosen = context.assemble(ranked, question="Explain budget", max_sources=5, max_chars=40)
     assert [c["page"] for c in chosen] == [1, 2, 3, 4, 5]
     assert sum(len(c["text"]) for c in chosen) <= 40
+
+
+def test_authority_synonyms_can_replace_incidental_korean_title_overlap():
+    repeated = "최종 승인자와 재무팀 사전검토를 알려주세요. "
+    texts = [repeated, repeated, "1. 배송\n" + repeated,
+             "2. 법무팀 안내\n" + repeated, "3. 일정\n" + repeated,
+             "4. 금액별 최종 결재권자\n경계 금액과 담당자를 확인한다."]
+    chosen = select(texts, repeated, k=5)
+    assert 6 in {c["page"] for c in chosen}
+    assert [c["page"] for c in chosen[:2]] == [1, 2]
+
+
+def test_policy_assertion_in_scenario_needs_authority_even_if_request_is_review():
+    question = "소액은 팀장 결재 구간이라고 들었습니다. 추가 검토는 무엇인가요?"
+    texts = [question, question, "1. 배송\n" + question, "2. 안내\n" + question,
+             "3. 일정\n" + question, "4. 결재 권한\n금액별 승인자를 확인한다."]
+    assert 6 in {c["page"] for c in select(texts, question, k=5)}
+
+
+def test_background_privacy_fact_does_not_displace_requested_quotation_rule():
+    question = "개인정보가 없는 업무입니다. 견적 기준을 설명하세요."
+    texts = [question, question, "1. 배송\n" + question, "2. 안내\n" + question,
+             "3. 견적 기준\n견적을 확보한다.", "4. 개인정보\n개인정보 취급 기준."]
+    chosen = select(texts, question, k=5)
+    assert 5 in {c["page"] for c in chosen}
+    assert 6 not in {c["page"] for c in chosen}
+
+
+def test_added_authority_keeps_existing_requested_budget_section():
+    question = "예산 검토와 최종 승인자를 설명하세요."
+    texts = [question, question, "1. 예산 검토\n예산을 확인한다.",
+             "2. 안내\n" + question, "3. 일정\n" + question,
+             "4. 결재권한\n승인자는 금액에 따라 정한다."]
+    chosen = select(texts, question, k=5)
+    assert {3, 6} <= {c["page"] for c in chosen}

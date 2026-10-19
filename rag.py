@@ -160,6 +160,9 @@ class RAGAssistant:
             record.update(result)
             record["stage"] = "complete"
             return result
+        except ClaudeError as exc:
+            record["provider_error"] = exc.diagnostic()
+            raise
         except AnswerValidationError as exc:
             record["validation_error"] = exc.diagnostic()
             if record["stage"] == "validation":

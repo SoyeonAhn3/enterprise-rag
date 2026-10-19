@@ -1,0 +1,26 @@
+{
+  "created_at": "2026-10-19T02:27:26.063805+00:00",
+  "status": "stopped_after_one_request",
+  "requests": 1,
+  "automatic_retries": 0,
+  "error_type": "ValueError",
+  "validator_message": "Judge must assess every item once.",
+  "cause": "The model returned only c1 although the input contained five claims; local validation rejected it.",
+  "change": "Require each claim/criterion ID as an explicit required object property in the provider response schema. Retain local completeness checks and audit the exact sent schema.",
+  "original_attempt_preserved": true,
+  "accepted_grade": null,
+  "followup_plan": {
+    "configurations": [
+      "before",
+      "after"
+    ],
+    "question_ids": [
+      "v3_d07",
+      "v3_d10",
+      "v3_d12"
+    ],
+    "max_calls": 12,
+    "total_calls_including_both_failed_checks_at_most": 14
+  },
+  "sha256": "e629d74bc6b6e9dddffcd6b8a10f085bbfcf7683112a8cb5d50dcadba16c207e"
+}

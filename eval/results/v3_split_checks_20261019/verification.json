@@ -1,0 +1,338 @@
+{
+  "created_at": "2026-10-19T02:35:22.284261+00:00",
+  "status": "software_and_offline_checks_passed_live_reviews_partial",
+  "software_tests": {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest -q",
+    "passed": 483,
+    "seconds": 22.25,
+    "new_tests": 44
+  },
+  "software_record_sha256": "1abfc8990c613ab6a22059fb50374740b629a625a7a108fda1e0c35479eabf16",
+  "tested_code_still_matches": true,
+  "retrieval": {
+    "dev_before": 14,
+    "dev_after": 16,
+    "answerable": 16,
+    "known_v2_before": 48,
+    "known_v2_after": 48,
+    "known_v2_answerable": 48,
+    "complete_evidence_regressions": []
+  },
+  "live_review": {
+    "requests": 10,
+    "accepted_stages": 6,
+    "validation_errors": 3,
+    "provider_errors": 1,
+    "automatic_retries": 0,
+    "new_answers": 0,
+    "final_split_calls": 0,
+    "token_usage_observed": {
+      "input_tokens": 59734,
+      "output_tokens": 12467,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0
+    },
+    "provider_error_token_usage_unknown": true,
+    "runs": [
+      {
+        "directory": "v3_split_review_20261019",
+        "protocol_sha256": "e2e6bb878a979abd3030cd3319f7089ad524656b5b078252eb88610cd7e3b662",
+        "summary_sha256": "6c4e5ef18a4264826a4c4a2bfb862c7cadeb7c8d51fdc791f4000610867ef6eb",
+        "records": 1,
+        "planned_stages": 16,
+        "complete": false,
+        "rows": [
+          {
+            "configuration": "before",
+            "question_id": "v3_d07",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "before",
+            "question_id": "v3_d10",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "before",
+            "question_id": "v3_d11",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "before",
+            "question_id": "v3_d12",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "after",
+            "question_id": "v3_d07",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "after",
+            "question_id": "v3_d10",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "after",
+            "question_id": "v3_d11",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "after",
+            "question_id": "v3_d12",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          }
+        ]
+      },
+      {
+        "directory": "v3_split_review_fixed_20261019",
+        "protocol_sha256": "4ff33b5f0d164d633f1b0b39c697c0f336a95ec6e889c77a015e3968597c3b55",
+        "summary_sha256": "e932422e2e04285ec5c7790c171f11c32f2319749ed97999bbdb6873fd85a23e",
+        "records": 1,
+        "planned_stages": 12,
+        "complete": false,
+        "rows": [
+          {
+            "configuration": "before",
+            "question_id": "v3_d07",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "before",
+            "question_id": "v3_d10",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "before",
+            "question_id": "v3_d12",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "after",
+            "question_id": "v3_d07",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "after",
+            "question_id": "v3_d10",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "after",
+            "question_id": "v3_d12",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          }
+        ]
+      },
+      {
+        "directory": "v3_split_review_keyed_20261019",
+        "protocol_sha256": "8d4b64e76569be895255861698746846babcf466c57cd0edec81925680f5cb23",
+        "summary_sha256": "16b0bad7e9feda64e61315f029d7913f291fa9b483b940a144b5de9383eaaed9",
+        "records": 3,
+        "planned_stages": 12,
+        "complete": false,
+        "rows": [
+          {
+            "configuration": "before",
+            "question_id": "v3_d07",
+            "answer_status": "success",
+            "accurate": true,
+            "grounded": true,
+            "citation_complete": false,
+            "uncertain": true,
+            "overall_pass": null
+          },
+          {
+            "configuration": "before",
+            "question_id": "v3_d10",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "before",
+            "question_id": "v3_d12",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "after",
+            "question_id": "v3_d07",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "after",
+            "question_id": "v3_d10",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "after",
+            "question_id": "v3_d12",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          }
+        ]
+      },
+      {
+        "directory": "v3_split_review_indices_20261019",
+        "protocol_sha256": "29130cecf1888c0dce4b091bcf42070edc119e0859ad25f797f51300ac69f778",
+        "summary_sha256": "f8c60f276dbcfa1d992972d3f8e4cabbe3c7341d065f7f7b8fed339403ef1a05",
+        "records": 5,
+        "planned_stages": 8,
+        "complete": false,
+        "rows": [
+          {
+            "configuration": "before",
+            "question_id": "v3_d07",
+            "answer_status": "success",
+            "accurate": true,
+            "grounded": true,
+            "citation_complete": false,
+            "uncertain": false,
+            "overall_pass": false
+          },
+          {
+            "configuration": "before",
+            "question_id": "v3_d12",
+            "answer_status": "success",
+            "accurate": true,
+            "grounded": true,
+            "citation_complete": false,
+            "uncertain": false,
+            "overall_pass": false
+          },
+          {
+            "configuration": "after",
+            "question_id": "v3_d07",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          },
+          {
+            "configuration": "after",
+            "question_id": "v3_d12",
+            "answer_status": "success",
+            "accurate": null,
+            "grounded": null,
+            "citation_complete": null,
+            "uncertain": null,
+            "overall_pass": null
+          }
+        ]
+      }
+    ]
+  },
+  "preservation": {
+    "protected_files": 522,
+    "historical_eval_files": 515,
+    "byte_identical": true
+  },
+  "publication": {
+    "completed_before_development": "8686fff76349cd1a2b615a5b365c80471941d390",
+    "files": 192,
+    "branch": "main",
+    "remote": "https://github.com/SoyeonAhn3/enterprise-rag.git",
+    "new_development_pushed": false
+  },
+  "limitations": [
+    "Same-model AI grading; no independent human adjudication.",
+    "d07 still generalizes an example while marking support true; original decisions were not manually adjusted.",
+    "Live reviews are incomplete after validation/provider errors; no full answer-accuracy claim.",
+    "No new answers or final questions were evaluated."
+  ],
+  "sha256": "ea05da85fab109be2a871da93040215f1cf3d78e647135efa1816277e91df8fa"
+}

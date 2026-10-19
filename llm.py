@@ -16,6 +16,17 @@ from config import ConfigurationError, Settings, load_settings
 class ClaudeError(RuntimeError):
     """A Claude request failed; the message contains no provider response text."""
 
+    def __init__(self, message, *, category="provider", http_status=None):
+        super().__init__(message)
+        self.category = category if category in {
+            "provider", "authentication", "rate_limit", "timeout", "connection",
+            "api_error", "incomplete_response", "empty_response",
+        } else "provider"
+        self.http_status = http_status if type(http_status) is int and 100 <= http_status <= 599 else None
+
+    def diagnostic(self):
+        return {"category": self.category, "http_status": self.http_status}
+
 
 class ClaudeClient:
     def __init__(self, settings: Settings, *, http_client=None):
@@ -30,16 +41,18 @@ class ClaudeClient:
     def _call(self, operation, **kwargs):
         try:
             return operation(**kwargs)
-        except AuthenticationError:
-            raise ClaudeError("Claude authentication failed. Check ANTHROPIC_API_KEY.") from None
-        except RateLimitError:
-            raise ClaudeError("Claude rate or usage limit reached. Check API billing and usage limits.") from None
-        except APITimeoutError:
-            raise ClaudeError("Claude request timed out.") from None
-        except APIConnectionError:
-            raise ClaudeError("Could not connect to Claude. Check network access.") from None
-        except APIError:
-            raise ClaudeError("Claude request failed. Check API billing, model access, and service status.") from None
+        except APIError as exc:
+            if isinstance(exc, AuthenticationError):
+                category, message = "authentication", "Claude authentication failed. Check ANTHROPIC_API_KEY."
+            elif isinstance(exc, RateLimitError):
+                category, message = "rate_limit", "Claude rate or usage limit reached. Check API billing and usage limits."
+            elif isinstance(exc, APITimeoutError):
+                category, message = "timeout", "Claude request timed out."
+            elif isinstance(exc, APIConnectionError):
+                category, message = "connection", "Could not connect to Claude. Check network access."
+            else:
+                category, message = "api_error", "Claude request failed. Check API billing, model access, and service status."
+            raise ClaudeError(message, category=category, http_status=getattr(exc, "status_code", None)) from None
 
     def check_connection(self) -> dict:
         model = self._call(self.client.models.retrieve, model_id=self.settings.chat_model)
@@ -62,10 +75,10 @@ class ClaudeClient:
             for key in ("input_tokens", "output_tokens", "cache_creation_input_tokens", "cache_read_input_tokens")
         }
         if message.stop_reason != "end_turn":
-            raise ClaudeError("Claude did not return a complete text response; no answer was accepted.")
+            raise ClaudeError("Claude did not return a complete text response; no answer was accepted.", category="incomplete_response")
         text = "\n".join(block.text for block in message.content if block.type == "text").strip()
         if not text:
-            raise ClaudeError("Claude returned no text; no answer was accepted.")
+            raise ClaudeError("Claude returned no text; no answer was accepted.", category="empty_response")
         return text
 
     def close(self) -> None:

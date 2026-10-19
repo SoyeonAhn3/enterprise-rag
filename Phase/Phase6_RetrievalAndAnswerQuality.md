@@ -1,4 +1,4 @@
-# Phase 6 — Retrieval and Answer Quality `✅ Local implementation · ✅ V3 dev evaluation`
+# Phase 6 — Retrieval and Answer Quality `✅ Local implementation · Final evaluation recorded`
 
 > Improve complete evidence retrieval and condition-preserving answers with a bounded, auditable context.
 
@@ -8,7 +8,9 @@
 **Prerequisites**: Phases 1–4 implemented; Phase 5 demo deployed. The user explicitly deferred remaining Phase 5 checks and authorized Phase 6 documentation, development, and tests.\
 **Technology**: Python 3.12, existing E5/Chroma/Claude stack, pytest.
 
-**Latest follow-up (2026-10-19):** [Development refinement](#v3-development-refinement--2026-10-19) and **439 tests** are complete. Page evidence coverage improves 12/16→14/16 and validated outputs 19/20→20/20. With the same revised judge, old and new page answers both pass **17/20**; overall accuracy improvement is not established. The run used 59 new model calls. Grading inconsistencies and remaining retrieval/citation issues are recorded; final questions remain unexecuted.
+**Latest closeout (2026-10-19):** [Bounded final evaluation](#bounded-final-closeout--2026-10-19) is recorded: 484 software tests; final content 15/20 and content plus complete citations 13/20 by Codex source review. Six dev plus twenty final answers, no judge calls. Known failures and human review remain explicit. No publication or Cloud change.
+
+**Earlier follow-up (2026-10-19):** [Separate grading and rule selection](#separate-grading-and-complete-rule-selection--2026-10-19) are implemented locally; **483 tests** pass. Offline dev evidence improves **14/16→16/16**, retaining known-v2 **48/48**. Live grading is partial: 10 requests, 6 accepted stages, 3 validation rejections and 1 provider error. No new answers or final questions were evaluated; the earlier complete answer comparison remains 17/20→17/20. The previous snapshot was published as `8686fff`; this follow-up is local.
 
 ## Earlier user decision — 2026-10-16
 
@@ -317,6 +319,68 @@ Evidence: [offline retrieval replay](../eval/results/v3_refinement_checks_202610
 .\.venv\Scripts\python.exe -X utf8 -m eval.refinement report --output-dir eval/results/v3_refinement_dev_20261019
 ```
 
+### Separate grading and complete rule selection — 2026-10-19
+
+The owner approved publishing the reviewed snapshot and developing priorities 1 and 2. Commit `8686fff76349cd1a2b615a5b365c80471941d390` was pushed to `origin/main`; local, upstream and GitHub tips matched. The new work below starts after that publication and is not part of that commit.
+
+| Task | Planned behavior | Completion checks |
+| --- | --- | --- |
+| Separate grading | Add a frozen saved-answer evaluator with independent correctness and grounding requests. Grounding receives only the question, answer/claims and retrieved sources; expected answers, reference passages and correctness judgments never enter that request. Keep original combined-judge artifacts reproducible. | Payload-isolation tests, source/claim binding checks, ambiguous/error grades reported separately, durable stage attempts and bounded calls. Review disputed dev cases without silently changing old grades. |
+| Complete rule selection | Recover relevant rule sections already present in the candidate list, including approval authority, without reference annotations or extra model/search calls. | Replay all 20 dev and 60 known-v2 questions; retain existing complete evidence, source limits and exact text. Add general selection regression tests. |
+| Verification | Run meaningful unit/regression tests and a small frozen live check of split grading after software checks. | Preserve all historical artifacts and final questions. Record observations separately from human adjudication and overall answer accuracy. |
+
+Status: both implementations and software/retrieval tests are complete. Live judge calibration remains partial; no independent human adjudication or new answer-accuracy measurement was completed.
+
+- [split_judge.py](../eval/split_judge.py) builds allowlisted, independent correctness and grounding inputs. References and expected answers cannot enter grounding. Correctness never receives grounding decisions. Grounding also reports claim-level citation completeness separately. Every claim/criterion is a required API response field; directly cited evidence is selected by an index restricted to that claim's existing citations. Retrieved evidence still requires exact original quotes.
+- [review_split.py](../eval/review_split.py) freezes selected saved dev answers, code, prompts, settings and request limits. Each stage has its own durable attempt and audited input/schema/result links. Errors remain unassessed; pending calls and completed/failed calls are not automatically repeated. Earlier frozen schemas and combined-judge reports remain auditable.
+- `query_and_section_topics_v3` normalizes business-rule terms, including approver/approval authority wording. It preserves leading hits, existing question-text coverage and existing requested rule topics; gaining an explicit topic can replace incidental Korean character-pair title matches. Requested topics use the final request sentence, while an approval-role assertion in the scenario still requires evidence. No question IDs, document filenames, amounts or reference annotations drive selection. A broader topic experiment displaced a quotation clause and was rejected; the final replay has no complete-evidence regressions.
+
+| Verification | Observed result |
+| --- | --- |
+| Full software suite | **483 passed in 22.25 s**, 44 new tests since 439 |
+| Dev retrieval replay | **14/16→16/16**, gains `d10`/`d11`, no regressions |
+| Known-v2 retrieval replay | **48/48→48/48**, no regressions |
+| Historical preservation | **522 files**, including **515 prior evaluation artifacts**, byte-identical |
+| Live diagnostic reviews | **10 requests**, 6 accepted stages, 3 validation rejections, 1 provider error; no automatic retry |
+| New answers / final questions | **0 / 0** |
+
+The first three diagnostic runs exposed mixed support/citation proof, omitted claim decisions, and a quote outside a particular claim's citations. All rejected responses were retained; the fixes separated proof fields, required each item in the response schema, and constrained citation selection to existing citation indices. The final run accepted four stages for two saved `before` answers, then stopped on `ClaudeError` while starting the `after` reviews. Its provider response was not retained, so the specific API cause is unknown; credit shortage is not established. The intended before/after grading comparison did **not** complete. Observed usage across runs was 59,734 input and 12,467 output tokens; usage for the provider error is unavailable.
+
+Input separation is verified, but AI semantic consistency is not solved. In the latest `d07` review, the model marks support true while acknowledging an example-based generalization; it marks citation completeness false. `d12` also passes correctness/support but fails citation completeness. These are unadjusted AI decisions on old answers, not human findings or evidence that new RAG answers improved. Next: independently adjudicate the grading disputes, investigate the provider error before more paid review, improve generated claim citations, then generate/review dev answers with the new selector. Freeze code/scoring before the reserved final 20.
+
+Evidence: [retrieval replay](../eval/results/v3_split_checks_20261019/retrieval_replay.json), [final tests](../eval/results/v3_split_checks_20261019/software_tests_indices.json), [verification](../eval/results/v3_split_checks_20261019/verification.json), [partial live report](../eval/results/v3_split_review_indices_20261019/report.md), [case analysis](../eval/results/v3_split_review_indices_20261019/analysis.json). Earlier failed attempts are retained in `v3_split_review_20261019`, `v3_split_review_fixed_20261019` and `v3_split_review_keyed_20261019`.
+
+```powershell
+# Offline: audit attempts and reproduce the partial report; no model calls.
+.\.venv\Scripts\python.exe -X utf8 -m eval.review_split report --output-dir eval/results/v3_split_review_indices_20261019
+```
+
+`verify` requires a completed run and deliberately does not declare this partial run complete. New paid execution requires a new frozen plan; the stopped output is retained. Separate dev-log is unavailable; the Phase change log records this work.
+
+### Bounded final closeout — 2026-10-19
+
+The owner limited the remaining work to disputed development cases, one final evaluation and a demonstration check. Further judge development and historical review recovery are deferred. The fixed scoring policy accepts rule application but not generalization from examples, distinguishes required answers from restated premises, and checks each claim's attached citations. Codex reviewed the original PDFs; this is **agent review, not independent human adjudication**.
+
+`llm.py` now exposes allowlisted error categories and numeric HTTP status without provider bodies; `rag.py` and saved answer records retain the diagnostic. The prior provider error remains unexplained because its response was not recorded. This run had no provider errors. Retrieval and generation instructions were unchanged. The existing error tests were strengthened and one record-propagation test added: **484 tests passed in 18.33 seconds**.
+
+| Measure | Observed result |
+| --- | --- |
+| Six disputed/control dev cases | 5/6 meet requirements; d12 inserted table separators into quotes and was blocked |
+| Final execution | 20/20 validated responses; 20 generation calls; no AI judge calls |
+| Final complete evidence retrieval | 12/16 answerable cases |
+| Final content requirements | 15/20 overall; 11/16 answerable |
+| Final content plus complete claim citations | 13/20 |
+| Unanswerable questions | 4/4 appropriately abstained |
+| Latency, excluding initialization | Mean 5.193 s; median 4.341 s; maximum 11.198 s |
+| Total new model requests | 26 answers, 0 judges, 0 automatic retries; two non-generation Models API checks |
+| Tokens across all 26 answers | 163,233 input / 17,920 output; no monetary estimate |
+| Demo | Saved-answer AppTest: 3 answers, 1 abstention, 1 blocked output; local HTTP startup and restart passed |
+| Historical preservation | 554 files unchanged; code/scoring identical across dev and final |
+
+Final failures are retained: f01/f07/f09 lack required retrieved rules and abstain; f04 misses the contract-amendment rule and omits the amended contract; f08 omits account-verification documents from the answer text despite retrieving/citing them; f03/f05 omit a threshold or timing clause from claim citations. No tuning or rerunning followed final observation. These same-corpus questions are now known regression cases; the scores are not proof of general performance or directly comparable to earlier automated-judge scores.
+
+See the [report and all 20 human-review items](../eval/results/v3_closeout_20261019/report.md), [summary](../eval/results/v3_closeout_20261019/summary.json), [verification](../eval/results/v3_closeout_20261019/verification.json), [test output](../eval/results/v3_closeout_20261019/pytest.txt) and [demo check](../eval/results/v3_closeout_20261019/demo_check.json). The one-off `run.py` preserves attempts and refuses existing output folders; it is an archived execution, not a command to rerun this final set. UI results replay saved live answers; HTTP readiness excludes model warmup and does not verify the remote Cloud app. Independent human review is pending, especially interpretation of f03/f05/f08. Bounded execution and documentation are complete with these limits; no further paid tests are scheduled. This work remains local. Separate dev-log is unavailable; history is recorded below.
+
 ## Change Log
 
 | Date | Description |
@@ -330,10 +394,12 @@ Evidence: [offline retrieval replay](../eval/results/v3_refinement_checks_202610
 | 2026-10-19 | Implemented reusable dataset validation, split-specific version 2 evaluation protocols, call planning and grouped reports; added 40 PDF-checked v3 questions. Tested locally and retained legacy artifacts. No paid evaluation or publication; dev-log unavailable. |
 | 2026-10-19 | After the owner funded credits, completed v3 dev comparison with 79 model calls; original AI passes 14/20 and 15/20, one quote-validation failure, no provider/judge errors. Preserved raw grades and all baseline files; recorded retrieval failures and grading disputes. Final questions, old review recovery and Cloud unchanged; dev-log unavailable. |
 | 2026-10-19 | Implemented section-aware context refinement, quotation/inference guidance, revised judge instructions and a saved-answer comparison tool. 439 tests passed; 59 live calls. Coverage 12/16→14/16 and valid outputs 19/20→20/20, but same-judge passes 17/20→17/20. Preserved 434 files and documented remaining grading/retrieval issues. Final evaluation and publication pending; dev-log unavailable. |
+| 2026-10-19 | Published 192 reviewed files as 8686fff, then implemented separate grading and rule-topic selection locally. 483 tests; dev evidence 14/16→16/16, known-v2 48/48 retained. Live review partial: 10 requests, 6 accepted stages, 3 validation rejections, 1 provider error. Preserved 522 files; new answers/final evaluation and independent adjudication pending. Dev-log unavailable; recorded here. |
+| 2026-10-19 | Bounded closeout: safe provider diagnostics, 484 tests, 6 dev + 20 final answers and no judges. Final content 15/20, content/citations 13/20 by Codex; 554 original files preserved. Demo replay/restart passed; human review and publication pending. Further evaluator work deferred; dev-log unavailable. |
 
 ---
 
-# Phase 6 — 검색·답변 품질 개선 `✅ 로컬 구현 · ✅ V3 개발용 평가`
+# Phase 6 — 검색·답변 품질 개선 `✅ 로컬 구현 · 최종 평가 기록`
 
 > 길이를 제한하고 근거를 추적할 수 있는 문맥으로 필수 근거 검색과 조건을 보존하는 답변을 개선한다.
 
@@ -343,7 +409,9 @@ Evidence: [offline retrieval replay](../eval/results/v3_refinement_checks_202610
 **선행 조건**: Phase 1~4 구현, Phase 5 데모 배포. 사용자가 남은 Phase 5 검증을 보류하고 Phase 6 문서·개발·테스트를 명시적으로 요청했다.\
 **기술 구성**: Python 3.12, 기존 E5/Chroma/Claude, pytest.
 
-**최신 후속(2026-10-19):** [개발 후속 개선](#v3-개발-후속-개선--2026-10-19)과 **테스트 439개**를 완료했다. 페이지 근거 확보는 12/16→14/16, 출력 검증은 19/20→20/20이다. 같은 새 채점 기준에서 이전·새 답변 모두 **17/20**으로 전체 정확도 개선은 입증하지 않았다. 새 모델 호출은 59회다. 채점 불일치와 남은 검색·인용 문제를 기록했으며 최종 문항은 미실행이다.
+**최신 마무리(2026-10-19):** [제한한 최종 평가](#제한한-최종-점검--2026-10-19)를 기록했다. 소프트웨어 테스트 484개, Codex 원문 대조 기준 최종 내용 15/20·인용까지 13/20이다. 개발 6개와 최종 20개의 답변만 생성했고 별도 AI 채점은 없다. 실패 사례와 사람 검토 미완료를 명시하며 게시·Cloud 변경은 하지 않았다.
+
+**이전 후속(2026-10-19):** [채점 분리·규정 선택](#채점-분리와-규정-선택-보완--2026-10-19)을 로컬 구현했고 **테스트 483개**가 통과했다. 오프라인 개발용 근거는 **14/16→16/16**, 알려진 v2는 **48/48**을 유지했다. 실제 채점은 부분 완료로, 요청 10회 중 6개 단계를 채택하고 3개는 검증에서 거부했으며 1개는 제공업체 오류다. 새 답변·최종 문항은 평가하지 않았고 이전 전체 답변 비교는 17/20→17/20으로 유지한다. 이전 변경은 `8686fff`로 게시했으며 이번 후속은 로컬 상태다.
 
 ## 이전 사용자 결정 — 2026-10-16
 
@@ -652,6 +720,68 @@ API 평가를 명시적으로 재개한 뒤에만 `python -m eval.quality run --
 .\.venv\Scripts\python.exe -X utf8 -m eval.refinement report --output-dir eval/results/v3_refinement_dev_20261019
 ```
 
+### 채점 분리와 규정 선택 보완 — 2026-10-19
+
+사용자가 검토한 변경의 게시와 우선순위 1·2번 개발을 승인했다. `8686fff76349cd1a2b615a5b365c80471941d390`을 `origin/main`에 푸시했고 로컬·추적 브랜치·GitHub 커밋의 일치를 확인했다. 아래 신규 작업은 게시 후 시작하며 해당 커밋에는 포함되지 않는다.
+
+| 작업 | 계획한 동작 | 완료 확인 |
+| --- | --- | --- |
+| 채점 분리 | 저장 답변을 고정해 정확성과 근거성을 독립 요청으로 평가한다. 근거성 요청에는 질문·답변/주장·실제 검색 근거만 보내며 참고 정답·참고 원문·정확성 판정은 전달하지 않는다. 기존 통합 채점 산출물의 재현성을 유지한다. | 입력 분리·출처/주장 연결 검사, 모호함·오류의 별도 표시, 단계별 시도 저장·호출 한도 테스트. 원본 점수를 수정하지 않고 개발용 논쟁 사례를 점검한다. |
+| 규정 선택 보완 | 후보 목록에 이미 있는 결재권한 등 관련 규정의 절을 확보한다. 정답 주석이나 추가 모델·검색 호출을 사용하지 않는다. | 개발용 20문항·알려진 v2 60문항 재생. 기존 전체 근거 확보·출처 수·원문을 보존하고 일반적인 선택 회귀 테스트를 추가한다. |
+| 검증 | 단위·회귀 테스트 후 채점 분리의 소규모 실제 검사를 조건 고정해 실행한다. | 과거 산출물과 최종 문항을 보존한다. 관측 결과를 사람 판정·전체 답변 정확도와 구분해 기록한다. |
+
+상태: 두 항목의 구현과 소프트웨어·검색 테스트를 완료했다. 실제 채점 기준 점검은 부분 완료이며 독립 사람 판정이나 새 답변의 정확도 측정은 완료하지 않았다.
+
+- [split_judge.py](../eval/split_judge.py)는 정확성·근거성 요청을 허용한 필드만으로 각각 구성한다. 참고 정답·참고 원문은 근거성 입력에 들어가지 않으며 정확성 요청에는 근거성 판정을 보내지 않는다. 주장별 인용 완전성도 별도 표시한다. 각 주장·채점 항목을 API 응답의 필수 필드로 요구하고, 직접 인용 증빙은 해당 주장의 기존 인용 번호만 선택하게 한다. 검색 근거의 원문 인용 검증은 유지한다.
+- [review_split.py](../eval/review_split.py)는 선택한 개발용 저장 답변·코드·프롬프트·설정·요청 한도를 고정한다. 단계별 시도를 저장하고 입력·스키마·원본 답변 연결을 감사한다. 오류는 미확정으로 남기고 pending·성공·실패 요청을 자동 반복하지 않는다. 이전 스키마와 통합 채점 보고서의 감사도 유지한다.
+- `query_and_section_topics_v3`는 승인자·결재권자 등 업무 규정 표현을 묶는다. 앞선 검색 결과·기존 질문 본문 근거·이미 확보한 요청 규정 주제를 보존하며, 명시적인 규정 주제를 추가할 때 절 제목의 우연한 글자 겹침은 교체할 수 있다. 마지막 요청 문장을 중심으로 삼되 앞부분의 결재권한 주장은 확인한다. 문항 ID·파일명·금액·정답 주석으로 선택하지 않는다. 넓게 주제를 적용한 초기 실험은 견적 조항을 밀어내 폐기했고 최종 재생에서는 전체 근거 확보 악화가 없었다.
+
+| 검증 | 관측 결과 |
+| --- | --- |
+| 전체 소프트웨어 테스트 | **483개, 22.25초 통과**, 기존 439개 대비 신규 44개 |
+| 개발용 검색 재생 | **14/16→16/16**, `d10`·`d11` 개선, 악화 없음 |
+| 알려진 v2 검색 재생 | **48/48→48/48**, 악화 없음 |
+| 과거 기록 보존 | 기존 평가 산출물 **515개**를 포함한 **522개 파일** 바이트 동일 |
+| 실제 채점 진단 | **10회 요청**, 채택 6개 단계·검증 거부 3개·제공업체 오류 1개, 자동 재시도 없음 |
+| 새 답변 / 최종 문항 평가 | **0 / 0** |
+
+초기 세 진단 실행에서 설명용 근거와 직접 인용 증빙 혼용, 주장 판정 누락, 해당 주장이 인용하지 않은 구간 제시가 드러났다. 거부 원문을 모두 보존했고 증빙 필드 분리·항목별 필수 응답 필드·기존 인용 번호 선택으로 보완했다. 마지막 실행은 이전(`before`) 답변 두 개의 네 단계를 채택한 후 개선 후(`after`) 채점 시작에서 `ClaudeError`로 멈췄다. 제공업체 응답 원문을 기록하지 않아 구체적인 API 원인은 알 수 없으며 잔액 부족으로 단정하지 않는다. 계획한 전후 채점 비교는 **완료하지 못했다**. 전체 실행에서 확인한 사용량은 입력 59,734·출력 12,467토큰이며 제공업체 오류의 사용량은 미확인이다.
+
+입력 분리는 검증했지만 AI 의미 판정의 일관성은 해결되지 않았다. 최신 `d07` 판정은 사례 일반화를 설명하면서도 근거성을 통과시키고 인용 완전성을 실패시킨다. `d12`도 정확성·근거성을 통과시키지만 인용 완전성은 실패시킨다. 이는 이전 답변에 대한 보정하지 않은 AI 판단이며 사람 판정이나 새 RAG 답변의 개선 증거가 아니다. 다음은 채점 논쟁의 독립 판정, 추가 유료 검사 전 API 오류 확인, 생성 답변의 주장별 인용 보완 후 새 선택 방식으로 개발용 답변 생성·평가다. 코드·기준을 고정한 뒤 예약한 최종 20문항을 평가한다.
+
+근거: [검색 재생](../eval/results/v3_split_checks_20261019/retrieval_replay.json), [최종 테스트](../eval/results/v3_split_checks_20261019/software_tests_indices.json), [검증](../eval/results/v3_split_checks_20261019/verification.json), [부분 완료 실제 보고서](../eval/results/v3_split_review_indices_20261019/report.md), [사례 분석](../eval/results/v3_split_review_indices_20261019/analysis.json). 앞선 실패 기록은 `v3_split_review_20261019`, `v3_split_review_fixed_20261019`, `v3_split_review_keyed_20261019`에 보존했다.
+
+```powershell
+# 오프라인: 저장 시도를 감사하고 부분 완료 보고서를 재현한다. 모델 호출 없음.
+.\.venv\Scripts\python.exe -X utf8 -m eval.review_split report --output-dir eval/results/v3_split_review_indices_20261019
+```
+
+`verify`는 완료한 실행을 요구하므로 이번 부분 실행을 완료로 인정하지 않는다. 새 유료 실행은 새 조건 고정 계획이 필요하며 중단한 결과는 보존한다. 별도 dev-log가 없어 Phase 변경 이력에 기록한다.
+
+### 제한한 최종 점검 — 2026-10-19
+
+사용자가 남은 범위를 개발 논쟁 사례, 최종 평가 1회, 시연 점검으로 제한했다. 추가 채점기 개발과 과거 미완료 채점 복구는 보류한다. 고정한 기준은 명시된 규칙의 적용은 허용하지만 예시의 일반화는 허용하지 않고, 질문이 요구한 답과 전제의 반복을 구분하며 주장에 붙은 인용을 확인한다. Codex가 원본 PDF를 대조했으며 **에이전트 검토이지 독립적인 사람 판정은 아니다.**
+
+`llm.py`에 허용된 오류 분류와 숫자 HTTP 상태를 제공업체 응답 본문 없이 기록하도록 보완하고 `rag.py`와 저장 답변에 전달했다. 과거 API 오류는 당시 응답이 남지 않아 구체적 원인을 확정할 수 없다. 이번 실행에서는 제공업체 오류가 없었다. 검색·생성 지시는 변경하지 않았다. 기존 오류 테스트를 강화하고 진단 전달 테스트 1개를 추가해 **484개가 18.33초에 통과**했다.
+
+| 항목 | 관측 결과 |
+| --- | --- |
+| 개발 논쟁·대조 질문 6개 | 요건 충족 5/6; d12는 인용에 표 구분 기호를 넣어 차단 |
+| 최종 실행 | 출력 검증 20/20; 생성 20회; 별도 AI 채점 0회 |
+| 최종 필수 근거 검색 | 답변 가능한 16개 중 12개 |
+| 최종 내용 요건 | 전체 15/20; 답변 가능한 질문만 11/16 |
+| 최종 내용·주장별 인용 모두 충족 | 13/20 |
+| 답변 불가 질문 | 4/4 올바르게 보류 |
+| 초기화 제외 응답 시간 | 평균 5.193초·중앙값 4.341초·최대 11.198초 |
+| 전체 새 모델 요청 | 답변 26회·채점 0회·자동 재시도 0회; 비생성 Models API 확인 2회 |
+| 26회 전체 토큰 | 입력 163,233 / 출력 17,920; 금액 환산 없음 |
+| 시연 | 실답변 저장본 AppTest 재생: 답변 3개·보류 1개·차단 1개; 로컬 HTTP 시작·재시작 통과 |
+| 원본 보존 | 기존 파일 554개 동일; 개발·최종 실행의 코드·판정 기준 동일 |
+
+최종 실패를 보존했다. f01·f07·f09는 필수 규정 검색 누락 후 보류, f04는 계약 변경 규정 검색 누락으로 변경 계약서 작성을 빠뜨렸다. f08은 검색·인용에는 있는 계좌 확인 자료를 답변 본문에 명시하지 않았고 f03·f05는 주장 인용에서 금액 기준·검토 시점이 빠졌다. 최종 결과를 본 뒤 조정·재실행하지 않았다. 같은 문서를 공유하는 이 질문들은 이제 관측한 회귀 사례이며, 일반 성능의 증명이나 이전 자동 채점 점수와의 직접 비교 자료가 아니다.
+
+[보고서와 사람 검토용 20문항](../eval/results/v3_closeout_20261019/report.md), [요약](../eval/results/v3_closeout_20261019/summary.json), [검증](../eval/results/v3_closeout_20261019/verification.json), [테스트 출력](../eval/results/v3_closeout_20261019/pytest.txt), [시연 검사](../eval/results/v3_closeout_20261019/demo_check.json)를 보존한다. 일회용 `run.py`는 시도를 보존하고 기존 출력 폴더를 거부하며, 완료한 최종 평가를 반복 실행하는 안내가 아니다. 화면 검사는 실제 답변 저장본 재생이며 HTTP 준비 시간은 모델 초기화나 원격 Cloud 검증과 구분한다. 독립 사람 검토, 특히 f03·f05·f08의 판정 기준 확인은 남아 있다. 제한한 실행·기록은 이 한계를 포함해 완료했고 추가 유료 검사를 예정하지 않는다. 이번 변경은 로컬 상태다. dev-log가 없어 아래 변경 이력에 기록한다.
+
 ## 변경 이력
 
 | 날짜 | 내용 |
@@ -665,3 +795,5 @@ API 평가를 명시적으로 재개한 뒤에만 `python -m eval.quality run --
 | 2026-10-19 | 공통 데이터셋 검사, 묶음별 버전 2 평가 프로토콜, 호출 계획·유형별 보고서와 PDF 대조한 v3 40문항 구현. 로컬 테스트·과거 산출물 호환 확인. 유료 평가·게시 없음. 별도 dev-log 미설치로 여기에 기록. |
 | 2026-10-19 | 사용자 충전 후 모델 79회 호출로 v3 개발용 비교 완료. 원본 AI 통과 14/20·15/20, 인용 검증 실패 1건, 제공업체·채점 오류 없음. 원본 점수·기준 파일을 보존하고 검색 실패·채점 논쟁을 기록했다. 최종 문항·과거 채점 복구·Cloud 변경 없음. dev-log 미설치로 여기에 기록. |
 | 2026-10-19 | 절 제목 기반 문맥 선택, 인용·추론 지시, 채점 지시, 저장 답변 비교 도구 구현. 테스트 439개·실제 호출 59회. 근거 12/16→14/16, 유효 출력 19/20→20/20이나 동일 기준 AI 통과는 17/20→17/20. 파일 434개를 보존하고 채점·검색 한계를 기록했다. 최종 평가·게시 대기, dev-log 미설치로 여기에 기록. |
+| 2026-10-19 | 검토한 파일 192개를 8686fff로 게시한 뒤 채점 분리·규정 주제 선택을 로컬 구현했다. 테스트 483개, 개발용 근거 14/16→16/16·v2 48/48 유지. 실제 채점은 요청 10회·채택 6개 단계·검증 거부 3개·API 오류 1개로 부분 완료. 파일 522개 보존, 새 답변·최종 평가·독립 판정 대기. dev-log 미설치로 여기에 기록. |
+| 2026-10-19 | 제한한 마무리: 안전한 API 진단, 테스트 484개, 개발 6개+최종 20개 생성·별도 채점 없음. Codex 기준 최종 내용 15/20·인용까지 13/20, 원본 554개 보존. 시연 재생·재시작 통과, 사람 검토·게시 미완료. 추가 평가기 개발 보류, dev-log 미설치. |

@@ -1,0 +1,21 @@
+{
+  "created_at": "2026-10-19T02:35:22.285271+00:00",
+  "reviewer_kind": "coding_agent_analysis_not_human_adjudication",
+  "requests_this_run": 5,
+  "accepted_stages": 4,
+  "provider_errors": 1,
+  "provider_error_detail": "ClaudeError; no provider response text was recorded, so the specific cause cannot be recovered. Do not assume a credit shortage.",
+  "grounding_input_isolation_verified": true,
+  "same_model_semantic_consistency_solved": false,
+  "case_notes": {
+    "v3_d07_before": "Accuracy passes; grounding marks support true while explaining example-based generalization. Citation completeness fails. This is a grading inconsistency, not proof of full support.",
+    "v3_d12_before": "See the preserved stage-level decisions; do not infer an after-improvement comparison because after reviews did not complete."
+  },
+  "next_steps": [
+    "Independently adjudicate dev grading disputes and freeze the policy.",
+    "Investigate the provider error before another paid evaluation; preserve completed stages.",
+    "Run new answers under the completed selector, then assess them under one calibrated judge.",
+    "Keep final 20 questions reserved until code and scoring are frozen."
+  ],
+  "sha256": "95d4a2ad108154398c3ef3f122be39e4d74fa56d67b8a286fddd62c80f5e0cfd"
+}

@@ -100,6 +100,21 @@ def test_failures_are_not_retried_or_converted_to_successful_abstention(failure)
     assert len(client.requests) == (0 if failure == "retrieval" else 1)
 
 
+def test_provider_diagnostic_survives_saved_answer_without_response_text():
+    from eval.benchmark import answer_once
+
+    retriever, client = FakeRetriever(), FakeClaude()
+    client.error = ClaudeError("safe message", category="rate_limit", http_status=429)
+    result = answer_once(RAGAssistant(retriever, client), {
+        "id": "diagnostic", "question": "질문", "evidence_groups": [],
+    })
+    assert result["status"] == "error"
+    assert result["error_stage"] == "generation"
+    assert result["provider_error"] == {"category": "rate_limit", "http_status": 429}
+    assert result["token_usage"] is None
+    assert len(client.requests) == 1
+
+
 def test_cli_keeps_retrieval_only_as_default_and_closes_clients(monkeypatch, capsys):
     import rag
 

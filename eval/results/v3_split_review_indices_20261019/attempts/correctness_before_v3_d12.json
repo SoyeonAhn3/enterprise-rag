@@ -1,0 +1,197 @@
+{
+  "protocol_sha256": "29130cecf1888c0dce4b091bcf42070edc119e0859ad25f797f51300ac69f778",
+  "kind": "correctness",
+  "configuration": "before",
+  "question_id": "v3_d12",
+  "state": "completed",
+  "started_at": "2026-10-19T02:32:29.252366+00:00",
+  "sha256": "57b88a87f43a84074d2c23a39c573de14b6ef8a6d1888e9fdbd41ba6405b4ed0",
+  "completed_at": "2026-10-19T02:32:34.549075+00:00",
+  "payload": {
+    "configuration": "before",
+    "question_id": "v3_d12",
+    "result_sha256": "011dc976e3f9551f1d79e7d4e52028c79eda5a58be0f9c8b0f44b421ae4b6c4a",
+    "stage": "correctness",
+    "input": {
+      "question": "독점 제품 420만원 구매에 견적이 하나뿐이고 잔여예산도 부족합니다. 단독 공급 예외를 받으면 예산 검토까지 생략할 수 있나요?",
+      "answerable": true,
+      "answer": "아니요. 단독 공급 예외는 비교견적(견적 2부) 요건에 대한 예외로, 독점 제품 등 사유서와 구매운영팀 승인 기록이 필요하며 자동 면제가 아닙니다. [S1]\n\n420만원은 500만원 이하이지만, 예산 미편성 또는 잔여예산 부족이면 금액과 무관하게 재무팀의 예산 사전검토가 필수입니다. 따라서 잔여예산이 부족한 이 건은 단독 공급 예외를 받아도 예산 사전검토를 생략할 수 없습니다. [S2]\n\n재무팀의 예산 확인이 있더라도 최종 구매 승인이 완료된 것은 아니며, 예산 사전검토 결과와 전결권자의 구매 승인 내역은 각각 보관해야 합니다. [S2]",
+      "claims": [
+        {
+          "id": "c1",
+          "text": "아니요. 단독 공급 예외는 비교견적(견적 2부) 요건에 대한 예외로, 독점 제품 등 사유서와 구매운영팀 승인 기록이 필요하며 자동 면제가 아닙니다."
+        },
+        {
+          "id": "c2",
+          "text": "420만원은 500만원 이하이지만, 예산 미편성 또는 잔여예산 부족이면 금액과 무관하게 재무팀의 예산 사전검토가 필수입니다. 따라서 잔여예산이 부족한 이 건은 단독 공급 예외를 받아도 예산 사전검토를 생략할 수 없습니다."
+        },
+        {
+          "id": "c3",
+          "text": "재무팀의 예산 확인이 있더라도 최종 구매 승인이 완료된 것은 아니며, 예산 사전검토 결과와 전결권자의 구매 승인 내역은 각각 보관해야 합니다."
+        }
+      ],
+      "expected_answerable": true,
+      "expected_answer": "단독 공급 사유서와 구매운영팀 승인 기록이 필요하고 예외가 자동 적용되는 것은 아니다. 잔여예산 부족은 금액과 무관하게 재무팀 예산 사전검토 대상이며 단독 공급 예외로 이를 면제하지 않는다.",
+      "criteria": [
+        {
+          "id": "r1",
+          "text": "단독 공급 사유서와 구매운영팀 승인 기록이 필요하고 예외가 자동 적용되는 것은 아니다."
+        },
+        {
+          "id": "r2",
+          "text": "잔여예산 부족은 금액과 무관하게 재무팀 예산 사전검토 대상이며 단독 공급 예외로 이를 면제하지 않는다."
+        }
+      ],
+      "references": [
+        {
+          "source_id": "R1",
+          "text": "단독 공급 불가피 독점 제품·기존 시스템 호환 등 사유서와 구매운영팀 승인 기록"
+        },
+        {
+          "source_id": "R2",
+          "text": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수 예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수 예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재"
+        }
+      ]
+    },
+    "input_sha256": "7f1eaa3a8a6415f18703999ac995e957ef04ecfb193ed8924dbb2cff0a27c920",
+    "prompt_sha256": "30ba2ce709682d362a2fbb626d3649403b7cc81bc1ed123b147920e00fc86b85",
+    "model": "claude-sonnet-5-5",
+    "response_schema": {
+      "type": "object",
+      "properties": {
+        "criterion_results": {
+          "type": "object",
+          "properties": {
+            "r1": {
+              "type": "object",
+              "properties": {
+                "satisfied": {
+                  "type": "boolean"
+                },
+                "reason": {
+                  "type": "string"
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "source_id": {
+                        "type": "string"
+                      },
+                      "quote": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "source_id",
+                      "quote"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "satisfied",
+                "reason",
+                "evidence"
+              ],
+              "additionalProperties": false
+            },
+            "r2": {
+              "type": "object",
+              "properties": {
+                "satisfied": {
+                  "type": "boolean"
+                },
+                "reason": {
+                  "type": "string"
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "source_id": {
+                        "type": "string"
+                      },
+                      "quote": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "source_id",
+                      "quote"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "satisfied",
+                "reason",
+                "evidence"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "r1",
+            "r2"
+          ],
+          "additionalProperties": false
+        },
+        "rubric_uncertain": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "criterion_results",
+        "rubric_uncertain",
+        "notes"
+      ],
+      "additionalProperties": false
+    },
+    "response_schema_sha256": "0e15b15250bf4d31727f1df86f6b431fe035533c47a560506a5b0894fc073eeb",
+    "token_usage": {
+      "input_tokens": 2518,
+      "output_tokens": 489,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0
+    },
+    "raw_response": "{\"criterion_results\":{\"r1\":{\"satisfied\":true,\"reason\":\"답변은 단독 공급 예외에 독점 제품 등 사유서와 구매운영팀 승인 기록이 필요하며 자동 면제가 아니라고 설명한다. 이는 R1 및 기준 r1과 일치한다.\",\"evidence\":[{\"source_id\":\"R1\",\"quote\":\"단독 공급 불가피 독점 제품·기존 시스템 호환 등 사유서와 구매운영팀 승인 기록\"}]},\"r2\":{\"satisfied\":true,\"reason\":\"답변은 예산 미편성 또는 잔여예산 부족이면 금액과 무관하게 재무팀 예산 사전검토가 필수이며, 단독 공급 예외를 받아도 이를 생략할 수 없다고 명시한다. R2의 내용과 기준 r2를 충족한다.\",\"evidence\":[{\"source_id\":\"R2\",\"quote\":\"예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수\"}]}},\"rubric_uncertain\":false,\"notes\":\"답변은 두 기준을 모두 충족한다. 단독 공급 예외가 비교견적 요건에 대한 것이라는 설명과 최종 승인·보관 관련 부가 설명은 참고 규정과 충돌하지 않으며 감점 요인이 아니다.\"}",
+    "status": "success",
+    "decision": {
+      "criterion_results": [
+        {
+          "id": "r1",
+          "satisfied": true,
+          "reason": "답변은 단독 공급 예외에 독점 제품 등 사유서와 구매운영팀 승인 기록이 필요하며 자동 면제가 아니라고 설명한다. 이는 R1 및 기준 r1과 일치한다.",
+          "evidence": [
+            {
+              "source_id": "R1",
+              "quote": "단독 공급 불가피 독점 제품·기존 시스템 호환 등 사유서와 구매운영팀 승인 기록"
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "satisfied": true,
+          "reason": "답변은 예산 미편성 또는 잔여예산 부족이면 금액과 무관하게 재무팀 예산 사전검토가 필수이며, 단독 공급 예외를 받아도 이를 생략할 수 없다고 명시한다. R2의 내용과 기준 r2를 충족한다.",
+          "evidence": [
+            {
+              "source_id": "R2",
+              "quote": "예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수"
+            }
+          ]
+        }
+      ],
+      "rubric_uncertain": false,
+      "notes": "답변은 두 기준을 모두 충족한다. 단독 공급 예외가 비교견적 요건에 대한 것이라는 설명과 최종 승인·보관 관련 부가 설명은 참고 규정과 충돌하지 않으며 감점 요인이 아니다."
+    },
+    "latency_ms": 5294.16
+  }
+}

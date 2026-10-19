@@ -1,0 +1,25 @@
+{
+  "created_at": "2026-10-19T02:32:19.647537+00:00",
+  "status": "stopped_after_three_requests",
+  "requests": 3,
+  "accepted_stages": 2,
+  "automatic_retries": 0,
+  "error_type": "ValueError",
+  "validator_message": "Citation evidence is outside the claim's cited passages.",
+  "cause": "The grounding stage quoted valid retrieved text that was not directly cited by that particular claim. Local validation rejected the citation-completeness proof.",
+  "change": "The model now selects indices from each claim's existing citations. The request schema enumerates only that claim's valid indices; raw retrieved grounding evidence is still validated separately.",
+  "original_attempts_preserved": true,
+  "followup_plan": {
+    "question_ids": [
+      "v3_d07",
+      "v3_d12"
+    ],
+    "configurations": [
+      "before",
+      "after"
+    ],
+    "max_calls": 8,
+    "total_calls_including_stopped_checks_at_most": 13
+  },
+  "sha256": "b60bab750128a7434ccedf25f7108d9600f367e8ceea15efcccf0382a0461a81"
+}
