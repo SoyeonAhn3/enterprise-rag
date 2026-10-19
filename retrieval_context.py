@@ -11,7 +11,7 @@ from config import pdf_fingerprints
 from index_store import IndexErrorBase
 from ingest import extract_pages
 
-PAGE_SELECTION_POLICY = "rank_with_coverage_slot_v1"
+PAGE_SELECTION_POLICY = "query_and_section_coverage_v2"
 
 
 def query_features(text: str) -> set[str]:
@@ -42,6 +42,12 @@ def _source(chunk, rank, text, page_text, position):
     }
 
 
+def section_features(text: str) -> set[str]:
+    """Features of numbered/Markdown section titles, never rewritten evidence."""
+    titles = re.findall(r"(?m)^\s*(?:\d{1,3}[.)]|\#{1,6})\s+([^\n]{1,120})", text)
+    return query_features(" ".join(titles))
+
+
 class PageContext:
     """Read the exact indexed corpus once; keep physical pages and text intact."""
 
@@ -59,7 +65,8 @@ class PageContext:
 
         Never clip a page/chunk to fit. A non-fitting seed can be skipped so a
         later complete source still fits. All hits remain in the retrieval log.
-        With a question, only the final slot may move to improve query coverage.
+        With a question, refine redundant slots while retaining the first hit
+        and all query features already covered by the selected context.
         An empty question explicitly reproduces the original rank-only selector.
         """
         selected, used_pages, used_chars = [], set(), 0
@@ -79,6 +86,72 @@ class PageContext:
             used_chars += len(text)
         if question and max_sources > 1 and len(selected) == max_sources:
             selected = self._coverage_slot(selected, ranked_chunks, question, max_chars)
+            selected = self._refine_coverage(selected, ranked_chunks, question, max_chars)
+        return selected
+
+    def _refine_coverage(self, selected, ranked_chunks, question, max_chars):
+        """Replace redundant non-leading slots; favor direct section coverage.
+
+        Scores use only question/text, with IDF over distinct candidate pages.
+        Preserve two leading semantic hits and all covered query/section terms.
+        The last sentence focuses section matching on the actual request rather
+        than preceding scenario details. Require new direct section coverage.
+        This is a bounded lexical heuristic, not semantic completeness proof.
+        """
+        wanted = query_features(question)
+        focus = query_features(re.split(r"[.!?。？！]\s+", question.strip())[-1])
+        if not wanted:
+            return selected
+        keys = {(c["source_file"], c["page"]) for c in ranked_chunks}
+        features = [query_features(self.pages[key]) & wanted for key in keys]
+        weights = {term: 1 + math.log((1 + len(features)) /
+                                     (1 + sum(term in f for f in features))) for term in wanted}
+        cache = {}
+
+        def covered(text):
+            if text not in cache:
+                cache[text] = (query_features(text) & wanted, section_features(text) & focus)
+            return cache[text]
+
+        def score(sources):
+            words, titles = set(), set()
+            for source in sources:
+                plain, headings = covered(source["text"])
+                words.update(plain)
+                titles.update(headings)
+            return words, titles, (sum(weights[t] for t in sorted(titles)),
+                                   sum(weights[t] for t in sorted(words)))
+
+        # At most one accepted improvement per replaceable slot. No extra search.
+        for _ in range(len(selected) - 1):
+            required, required_titles, best_score = score(selected)
+            best = None
+            selected_keys = {(c["source_file"], c["page"]) for c in selected}
+            for position in range(len(selected) - 1, min(2, len(selected) - 1) - 1, -1):
+                available = max_chars - sum(len(c["text"]) for i, c in enumerate(selected) if i != position)
+                seen = set(selected_keys)
+                for rank, chunk in enumerate(ranked_chunks, 1):
+                    key = (chunk["source_file"], chunk["page"])
+                    if key in seen:
+                        continue
+                    page_text = self.pages[key]
+                    text = page_text if len(page_text) <= available else chunk["text"]
+                    if len(text) > available:
+                        continue
+                    # Different fallback chunks on the same page may be useful.
+                    if text == page_text:
+                        seen.add(key)
+                    candidate = _source(chunk, rank, text, page_text, position + 1)
+                    trial = [candidate if i == position else c for i, c in enumerate(selected)]
+                    words, titles, value = score(trial)
+                    if (required <= words and required_titles < titles and value > best_score):
+                        best_score = value
+                        candidate.update(selection_reason="query_and_section_coverage",
+                                         replaced_seed_rank=selected[position]["seed_rank"])
+                        best = trial
+            if best is None:
+                break
+            selected = best
         return selected
 
     def _coverage_slot(self, selected, ranked_chunks, question, max_chars):

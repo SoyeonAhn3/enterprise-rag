@@ -1,11 +1,12 @@
-"""Frozen, paired regression evaluation on the 60 already inspected v2 cases.
+"""Frozen, paired evaluation on legacy v2 or explicitly selected dataset splits.
 
-freeze -> run [--resume] -> verify/report, all with --output-dir.
+validate is offline; freeze -> run [--resume] -> verify/report use --output-dir.
 No prompt tuning, automatic model retries, or overwriting historical attempts.
 This compares the complete page-mode change, not page expansion in isolation.
 """
 
 import argparse
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from contextlib import ExitStack
 from dataclasses import replace
@@ -22,6 +23,8 @@ from eval.benchmark import answer_metrics, answer_once, now, read, seal, verify
 from eval.check_retrieval import check_evidence
 from eval.evaluate import digest, public_configuration, rate, save_json
 from eval.expanded_cases import DATASET_PATH, validate_dataset
+from eval.datasets import (dataset_summary, read_dataset, select_questions,
+                           validate_file, validate_questions)
 from eval.phase6 import SOURCE_FILES as PHASE6_SOURCE_FILES
 from grounding import SYSTEM_PROMPT, validate_answer
 from llm import ClaudeClient
@@ -31,10 +34,15 @@ CONFIGS = {
     "chunks5": {"retrieval_mode": "chunks", "top_k": 5, "context_max_chars": 6000},
     "pages5": {"retrieval_mode": "pages", "top_k": 5, "context_max_chars": 6000},
 }
-SOURCE_FILES = (*PHASE6_SOURCE_FILES, "eval/quality.py", "eval/expanded_cases.py", "eval/check_trace.py")
+SOURCE_FILES = (*PHASE6_SOURCE_FILES, "eval/quality.py", "eval/expanded_cases.py", "eval/check_trace.py",
+                "eval/datasets.py")
 SCOPE = ("Known-case regression; all 60 v2 questions were previously inspected. "
          "Same-model AI grading, no completed human review, no unseen holdout. "
          "Page mode changes both candidate depth and context assembly.")
+DATASET_SCOPE = ("Explicitly selected question split on the same synthetic PDFs. "
+                 "PDF-checked references, no completed independent human review or external blind validation. "
+                 "Same-model AI grading; page mode changes candidate depth and context assembly. "
+                 "Reserve final questions before tuning; after inspecting results, treat them as regression cases.")
 
 
 def source_hashes():
@@ -67,23 +75,52 @@ def open_retrievers(settings, stack):
     return retrievers, configurations
 
 
-def freeze(output):
+def planned_execution(question_count, max_calls=None):
+    attempts = question_count * len(CONFIGS)
+    required = attempts * 2
+    limit = required if max_calls is None else max_calls
+    if type(limit) is not int or limit < required:
+        raise ValueError(f"Call limit must allow up to {required} calls (answers plus AI reviews).")
+    return {"max_answers": attempts, "max_judge_calls": attempts, "max_total_calls": required,
+            "max_calls": limit, "judge_workers": 2,
+            "order": "alternate configuration order per question", "automatic_retries": 0}
+
+
+def freeze(output, *, dataset_path=None, split=None, max_calls=None):
     target = output / "protocol.json"
     if output.exists() and any(output.iterdir()):
         raise ValueError("Freeze needs a new, empty output directory.")
-    questions = read(DATASET_PATH)
-    validate_dataset(questions)
+    if dataset_path is None:
+        if split is not None or max_calls is not None:
+            raise ValueError("--split and --max-calls require --dataset.")
+        questions = read(DATASET_PATH)
+        validate_dataset(questions)
+        version, scope, dataset_info = 1, SCOPE, None
+        execution = {"max_answers": 120, "max_judge_calls": 120, "judge_workers": 2,
+                     "order": "alternate configuration order per question", "automatic_retries": 0}
+    else:
+        source_path = Path(dataset_path).resolve()
+        all_questions = validate_file(source_path)
+        questions = select_questions(all_questions, split)
+        execution = planned_execution(len(questions), max_calls)
+        version, scope = 2, DATASET_SCOPE
+        try:
+            stored_path = source_path.relative_to(PROJECT_ROOT).as_posix()
+        except ValueError:
+            stored_path = source_path.as_posix()
+        dataset_info = {"path": stored_path, "sha256": digest(all_questions), "split": split,
+                        "source_question_count": len(all_questions), "question_count": len(questions)}
     settings = run_settings()
     with ExitStack() as stack:
         _, configurations = open_retrievers(settings, stack)
-    protocol = seal({"format_version": 1, "created_at": now(), "scope": SCOPE,
+    protocol = seal({"format_version": version, "created_at": now(), "scope": scope,
                      "dataset": questions, "dataset_sha256": digest(questions),
                      "documents_sha256": pdf_fingerprints(DOCUMENTS_DIR), "source_sha256": source_hashes(),
                      "config_overrides": CONFIGS, "configurations": configurations,
                      "answer_prompt_sha256": digest(SYSTEM_PROMPT), "judge_prompt_sha256": judge_hash(),
                      "judge": {"model": settings.chat_model, "max_tokens": 4096, "timeout_seconds": 60},
-                     "execution": {"max_answers": 120, "max_judge_calls": 120, "judge_workers": 2,
-                                   "order": "alternate configuration order per question", "automatic_retries": 0}})
+                     "execution": execution,
+                     **({"dataset_info": dataset_info} if version == 2 else {})})
     unused(target)
     save_json(target, protocol)
     return protocol
@@ -92,17 +129,44 @@ def freeze(output):
 def load_protocol(output):
     protocol = read(output / "protocol.json")
     verify(protocol)
-    if (protocol["format_version"] != 1 or digest(protocol["dataset"]) != protocol["dataset_sha256"]
+    if (type(protocol["format_version"]) is not int or protocol["format_version"] not in (1, 2)
+            or digest(protocol["dataset"]) != protocol["dataset_sha256"]
             or protocol["config_overrides"] != CONFIGS or set(protocol["configurations"]) != set(CONFIGS)):
         raise ValueError("Invalid protocol dataset/configurations.")
     questions = protocol["dataset"]
-    if len(questions) != 60 or {q["id"] for q in questions} != {f"q{i:02d}" for i in range(1, 61)}:
-        raise ValueError("Expected all 60 frozen questions, without duplicates.")
+    if protocol["format_version"] == 1:
+        if len(questions) != 60 or {q["id"] for q in questions} != {f"q{i:02d}" for i in range(1, 61)}:
+            raise ValueError("Expected all 60 frozen questions, without duplicates.")
+    else:
+        validate_questions(questions)
+        info = protocol.get("dataset_info", {})
+        if (type(info.get("question_count")) is not int or info["question_count"] != len(questions)
+                or type(info.get("source_question_count")) is not int
+                or info["source_question_count"] < len(questions)
+                or not isinstance(info.get("path"), str) or not info["path"].strip()
+                or not isinstance(info.get("sha256"), str) or len(info["sha256"]) != 64
+                or any(c not in "0123456789abcdef" for c in info["sha256"])
+                or select_questions(questions, info.get("split")) != questions
+                or protocol.get("scope") != DATASET_SCOPE):
+            raise ValueError("Invalid frozen dataset selection.")
+        execution = protocol.get("execution", {})
+        if execution != planned_execution(len(questions), execution.get("max_calls")):
+            raise ValueError("Execution limits differ from the selected dataset.")
     return protocol
 
 
 def check_current_protocol(protocol):
-    checks = {"dataset_sha256": digest(read(DATASET_PATH)),
+    if protocol["format_version"] == 2:
+        info = protocol["dataset_info"]
+        path = Path(info["path"])
+        source = read_dataset(path if path.is_absolute() else PROJECT_ROOT / path)
+        validate_questions(source, documents_dir=DOCUMENTS_DIR)
+        if digest(source) != info["sha256"] or len(source) != info["source_question_count"]:
+            raise ValueError("Source dataset changed after freezing; do not reuse this run.")
+        questions = select_questions(source, info["split"])
+    else:
+        questions = read(DATASET_PATH)
+    checks = {"dataset_sha256": digest(questions),
               "documents_sha256": pdf_fingerprints(DOCUMENTS_DIR), "source_sha256": source_hashes(),
               "answer_prompt_sha256": digest(SYSTEM_PROMPT), "judge_prompt_sha256": judge_hash()}
     if any(protocol.get(k) != v for k, v in checks.items()):
@@ -133,10 +197,10 @@ def attempt(output, protocol, kind, name, qid, operation, *, resume):
     return payload
 
 
-def read_attempts(output, protocol):
+def read_attempts(output, protocol, *, configurations=CONFIGS):
     results, reviews = [], []
     expected = {f"{kind}_{name}_{q['id']}.json": (kind, name, q["id"])
-                for kind in ("answer", "review") for name in CONFIGS for q in protocol["dataset"]}
+                for kind in ("answer", "review") for name in configurations for q in protocol["dataset"]}
     for path in sorted((output / "attempts").glob("*")):
         if path.name not in expected:
             raise ValueError("Unknown or temporary attempt file; inspect it before continuing.")
@@ -150,17 +214,17 @@ def read_attempts(output, protocol):
         if payload.get("configuration") != name or payload.get("id" if kind == "answer" else "question_id") != qid:
             raise ValueError("Attempt payload identity mismatch.")
         (results if kind == "answer" else reviews).append(payload)
-    validate_records(protocol, results, reviews)
+    validate_records(protocol, results, reviews, configurations=configurations)
     return results, reviews
 
 
-def validate_records(protocol, results, reviews):
+def validate_records(protocol, results, reviews, *, configurations=CONFIGS):
     """Recompute saved answer/grade links; checksums alone are insufficient."""
     questions = {q["id"]: q for q in protocol["dataset"]}
     by_key, grade_keys = {}, set()
     for result in results:
         key = (result.get("configuration"), result.get("id"))
-        if key in by_key or key[0] not in CONFIGS or key[1] not in questions:
+        if key in by_key or key[0] not in configurations or key[1] not in questions:
             raise ValueError("Duplicate or unknown result.")
         by_key[key] = result
         question = questions[key[1]]
@@ -170,10 +234,10 @@ def validate_records(protocol, results, reviews):
             raise ValueError("Result question or evidence check mismatch.")
         if result.get("status") == "success":
             raw = json.dumps({k: result[k] for k in ("answerable", "claims")}, ensure_ascii=False)
-            checked = validate_answer(raw, chunks, max_sources=CONFIGS[key[0]]["top_k"])
+            checked = validate_answer(raw, chunks, max_sources=configurations[key[0]]["top_k"])
             if any(result.get(k) != v for k, v in checked.items()):
                 raise ValueError("Stored answer/citations differ from the validated claims.")
-            if (result.get("retrieval_mode") != CONFIGS[key[0]]["retrieval_mode"]
+            if (result.get("retrieval_mode") != configurations[key[0]]["retrieval_mode"]
                     or result.get("context_chars") != sum(len(c["text"]) for c in chunks)):
                 raise ValueError("Result retrieval mode or context size mismatch.")
         elif result.get("status") != "error":
@@ -263,9 +327,10 @@ def load_completed(output):
     if report.get("status") != "completed" or report.get("protocol_sha256") != protocol["sha256"]:
         raise ValueError("Incomplete run or protocol mismatch.")
     results, reviews = read_attempts(output, protocol)
-    if (len(results) != 120 or len(reviews) != 120
+    expected = len(protocol["dataset"]) * len(CONFIGS)
+    if (len(results) != expected or len(reviews) != expected
             or report["results"] != results or report["reviews"] != reviews):
-        raise ValueError("Completed report differs from the 120 answer/review attempts.")
+        raise ValueError(f"Completed report differs from the {expected} answer/review attempts.")
     return protocol, report
 
 
@@ -309,7 +374,113 @@ def analyze(questions, results, reviews):
                        "unassessed": sorted(q["id"] for q in questions if q["id"] not in common)}}
 
 
+def analyze_selected(questions, results, reviews):
+    """Keep legacy scores intact, with explicit assessment coverage and groups."""
+    def section(selected, rows, grades):
+        summary = analyze(selected, rows, grades)
+        summary.update(scope=DATASET_SCOPE, question_count=len(selected), assessment={})
+        for name in CONFIGS:
+            answers = {r["id"]: r for r in rows if r["configuration"] == name}
+            judgments = {r["question_id"]: r for r in grades if r["configuration"] == name}
+            eligible = {qid for qid, r in answers.items() if r["status"] == "success"}
+            assessed = {qid for qid in eligible if judgments.get(qid, {}).get("status") == "success"}
+            errors = sorted(qid for qid in eligible if judgments.get(qid, {}).get("status") == "error")
+            missing = sorted(qid for qid in eligible if qid not in judgments)
+            failed = [r for r in answers.values() if r["status"] == "error"]
+            complete = len(answers) == len(selected) and assessed == eligible
+            summary["assessment"][name] = {
+                "eligible_answers": len(eligible), "completed_reviews": len(assessed),
+                "judge_errors": errors, "missing_reviews": missing,
+                "skipped_failed_answers": sorted(r["id"] for r in failed),
+                "unassessed_eligible": sorted(eligible - assessed),
+                "fully_assessed": complete,
+                "end_to_end_ai_correctness": summary["metrics"][name]["ai_correctness"] if complete else None,
+                "failure_stages": dict(sorted(Counter(r.get("error_stage", "unknown") for r in failed).items())),
+            }
+        return summary
+
+    summary = section(questions, results, reviews)
+    summary["breakdown"] = {}
+    for field in ("category", "test_type"):
+        groups = {}
+        for value in sorted({q.get(field, q["category"]) for q in questions}):
+            selected = [q for q in questions if q.get(field, q["category"]) == value]
+            ids = {q["id"] for q in selected}
+            groups[value] = section(selected, [r for r in results if r["id"] in ids],
+                                    [g for g in reviews if g["question_id"] in ids])
+        summary["breakdown"][field] = groups
+    return summary
+
+
+def dataset_report_text(summary):
+    n = summary["question_count"]
+    info = summary["dataset_info"]
+    lines = [f"# 데이터셋 품질 평가 — {info['split']} / {n}문항", "",
+             "같은 합성 PDF의 지정 문항을 평가했다. 외부 독립 평가나 사람 검증을 완료했다는 뜻은 아니다.",
+             "답변과 별도 AI 채점은 같은 모델을 사용한다. 최종 평가 결과를 개선에 사용하면 이후에는 회귀 사례로 취급한다.",
+             "미채점이 있으면 전체 답변 정확도를 확정하지 않는다. 확인된 통과 수와 채점 완료 수를 함께 읽는다.", "",
+             "| 지표 | chunks/5 | pages/5 |", "|---|---:|---:|"]
+    def row(label, values):
+        lines.append(f"| {label} | " + " | ".join(values) + " |")
+    for label, key in (("확인된 AI 통과 / 전체 문항", "ai_correctness"),
+                       ("필수 근거 전체 확보 / 답변 가능 문항", "complete_quote_coverage"),
+                       ("근거 그룹 확보", "evidence_group_recall"),
+                       ("근거 일치 AI 통과 / 내용 있는 응답", "ai_grounding_substantive"),
+                       ("정해진 답변 보류 / 답변 불가 문항", "abstention_contract"),
+                       ("확인된 세부 기준 충족 / 전체 기준", "ai_criteria_satisfied")):
+        row(label, [f"{summary['metrics'][name][key]['passed']}/{summary['metrics'][name][key]['total']}"
+                    for name in CONFIGS])
+    row("AI 채점 완료 / 채점 가능한 응답", [
+        f"{summary['assessment'][name]['completed_reviews']}/{summary['assessment'][name]['eligible_answers']}"
+        for name in CONFIGS])
+    row("출력 검증 통과 응답 / 전체 문항", [f"{summary['metrics'][name]['successful']}/{n}" for name in CONFIGS])
+    row("미생성 답변", [str(len(summary["metrics"][name]["missing"])) for name in CONFIGS])
+    row("채점 오류 / 누락", [f"{len(summary['assessment'][name]['judge_errors'])} / "
+                              f"{len(summary['assessment'][name]['missing_reviews'])}" for name in CONFIGS])
+    row("전체 실행 결과 채점 상태", ["완료(AI 기준)" if summary["assessment"][name]["fully_assessed"]
+                                   else "미완료 — 정확도 미확정" for name in CONFIGS])
+    row("평균 문맥 글자 수", [f"{summary['metrics'][name]['mean_context_chars']:.1f}"
+                             if summary['metrics'][name]['mean_context_chars'] is not None else "측정 없음"
+                             for name in CONFIGS])
+    row("평균 응답 시간(초)", [f"{summary['metrics'][name]['latency_ms']['successful_mean'] / 1000:.2f}"
+                               if summary['metrics'][name]['latency_ms']['successful_mean'] is not None else "측정 없음"
+                               for name in CONFIGS])
+    for label, key in (("생성 입력 토큰(캐시 제외)", "input_tokens"), ("생성 출력 토큰", "output_tokens")):
+        row(label, [str(summary["metrics"][name]["generation_tokens"][key]) for name in CONFIGS])
+    for field, title in (("category", "문서 구성별"), ("test_type", "질문 유형별")):
+        lines.extend(["", f"## {title} 결과", "",
+                      "통과 수는 전체 문항 기준이며, 채점 완료 수를 별도 표시한다.", "",
+                      "| 유형 | 문항 | chunks 통과 | pages 통과 | chunks 채점 완료 | pages 채점 완료 |",
+                      "|---|---:|---:|---:|---:|---:|"])
+        for group, part in summary["breakdown"][field].items():
+            values = [str(part["metrics"][name]["ai_correctness"]["passed"]) for name in CONFIGS]
+            counts = [str(part["assessment"][name]["completed_reviews"]) for name in CONFIGS]
+            lines.append("| " + " | ".join([group, str(part["question_count"]), *values, *counts]) + " |")
+    paired = summary["paired"]
+    lines.extend(["", f"두 방식 모두 채점 완료: {paired['assessed']}/{n}.",
+                  f"pages 개선 문항: {', '.join(paired['gains']) or '없음'}.",
+                  f"pages 악화 문항: {', '.join(paired['regressions']) or '없음'}.", "",
+                  "## 실패 진단", "",
+                  "reference_quote_missing은 정답표 인용문이 문맥에 부족하다는 뜻이며 의미상 답변 불가능 판정은 아니다.",
+                  "ai_incorrect_with_complete_evidence는 생성 누락과 채점 해석 문제를 모두 검토해야 한다."])
+    for name in CONFIGS:
+        lines.extend(["", f"### {name}", ""])
+        lines.extend([f"- {r['id']}: {', '.join(r['flags'])}" for r in summary["diagnostics"][name]]
+                     or ["- 자동 진단 항목 없음."])
+        lines.append("- 실행 오류 단계별: " + json.dumps(summary["assessment"][name]["failure_stages"], ensure_ascii=False))
+    lines.extend(["", "## 재현과 한계", "",
+                  f"- 답변 시도와 채점 기록은 각각 {n * len(CONFIGS)}개이며, 실패 답변의 채점은 건너뛴다.",
+                  "- protocol.json은 선택한 문항·원본 데이터셋 해시·PDF·코드·프롬프트·설정·최대 호출 수를 고정한다.",
+                  "- attempts/의 개별 기록과 answers.json을 대조한다. 완료/오류/pending 요청을 자동 재시도하지 않는다.",
+                  "- 표의 답변 보류는 출력 계약 준수 지표다. 의미상 정답 여부와 사람 검토는 별도로 판단한다.",
+                  "- 검색 근거 포함은 답변 정확도가 아니다. 미채점은 정답이나 오답으로 확정하지 않는다.",
+                  "- 같은 소규모 합성 문서의 단일 실행이다. 실제 기업 문서, Cloud 성능, 통계적 유의성은 검증하지 않았다.", ""])
+    return "\n".join(lines)
+
+
 def report_text(summary):
+    if "dataset_info" in summary:
+        return dataset_report_text(summary)
     lines = ["# Phase 6: 기존 60문항 품질 회귀 평가", "",
              "이미 확인한 60문항으로 개선 효과를 점검했다. 새로운 문제에 대한 일반 정확도는 아니다.",
              "답변과 별도 AI 채점은 같은 모델을 사용했다. 사람의 판정은 아직 완료하지 않았다.",
@@ -356,8 +527,13 @@ def report_text(summary):
 
 def summarize(output):
     protocol, report = load_completed(output)
+    if protocol["format_version"] == 2:
+        analysis = {**analyze_selected(protocol["dataset"], report["results"], report["reviews"]),
+                    "dataset_info": protocol["dataset_info"]}
+    else:
+        analysis = analyze(protocol["dataset"], report["results"], report["reviews"])
     summary = seal({"protocol_sha256": protocol["sha256"], "answers_sha256": report["sha256"],
-                    **analyze(protocol["dataset"], report["results"], report["reviews"])})
+                    **analysis})
     target = output / "summary.json"
     markdown = output / "report.md"
     content = report_text(summary)
@@ -375,14 +551,32 @@ def summarize(output):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("freeze", "run", "verify", "report"))
-    parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("command", choices=("validate", "freeze", "run", "verify", "report"))
+    parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--dataset", type=Path, help="JSON question list; freeze requires --split.")
+    parser.add_argument("--split", choices=("dev", "final"))
+    parser.add_argument("--against", action="append", type=Path, default=[],
+                        help="Prior dataset to check for duplicate wording (validate only).")
+    parser.add_argument("--max-calls", type=int, help="Maximum combined answer/judge calls planned by freeze.")
     parser.add_argument("--resume", action="store_true")
     args = parser.parse_args(argv)
     try:
         if args.resume and args.command != "run":
             raise ValueError("--resume applies only to run.")
-        if args.command == "freeze": freeze(args.output_dir)
+        if args.command == "validate":
+            if args.output_dir or args.split or args.max_calls is not None or args.dataset is None:
+                raise ValueError("validate requires --dataset; only --against may accompany it.")
+            questions = validate_file(args.dataset, against=args.against)
+            print(json.dumps({"status": "validated_no_calls", **dataset_summary(questions)}, ensure_ascii=False))
+            return 0
+        if args.output_dir is None or args.against:
+            raise ValueError("An --output-dir is required; --against applies only to validate.")
+        if args.command != "freeze" and (args.dataset or args.split or args.max_calls is not None):
+            raise ValueError("Dataset/split/call-limit options apply only to freeze; run uses its frozen selection.")
+        if args.command == "freeze":
+            protocol = freeze(args.output_dir, dataset_path=args.dataset, split=args.split, max_calls=args.max_calls)
+            print(json.dumps({"status": "frozen_no_calls", "questions": len(protocol["dataset"]),
+                              "execution": protocol["execution"]}), flush=True)
         elif args.command == "run": run(args.output_dir, resume=args.resume)
         elif args.command == "verify": load_completed(args.output_dir)
         else: summarize(args.output_dir)

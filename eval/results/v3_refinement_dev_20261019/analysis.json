@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-19T01:37:22.895287+00:00",
+  "protocol_sha256": "8e0119621bce6c63d87dd64f3368b6278434787311af32633e303ccdb8d849b2",
+  "summary_sha256": "e09f57de88226e0b23c95c8966851e4b5b13eefbd0d725105d23d73985dd3233",
+  "reviewer_kind": "coding_agent_analysis_not_human_adjudication",
+  "conclusion_ko": "필수 근거 확보 12/16→14/16, 출력 검증 19/20→20/20으로 개선됐지만 같은 새 채점 기준의 AI 통과는 17/20→17/20이다. 전체 정확도 개선은 입증하지 않았다.",
+  "baseline_original_ai_passes": 15,
+  "baseline_regraded_ai_passes": 17,
+  "after_ai_passes": 17,
+  "baseline_grade_changes": [
+    {
+      "id": "v3_d07",
+      "original": false,
+      "regraded": true
+    },
+    {
+      "id": "v3_d15",
+      "original": false,
+      "regraded": true
+    }
+  ],
+  "adjusted_accuracy_computed": false,
+  "cases": [
+    {
+      "id": "v3_d04",
+      "outcome": "gain",
+      "analysis_ko": "이전 페이지 응답은 원문 인용 불일치로 차단됐으나 이번 새 응답은 인용 검증과 AI 채점을 통과했다. 단일 성공이며 원래 거부 원문을 복원하거나 정확한 변형 원인을 특정한 것은 아니다."
+    },
+    {
+      "id": "v3_d07",
+      "outcome": "retrieval_gain_judge_inconsistency",
+      "analysis_ko": "새 문맥에는 예산 규정 원문이 들어가 결재 전 재무팀 검토 시점을 명시했다. 이전 답변의 새 채점은 모델이 보지 못한 R3와 FAQ 사례를 결합했다고 설명하면서 통과시켰다. 참고 정답의 근거성 오용과 예시 일반화를 금지한 지시가 일관되게 지켜지지 않았다."
+    },
+    {
+      "id": "v3_d08",
+      "outcome": "gain",
+      "analysis_ko": "후보 15위의 견적 규정을 선택해 견적 1부와 합리성 검토를 명시했으며 이전 실패에서 새 채점 통과로 바뀌었다."
+    },
+    {
+      "id": "v3_d10",
+      "outcome": "regression_with_missing_rule",
+      "analysis_ko": "명시적 결재 금액표가 여전히 누락되어 강화한 생성 지시는 사례 사이를 추정하지 않고 전체 보류했다. 답변 가능한 문항의 실패는 그대로 계수한다. 이전 답변의 550만원·720만원 사례 보간은 새 채점에서도 허용했으므로 생성·채점의 추론 정책 일관성을 추가 검토해야 한다. 보류를 약화해 점수만 높이지 않는다."
+    },
+    {
+      "id": "v3_d11",
+      "outcome": "persistent_failure_and_rubric_review",
+      "analysis_ko": "결재 금액표 누락과 질문에서 주어진 팀장 구간 전제를 다시 입증해야 하는지의 문제가 남았다. 새 답변은 선결제 불인정·재무팀 별도 검토를 명시했으나 80만원 팀장 구간을 적지 않아 감점됐다."
+    },
+    {
+      "id": "v3_d12",
+      "outcome": "regression_with_judge_and_citation_review",
+      "analysis_ko": "필수 기준은 모두 통과했으나 서로 다른 근거의 타당한 결합이라고 인정하면서도 한 문장에 직접 쓰여 있지 않다는 이유로 grounded=false를 줬다. 동시에 첫 claim의 예산 면제 불가 주장에 S2가 직접 인용되지 않은 출처 연결 문제도 검토해야 한다. 사람 판정 없이 점수를 보정하지 않는다."
+    },
+    {
+      "id": "v3_d15",
+      "outcome": "baseline_regrade_change",
+      "analysis_ko": "영업일의 통상 의미를 허용한 새 지시에서 이전 답변도 통과했다. 이 점수 변화는 새 RAG 구현의 효과가 아니다."
+    }
+  ],
+  "next_steps": [
+    "정확성용 참고 정답이 근거성 판단에 섞이지 않도록 채점 분리 설계를 검토하고 독립적인 사람 판정으로 기준을 보정한다.",
+    "명시적 금액표가 빠지는 문항의 검색 문맥과 복합 claim의 모든 출처 연결을 개선한다.",
+    "개발용 회귀 결과와 채점 정책을 안정화한 뒤 코드·기준을 고정하고 최종 20문항을 실행한다."
+  ],
+  "limitations": [
+    "같은 합성 PDF에서 개발에 사용한 질문",
+    "동일 모델의 단일 실행 채점",
+    "인용 오류 해소는 이번 20문항 실행에서만 관측",
+    "검색 선택과 생성 지시의 효과를 분리하지 않음",
+    "독립 사람 검토 미완료",
+    "최종 묶음은 미실행"
+  ],
+  "sha256": "70b56b0a9fd853b988a0ff361fcf75cef2f9aab1a2d84a7aa3353416eb5eb67f"
+}

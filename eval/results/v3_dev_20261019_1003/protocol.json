@@ -1,0 +1,982 @@
+{
+  "format_version": 2,
+  "created_at": "2026-10-19T01:03:38.785841+00:00",
+  "scope": "Explicitly selected question split on the same synthetic PDFs. PDF-checked references, no completed independent human review or external blind validation. Same-model AI grading; page mode changes candidate depth and context assembly. Reserve final questions before tuning; after inspecting results, treat them as regression cases.",
+  "dataset": [
+    {
+      "id": "v3_d01",
+      "split": "dev",
+      "family": "installation_team_limit",
+      "category": "single_document",
+      "test_type": "boundary",
+      "question": "비품 공급가액 94만원에 계약상 필수 설치비 6만원이 붙습니다. VAT를 제외하면 결재 기준 총액과 최종 승인자는 어떻게 되나요?",
+      "answerable": true,
+      "expected_answer": "필수 설치비를 합산한 공급가액은 100만원이다. 정확히 100만원은 팀장 최종 결재 대상이며 부서장으로 올리지 않는다.",
+      "grading_criteria": [
+        "필수 설치비를 합산한 공급가액은 100만원이다.",
+        "정확히 100만원은 팀장 최종 결재 대상이며 부서장으로 올리지 않는다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "total",
+          "claim": "공급가액 총액(VAT 제외)을 사용하며, 운송·설치비 등 구매에 필수적인 비용이 계약에 포함되면 합산한다.",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "공급가액 총액(VAT 제외)을 사용하며, 운송·설치비 등 구매에 필수적인 비용이 계약에 포함되면 합산한다."
+            }
+          ]
+        },
+        {
+          "id": "authority",
+          "claim": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3_d02",
+      "split": "dev",
+      "family": "transport_budget_limit",
+      "category": "single_document",
+      "test_type": "boundary",
+      "question": "예산이 충분한 장비의 공급가액은 480만원, 계약에 포함된 필수 운송비는 25만원입니다. 최종 결재권자와 재무팀 검토 순서를 알려주세요.",
+      "answerable": true,
+      "expected_answer": "운송비를 포함해 505만원으로 계산하며 CFO가 최종 결재한다. 500만원 초과이므로 예산이 충분해도 금액별 결재 전에 재무팀 예산 사전검토가 필요하다.",
+      "grading_criteria": [
+        "운송비를 포함해 505만원으로 계산하며 CFO가 최종 결재한다.",
+        "500만원 초과이므로 예산이 충분해도 금액별 결재 전에 재무팀 예산 사전검토가 필요하다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "total",
+          "claim": "공급가액 총액(VAT 제외)을 사용하며, 운송·설치비 등 구매에 필수적인 비용이 계약에 포함되면 합산한다.",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "공급가액 총액(VAT 제외)을 사용하며, 운송·설치비 등 구매에 필수적인 비용이 계약에 포함되면 합산한다."
+            }
+          ]
+        },
+        {
+          "id": "authority",
+          "claim": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        },
+        {
+          "id": "budget",
+          "claim": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수 예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수 예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 2,
+              "quote": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수 예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수 예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3_d03",
+      "split": "dev",
+      "family": "subscription_quote_limit",
+      "category": "multi_document",
+      "test_type": "boundary",
+      "question": "월 공급가액 25만원으로 12개월을 약정한 서비스를 구매합니다. 견적 비교는 월액과 총액 중 무엇을 기준으로 하며 원칙적으로 몇 부를 받아야 하나요?",
+      "answerable": true,
+      "expected_answer": "최초 약정한 전체 기간 금액인 300만원을 기준으로 한다. 300만원 이상에 해당하므로 서로 다른 공급업체의 유효 견적 2부 이상을 원칙으로 비교한다.",
+      "grading_criteria": [
+        "최초 약정한 전체 기간 금액인 300만원을 기준으로 한다.",
+        "300만원 이상에 해당하므로 서로 다른 공급업체의 유효 견적 2부 이상을 원칙으로 비교한다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "subscription",
+          "claim": "월 구독처럼 주기적으로 지급하는 계약은 최초 약정한 총 계약기간 비용으로 판단한다.",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "월 구독처럼 주기적으로 지급하는 계약은 최초 약정한 총 계약기간 비용으로 판단한다."
+            }
+          ]
+        },
+        {
+          "id": "quote_high",
+          "claim": "300만원 이상 서로 다른 공급업체의 유효 견적 2부 이상을 원칙으로 비교",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 2,
+              "quote": "300만원 이상 서로 다른 공급업체의 유효 견적 2부 이상을 원칙으로 비교"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3_d04",
+      "split": "dev",
+      "family": "finance_legal_threshold_difference",
+      "category": "multi_document",
+      "test_type": "boundary",
+      "question": "개인정보 위탁이 없는 6개월 소프트웨어 계약의 공급가액이 정확히 500만원이고 정규 예산도 충분합니다. 최종 결재, 별도 예산 사전검토, 법무 사전검토를 구분해 주세요.",
+      "answerable": true,
+      "expected_answer": "최종 결재권자는 부서장이다. 예산 내 500만원 이하는 예산코드와 잔여예산 확인 후 정상 결재하며 재무팀 별도 서면검토가 필수인 경우가 아니다. 법무 검토는 500만원 이상부터이므로 계약 체결 전에 필요하다. 예산 검토와 같은 초과 기준으로 처리하지 않는다.",
+      "grading_criteria": [
+        "최종 결재권자는 부서장이다.",
+        "예산 내 500만원 이하는 예산코드와 잔여예산 확인 후 정상 결재하며 재무팀 별도 서면검토가 필수인 경우가 아니다.",
+        "법무 검토는 500만원 이상부터이므로 계약 체결 전에 필요하다. 예산 검토와 같은 초과 기준으로 처리하지 않는다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "authority",
+          "claim": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        },
+        {
+          "id": "budget",
+          "claim": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수 예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수 예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 2,
+              "quote": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수 예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수 예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재"
+            }
+          ]
+        },
+        {
+          "id": "legal",
+          "claim": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 1,
+              "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3_d05",
+      "split": "dev",
+      "family": "security_to_order_gate",
+      "category": "multi_document",
+      "test_type": "composite",
+      "question": "90만원짜리 업무용 네트워크 장비의 보안 승인은 받았지만 구매요청과 금액별 결재는 하지 않았습니다. 바로 발주 가능한지, 최종 승인자와 PO 발행 담당을 알려주세요.",
+      "answerable": true,
+      "expected_answer": "보안 승인만으로 발주할 수 없으며 구매요청과 최종 결재도 완료해야 한다. 공급가액 90만원의 최종 결재권자는 팀장이다. 사전검토와 결재 완료 후 구매운영팀이 PO를 발행한다.",
+      "grading_criteria": [
+        "보안 승인만으로 발주할 수 없으며 구매요청과 최종 결재도 완료해야 한다.",
+        "공급가액 90만원의 최종 결재권자는 팀장이다.",
+        "사전검토와 결재 완료 후 구매운영팀이 PO를 발행한다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "security_gate",
+          "claim": "보안검토는 최종 구매 결재를 대체하지 않는다. 구매요청서는 GB-PUR-01에 따라 등록하고, 결재권자는 GB-APR-02의 공급가액 기준으로 판단한다. 보안 검토 결과가 승인되기 전에는 해당 IT 품목을 발주하거나 회사 데이터를 외부 서비스에 이전하지 않는다.",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 1,
+              "quote": "보안검토는 최종 구매 결재를 대체하지 않는다. 구매요청서는 GB-PUR-01에 따라 등록하고, 결재권자는 GB-APR-02의 공급가액 기준으로 판단한다. 보안 검토 결과가 승인되기 전에는 해당 IT 품목을 발주하거나 회사 데이터를 외부 서비스에 이전하지 않는다."
+            }
+          ]
+        },
+        {
+          "id": "purchase_gate",
+          "claim": "구매 요청과 결재가 완료되기 전에는 발주서 발행·계약 확정·선결제를 진행하지 않는다.",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 1,
+              "quote": "구매 요청과 결재가 완료되기 전에는 발주서 발행·계약 확정·선결제를 진행하지 않는다."
+            }
+          ]
+        },
+        {
+          "id": "authority",
+          "claim": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        },
+        {
+          "id": "po",
+          "claim": "구매운영팀은 사전검토와 결재가 완료된 건에 한해 발주서(PO)를 발행한다. 모든 발주 건에는 PO 번호를 부여하며, 납품 뒤 검수·정산 단계에서도 같은 번호를 사용한다.",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 2,
+              "quote": "구매운영팀은 사전검토와 결재가 완료된 건에 한해 발주서(PO)를 발행한다. 모든 발주 건에는 PO 번호를 부여하며, 납품 뒤 검수·정산 단계에서도 같은 번호를 사용한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3_d06",
+      "split": "dev",
+      "family": "order_quantity_approval_change",
+      "category": "multi_document",
+      "test_type": "composite",
+      "question": "팀장 승인을 받은 공급가액 95만원 비품 발주를 수량 변경으로 110만원으로 늘립니다. 변경 이력과 변경 발주 전 추가 결재는 어떻게 해야 하나요?",
+      "answerable": true,
+      "expected_answer": "원 구매요청서와 발주서에 수량·금액 변경 이력을 남긴다. 110만원은 부서장 구간이므로 변경 발주 전에 상위 결재권자인 부서장 결재를 다시 받는다.",
+      "grading_criteria": [
+        "원 구매요청서와 발주서에 수량·금액 변경 이력을 남긴다.",
+        "110만원은 부서장 구간이므로 변경 발주 전에 상위 결재권자인 부서장 결재를 다시 받는다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "order_change",
+          "claim": "품목·수량·금액·납기 변경 시 원 구매요청서와 발주서의 변경 이력을 남긴다. • 금액 변경으로 상위 전결권자 구간에 들어가면 변경 발주 전에 상위 결재를 다시 받는다.",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 3,
+              "quote": "품목·수량·금액·납기 변경 시 원 구매요청서와 발주서의 변경 이력을 남긴다. • 금액 변경으로 상위 전결권자 구간에 들어가면 변경 발주 전에 상위 결재를 다시 받는다."
+            }
+          ]
+        },
+        {
+          "id": "authority",
+          "claim": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3_d07",
+      "split": "dev",
+      "family": "saas_four_controls",
+      "category": "multi_document",
+      "test_type": "composite",
+      "question": "월 공급가액 40만원인 신규 유료 SaaS를 15개월 약정합니다. 계산 총액, 최종 승인자, 예산·법무·보안 사전검토를 각각 알려주세요.",
+      "answerable": true,
+      "expected_answer": "약정 총액 600만원으로 계산하고 CFO가 최종 결재한다. 500만원 초과이므로 금액별 결재 전에 재무팀 예산 사전검토가 필요하다. 500만원 이상 또는 12개월 이상 조건으로 계약 전 법무 사전검토가 필요하다. 두 조건 동시 충족이 필수라고 하지 않는다. 신규 유료 SaaS는 금액과 관계없이 발주·계약 전에 정보보안팀 검토가 필요하다.",
+      "grading_criteria": [
+        "약정 총액 600만원으로 계산하고 CFO가 최종 결재한다.",
+        "500만원 초과이므로 금액별 결재 전에 재무팀 예산 사전검토가 필요하다.",
+        "500만원 이상 또는 12개월 이상 조건으로 계약 전 법무 사전검토가 필요하다. 두 조건 동시 충족이 필수라고 하지 않는다.",
+        "신규 유료 SaaS는 금액과 관계없이 발주·계약 전에 정보보안팀 검토가 필요하다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "subscription",
+          "claim": "월 구독처럼 주기적으로 지급하는 계약은 최초 약정한 총 계약기간 비용으로 판단한다.",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "월 구독처럼 주기적으로 지급하는 계약은 최초 약정한 총 계약기간 비용으로 판단한다."
+            }
+          ]
+        },
+        {
+          "id": "authority",
+          "claim": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        },
+        {
+          "id": "budget",
+          "claim": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수 예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수 예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 2,
+              "quote": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수 예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수 예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재"
+            }
+          ]
+        },
+        {
+          "id": "legal",
+          "claim": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 1,
+              "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토"
+            }
+          ]
+        },
+        {
+          "id": "security",
+          "claim": "가온비즈에서 회사 업무용으로 구매하는 노트북·데스크톱·서버·네트워크 장비, 신규 유료 SaaS, 회사 명의의 외부 IT 서비스 계약은 금액과 관계없이 발주·계약 전에 정보보안팀 검토를 받아야 한다.",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 1,
+              "quote": "가온비즈에서 회사 업무용으로 구매하는 노트북·데스크톱·서버·네트워크 장비, 신규 유료 SaaS, 회사 명의의 외부 IT 서비스 계약은 금액과 관계없이 발주·계약 전에 정보보안팀 검토를 받아야 한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3_d08",
+      "split": "dev",
+      "family": "small_non_it_contract",
+      "category": "multi_document",
+      "test_type": "composite",
+      "question": "개인정보 위탁이 없는 비IT 용역을 250만원·6개월로 계약합니다. 법무 사전검토 대상이 아니라면 계약서와 견적도 생략할 수 있나요?",
+      "answerable": true,
+      "expected_answer": "주어진 금액·기간·개인정보 조건으로는 법무 사전검토 대상이 아니지만 회사 표준 계약서를 사용하고 구매 절차를 준수한다. 300만원 미만이라 비교견적 의무는 없지만 견적 1부와 금액 합리성 검토는 필요하다.",
+      "grading_criteria": [
+        "주어진 금액·기간·개인정보 조건으로는 법무 사전검토 대상이 아니지만 회사 표준 계약서를 사용하고 구매 절차를 준수한다.",
+        "300만원 미만이라 비교견적 의무는 없지만 견적 1부와 금액 합리성 검토는 필요하다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "legal",
+          "claim": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 1,
+              "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다. 조건 적용 예시 공급가액 500만원 이상 일시불 500만원 이상의 소프트웨어 계약 계약기간 12개월 이상 소액이더라도 1년 이상 유지보수·구독 계약 고객·직원 개인정보의 처리 위탁 금액이나 계약기간과 관계없이 법무 검토 및 DPA 검토"
+            }
+          ]
+        },
+        {
+          "id": "standard_contract",
+          "claim": "법무 사전검토가 필요 없더라도 회사 표준 계약서를 사용하고 구매 절차는 준수한다.",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 1,
+              "quote": "법무 사전검토가 필요 없더라도 회사 표준 계약서를 사용하고 구매 절차는 준수한다."
+            }
+          ]
+        },
+        {
+          "id": "quote_low",
+          "claim": "300만원 미만 비교견적 의무는 없지만 금액의 합리성 검토와 견적 1부는 필요",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 2,
+              "quote": "300만원 미만 비교견적 의무는 없지만 금액의 합리성 검토와 견적 1부는 필요"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3_d09",
+      "split": "dev",
+      "family": "cross_department_aggregation",
+      "category": "multi_document",
+      "test_type": "exception",
+      "question": "두 부서가 같은 업체에 같은 목적의 장비를 20일 간격으로 180만원과 150만원씩 요청합니다. 부서가 다르다는 이유로 따로 결재하고 견적 1부씩만 받을 수 있나요?",
+      "answerable": true,
+      "expected_answer": "같은 업체·동일 목적의 30일 이내 거래는 요청 부서를 나눠도 합산하므로 총 330만원이다. 최종 결재권자는 부서장이고 서로 다른 업체 유효 견적 2부 이상을 원칙으로 비교한다.",
+      "grading_criteria": [
+        "같은 업체·동일 목적의 30일 이내 거래는 요청 부서를 나눠도 합산하므로 총 330만원이다.",
+        "최종 결재권자는 부서장이고 서로 다른 업체 유효 견적 2부 이상을 원칙으로 비교한다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "aggregate",
+          "claim": "같은 공급업체와 동일한 구매 목적을 가진 거래를 30일 이내 여러 번 요청하면 합산 공급가액을 기준으로 결재 구간과 비교견적 의무를 판단한다.",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 2,
+              "quote": "같은 공급업체와 동일한 구매 목적을 가진 거래를 30일 이내 여러 번 요청하면 합산 공급가액을 기준으로 결재 구간과 비교견적 의무를 판단한다."
+            }
+          ]
+        },
+        {
+          "id": "authority",
+          "claim": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        },
+        {
+          "id": "quote_high",
+          "claim": "300만원 이상 서로 다른 공급업체의 유효 견적 2부 이상을 원칙으로 비교",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 2,
+              "quote": "300만원 이상 서로 다른 공급업체의 유효 견적 2부 이상을 원칙으로 비교"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3_d10",
+      "split": "dev",
+      "family": "urgent_budget_coordination",
+      "category": "multi_document",
+      "test_type": "exception",
+      "question": "서비스 중단 대응으로 공급가액 700만원 긴급 구매를 우선 처리해야 합니다. 임시 승인, 정식 요청서 기한, 최종 승인자, 재무팀과의 협의를 알려주세요.",
+      "answerable": true,
+      "expected_answer": "팀장에게 우선 연락하고 이메일 또는 업무시스템에 임시 승인 흔적을 남기며 요청 부서는 1영업일 이내 정식 구매요청서를 등록한다. 700만원은 CFO 최종 결재 대상이며 긴급 구매도 상위 승인을 원칙적으로 면제하지 않는다. 예산 사전검토 대상 거래이므로 재무팀과 즉시 협의하고 구매요청서와 최종 결재를 사후 보완한다.",
+      "grading_criteria": [
+        "팀장에게 우선 연락하고 이메일 또는 업무시스템에 임시 승인 흔적을 남기며 요청 부서는 1영업일 이내 정식 구매요청서를 등록한다.",
+        "700만원은 CFO 최종 결재 대상이며 긴급 구매도 상위 승인을 원칙적으로 면제하지 않는다.",
+        "예산 사전검토 대상 거래이므로 재무팀과 즉시 협의하고 구매요청서와 최종 결재를 사후 보완한다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "emergency",
+          "claim": "이 경우 팀장에게 우선 연락하고 이메일 또는 업무시스템에 임시 승인 흔적을 남긴다. 요청 부서는 1영업일 이내에 정식 구매요청서를 등록해야 한다.",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 3,
+              "quote": "이 경우 팀장에게 우선 연락하고 이메일 또는 업무시스템에 임시 승인 흔적을 남긴다. 요청 부서는 1영업일 이내에 정식 구매요청서를 등록해야 한다."
+            }
+          ]
+        },
+        {
+          "id": "authority",
+          "claim": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        },
+        {
+          "id": "budget",
+          "claim": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수 예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수 예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 2,
+              "quote": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수 예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수 예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재"
+            }
+          ]
+        },
+        {
+          "id": "emergency_approval",
+          "claim": "긴급 구매도 상위 결재권자의 승인을 원칙적으로 면제하지 않는다.",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 3,
+              "quote": "긴급 구매도 상위 결재권자의 승인을 원칙적으로 면제하지 않는다."
+            }
+          ]
+        },
+        {
+          "id": "emergency_budget",
+          "claim": "업무 중단 위험 때문에 우선 처리가 필요한 경우 구매지침(GB-PUR-01)에 따라 팀장 임시 승인을 기록하고, 구매요청서와 최종 결재를 사후에 보완한다. 예산 사전검토 대상인 거래는 재무팀과 즉시 협의한다.",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 3,
+              "quote": "업무 중단 위험 때문에 우선 처리가 필요한 경우 구매지침(GB-PUR-01)에 따라 팀장 임시 승인을 기록하고, 구매요청서와 최종 결재를 사후에 보완한다. 예산 사전검토 대상인 거래는 재무팀과 즉시 협의한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3_d11",
+      "split": "dev",
+      "family": "unapproved_personal_advance",
+      "category": "multi_document",
+      "test_type": "exception",
+      "question": "80만원 비품은 팀장 결재 구간이라서 사전 승인 없이 개인카드로 먼저 결제했습니다. 소액이라는 이유로 정상 구매로 인정되는지와 필요한 추가 검토는요?",
+      "answerable": true,
+      "expected_answer": "80만원은 팀장 결재 구간이지만 사전 승인 없는 선결제는 원칙적으로 인정하지 않는다. 재무팀의 별도 검토가 필요하며 소액이면 자동 승인·정산된다고 하지 않는다.",
+      "grading_criteria": [
+        "80만원은 팀장 결재 구간이지만 사전 승인 없는 선결제는 원칙적으로 인정하지 않는다.",
+        "재무팀의 별도 검토가 필요하며 소액이면 자동 승인·정산된다고 하지 않는다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "authority",
+          "claim": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 1,
+              "quote": "100만원 이하 팀장 공급가액 100만원 100만원 초과 ~ 500만원 이하 부서장 공급가액 180만원 500만원 초과 ~ 2,000만원 이하 재무책임자(CFO) 공급가액 720만원 2,000만원 초과 대표이사(CEO) 공급가액 2,300만원"
+            }
+          ]
+        },
+        {
+          "id": "advance",
+          "claim": "사전 승인 없는 선결제는 원칙적으로 인정하지 않으며 재무팀의 별도 검토가 필요하다.",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 3,
+              "quote": "사전 승인 없는 선결제는 원칙적으로 인정하지 않으며 재무팀의 별도 검토가 필요하다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3_d12",
+      "split": "dev",
+      "family": "sole_supplier_budget_shortfall",
+      "category": "multi_document",
+      "test_type": "exception",
+      "question": "독점 제품 420만원 구매에 견적이 하나뿐이고 잔여예산도 부족합니다. 단독 공급 예외를 받으면 예산 검토까지 생략할 수 있나요?",
+      "answerable": true,
+      "expected_answer": "단독 공급 사유서와 구매운영팀 승인 기록이 필요하고 예외가 자동 적용되는 것은 아니다. 잔여예산 부족은 금액과 무관하게 재무팀 예산 사전검토 대상이며 단독 공급 예외로 이를 면제하지 않는다.",
+      "grading_criteria": [
+        "단독 공급 사유서와 구매운영팀 승인 기록이 필요하고 예외가 자동 적용되는 것은 아니다.",
+        "잔여예산 부족은 금액과 무관하게 재무팀 예산 사전검토 대상이며 단독 공급 예외로 이를 면제하지 않는다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "sole",
+          "claim": "단독 공급 불가피 독점 제품·기존 시스템 호환 등 사유서와 구매운영팀 승인 기록",
+          "any_of": [
+            {
+              "document": "01_purchase_process.pdf",
+              "page": 2,
+              "quote": "단독 공급 불가피 독점 제품·기존 시스템 호환 등 사유서와 구매운영팀 승인 기록"
+            }
+          ]
+        },
+        {
+          "id": "budget",
+          "claim": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수 예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수 예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재",
+          "any_of": [
+            {
+              "document": "02_approval_budget.pdf",
+              "page": 2,
+              "quote": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수 예산 미편성 또는 잔여예산 부족 금액과 무관하게 재무팀 예산 사전검토 필수 예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3_d13",
+      "split": "dev",
+      "family": "service_submission_acceptance",
+      "category": "single_document",
+      "test_type": "timing",
+      "question": "외부 용역의 계약상 산출물이 제출됐습니다. 검수 등록은 누가 언제부터 언제까지 하고, PO와 검수 내역의 일치는 누가 확인하나요?",
+      "answerable": true,
+      "expected_answer": "요청 부서가 계약상 산출물 제출일을 기준으로 3영업일 이내 검수 결과를 등록한다. 계약 체결일이나 대금 지급일부터 계산하지 않는다. 구매운영팀이 발주서(PO)와 검수 내역의 일치를 확인한다.",
+      "grading_criteria": [
+        "요청 부서가 계약상 산출물 제출일을 기준으로 3영업일 이내 검수 결과를 등록한다. 계약 체결일이나 대금 지급일부터 계산하지 않는다.",
+        "구매운영팀이 발주서(PO)와 검수 내역의 일치를 확인한다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "service_inspect",
+          "claim": "물품은 납품일, 용역은 계약상 산출물 제출일을 기준으로 요청 부서가 3영업일 이내 검수 결과를 등록한다. 구매운영팀은 발주서(PO)와 검수 내역이 일치하는지 확인한다.",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 2,
+              "quote": "물품은 납품일, 용역은 계약상 산출물 제출일을 기준으로 요청 부서가 3영업일 이내 검수 결과를 등록한다. 구매운영팀은 발주서(PO)와 검수 내역이 일치하는지 확인한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3_d14",
+      "split": "dev",
+      "family": "normal_security_clock",
+      "category": "single_document",
+      "test_type": "timing",
+      "question": "내부 문서를 보관하는 SaaS의 보안 신청은 월요일에 냈지만 서류는 수요일에 완비됐습니다. 표준 검토 기간은 어느 시점부터 며칠이며 보완 요청이 오면 어떻게 되나요?",
+      "answerable": true,
+      "expected_answer": "내부 문서를 보관하는 외부 SaaS의 보통 위험도 표준 예상 기간은 3영업일이다. 월요일 최초 신청이 아니라 수요일 서류 완비 시점부터 계산하며 보완 요청 시 늘어날 수 있다. 법적 기한이나 승인 보장이 아니다.",
+      "grading_criteria": [
+        "내부 문서를 보관하는 외부 SaaS의 보통 위험도 표준 예상 기간은 3영업일이다.",
+        "월요일 최초 신청이 아니라 수요일 서류 완비 시점부터 계산하며 보완 요청 시 늘어날 수 있다. 법적 기한이나 승인 보장이 아니다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "normal_risk",
+          "claim": "보통 내부 문서를 보관하는 외부 SaaS 3영업일",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 2,
+              "quote": "보통 내부 문서를 보관하는 외부 SaaS 3영업일"
+            }
+          ]
+        },
+        {
+          "id": "duration_qualifier",
+          "claim": "상기 기간은 접수 서류가 완비된 시점부터 계산하는 표준 예상 기간이며, 보완 요청이 있는 경우 늘어날 수 있다. 법적 처리 기한이나 승인 보장을 의미하지 않는다.",
+          "any_of": [
+            {
+              "document": "03_it_security.pdf",
+              "page": 2,
+              "quote": "상기 기간은 접수 서류가 완비된 시점부터 계산하는 표준 예상 기간이며, 보완 요청이 있는 경우 늘어날 수 있다. 법적 처리 기한이나 승인 보장을 의미하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3_d15",
+      "split": "dev",
+      "family": "settlement_two_clocks",
+      "category": "single_document",
+      "test_type": "timing",
+      "question": "검수가 끝난 뒤 정산 서류를 내는 5영업일과 매월 5일 마감은 같은 뜻인가요? 각 기준의 시작점과 휴무일 처리를 설명해 주세요.",
+      "answerable": true,
+      "expected_answer": "정산 서류는 검수 완료일부터 5영업일 이내 제출한다. 월 정기 접수 마감은 매월 5일이고 그날이 휴무일이면 다음 영업일이다. 두 기준을 동일한 기한으로 설명하지 않는다.",
+      "grading_criteria": [
+        "정산 서류는 검수 완료일부터 5영업일 이내 제출한다.",
+        "월 정기 접수 마감은 매월 5일이고 그날이 휴무일이면 다음 영업일이다. 두 기준을 동일한 기한으로 설명하지 않는다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "settlement_submit",
+          "claim": "정산 서류 제출 검수 완료일부터 5영업일 이내 제출",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 3,
+              "quote": "정산 서류 제출 검수 완료일부터 5영업일 이내 제출"
+            }
+          ]
+        },
+        {
+          "id": "cutoff",
+          "claim": "월 정기 접수 마감 매월 5일 (휴무일이면 다음 영업일)",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 3,
+              "quote": "월 정기 접수 마감 매월 5일 (휴무일이면 다음 영업일)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3_d16",
+      "split": "dev",
+      "family": "holiday_cutoff_payment",
+      "category": "single_document",
+      "test_type": "timing",
+      "question": "이번 달 5일은 휴무일이고 6일이 다음 영업일입니다. 적정한 정산 서류를 6일에 모두 접수했다면 정기 지급은 언제 예정되며 확정일인가요?",
+      "answerable": true,
+      "expected_answer": "마감이 다음 영업일인 6일로 이동하므로 마감 내 완비 건은 해당 월 25일 지급 예정이다. 서류 적정성·계약조건·금융기관 운영 상황 등에 따라 달라질 수 있어 확정 지급일이라고 하지 않는다.",
+      "grading_criteria": [
+        "마감이 다음 영업일인 6일로 이동하므로 마감 내 완비 건은 해당 월 25일 지급 예정이다.",
+        "서류 적정성·계약조건·금융기관 운영 상황 등에 따라 달라질 수 있어 확정 지급일이라고 하지 않는다."
+      ],
+      "evidence_groups": [
+        {
+          "id": "cutoff",
+          "claim": "월 정기 접수 마감 매월 5일 (휴무일이면 다음 영업일)",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 3,
+              "quote": "월 정기 접수 마감 매월 5일 (휴무일이면 다음 영업일)"
+            }
+          ]
+        },
+        {
+          "id": "payment",
+          "claim": "정기 지급 예정일 마감일까지 서류가 완비된 건은 해당 월 25일 지급 예정 마감 이후 접수 다음 월 지급 회차로 이월될 수 있음 지급 예정일은 서류의 적정성·계약조건·금융기관 운영 상황에 따라 변경될 수 있다.",
+          "any_of": [
+            {
+              "document": "04_contract_settlement.pdf",
+              "page": 3,
+              "quote": "정기 지급 예정일 마감일까지 서류가 완비된 건은 해당 월 25일 지급 예정 마감 이후 접수 다음 월 지급 회차로 이월될 수 있음 지급 예정일은 서류의 적정성·계약조건·금융기관 운영 상황에 따라 변경될 수 있다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3_d17",
+      "split": "dev",
+      "family": "unknown_po_history",
+      "category": "unanswerable",
+      "test_type": "unanswerable",
+      "question": "PO-2026-184의 실제 발행일과 지난주 승인 완료 시각을 조회해 주세요.",
+      "answerable": false,
+      "expected_answer": "요청한 실제 값·상태·정보를 문서에서 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다. 없는 정보나 근거를 만들어내지 않고 관련 규정만으로 실제 값을 추측하지 않는다.",
+      "grading_criteria": [
+        "요청한 실제 값·상태·정보를 문서에서 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다.",
+        "없는 정보나 근거를 만들어내지 않고 관련 규정만으로 실제 값을 추측하지 않는다."
+      ],
+      "evidence_groups": []
+    },
+    {
+      "id": "v3_d18",
+      "split": "dev",
+      "family": "unknown_staff_roster",
+      "category": "unanswerable",
+      "test_type": "unanswerable",
+      "question": "IT지원팀의 현재 정원과 이번 주 자산 등록 담당자 근무표를 알려주세요.",
+      "answerable": false,
+      "expected_answer": "요청한 실제 값·상태·정보를 문서에서 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다. 없는 정보나 근거를 만들어내지 않고 관련 규정만으로 실제 값을 추측하지 않는다.",
+      "grading_criteria": [
+        "요청한 실제 값·상태·정보를 문서에서 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다.",
+        "없는 정보나 근거를 만들어내지 않고 관련 규정만으로 실제 값을 추측하지 않는다."
+      ],
+      "evidence_groups": []
+    },
+    {
+      "id": "v3_d19",
+      "split": "dev",
+      "family": "unknown_vendor_account",
+      "category": "unanswerable",
+      "test_type": "unanswerable",
+      "question": "우리 회사가 거래하는 한빛상사의 현재 실제 입금 계좌번호와 은행명을 알려주세요.",
+      "answerable": false,
+      "expected_answer": "요청한 실제 값·상태·정보를 문서에서 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다. 없는 정보나 근거를 만들어내지 않고 관련 규정만으로 실제 값을 추측하지 않는다.",
+      "grading_criteria": [
+        "요청한 실제 값·상태·정보를 문서에서 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다.",
+        "없는 정보나 근거를 만들어내지 않고 관련 규정만으로 실제 값을 추측하지 않는다."
+      ],
+      "evidence_groups": []
+    },
+    {
+      "id": "v3_d20",
+      "split": "dev",
+      "family": "unknown_import_rates",
+      "category": "unanswerable",
+      "test_type": "unanswerable",
+      "question": "해외 장비 구매의 품목별 관세율과 오늘 적용할 원화 환산 환율을 알려주세요.",
+      "answerable": false,
+      "expected_answer": "요청한 실제 값·상태·정보를 문서에서 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다. 없는 정보나 근거를 만들어내지 않고 관련 규정만으로 실제 값을 추측하지 않는다.",
+      "grading_criteria": [
+        "요청한 실제 값·상태·정보를 문서에서 확정할 수 없으므로 정해진 답변 보류 문구를 반환한다.",
+        "없는 정보나 근거를 만들어내지 않고 관련 규정만으로 실제 값을 추측하지 않는다."
+      ],
+      "evidence_groups": []
+    }
+  ],
+  "dataset_sha256": "9dd6077b885061d035494e49124e240f19b99d71b18a9d1f7a394ce93e832e64",
+  "documents_sha256": {
+    "01_purchase_process.pdf": "09b75af05d1e3eb9a5407e562b747a17ac75a2a4537d7e1bbc6c60d5dd7ba3be",
+    "02_approval_budget.pdf": "2c260deb0d342673eb44162e2d9af21437bcdfdf3f3ce597e37af1f7e47a6b47",
+    "03_it_security.pdf": "dc8851bde13b3530b56c5016f106495a71903b59cf8007da83c64582e6d4c767",
+    "04_contract_settlement.pdf": "e4dcdca62a1e08c7eb595467c672f7cb05cc7ef3a91f666ff99dbcc3c0ecf795"
+  },
+  "source_sha256": {
+    "config.py": "f47e7ceb4a6fe63f0471e073ada08b2cf1e5ad714e8ce79ef6ce62a19b117a52",
+    "rag.py": "5314d350b56f05a654e71f9c41123278e2e5a378aa57f3c698b3d1107a0423c1",
+    "retrieval_context.py": "a0db5b1d714f1a0037b9872d880e791ab360e2e3e9239090f593d787457acf92",
+    "grounding.py": "4d3e4a3253d2873f6b2920ca027cb8f33b7bd1354e23d93c3d4604a789c9e838",
+    "index_store.py": "021aa85872fcff42d7b4a99677b06b148cb1a0def24a99fde823cb8eb77fd3fd",
+    "ingest.py": "56a04dc86fad48b805c0af2dd73d3339812001470bd6d0578a1cbc68afaddff7",
+    "embeddings.py": "4c798defd8224d80c7f598701b26447a1106ffb438b6c75764b7ebbe473f0e35",
+    "llm.py": "abc1f6554b0f0cde797af709dd12c515466c8009cecb5767a91d21ade1485454",
+    "tracing.py": "a0b87d3e52122fea9f7b067bab02195883dd77d37ce498abc8383b29f5d18d3b",
+    "eval/phase6.py": "55f74e6eadd1a71dfaf8a42818b361b8b85637de8c4e41bfaac75ed2866440e6",
+    "eval/ai_review.py": "abcca96baf6d897b62240da381936e718fb7522155356a3d56816263498d600c",
+    "eval/check_retrieval.py": "4f47dc90c4628dddff7822277896e75217bf04f34d4d325117c135b275777032",
+    "eval/evaluate.py": "c8b55ca3a552d0e478f36fdb410d1d5aa0b4d6d66a560cedf93d48a7c551cb66",
+    "eval/benchmark.py": "e20e794f16816486af71e6a556ff983ff65542f1b067c2add630c41c354bb472",
+    "eval/quality.py": "07d725326c5e68504ef3be9f023e863f1023455529d1b74a157c6cdef217e02f",
+    "eval/expanded_cases.py": "97b6a18b90f1d2cfcb73e6b4530f11cec55cc95c0efa414ebfb2b72c7f923d58",
+    "eval/check_trace.py": "a59d31650be167de52eba05cee659e24df9364bdd5a5c5ff53bf112e12dc0aa0",
+    "eval/datasets.py": "8b1b4284381b693e8f07d2121b9dee81d4bd1754e375a2c76a72d4d01431b6ee"
+  },
+  "config_overrides": {
+    "chunks5": {
+      "retrieval_mode": "chunks",
+      "top_k": 5,
+      "context_max_chars": 6000
+    },
+    "pages5": {
+      "retrieval_mode": "pages",
+      "top_k": 5,
+      "context_max_chars": 6000
+    }
+  },
+  "configurations": {
+    "chunks5": {
+      "provider": "anthropic",
+      "chat_model": "claude-sonnet-5-5",
+      "max_tokens": 2048,
+      "timeout_seconds": 30.0,
+      "top_k": 5,
+      "embedding": {
+        "provider": "fastembed",
+        "model": "intfloat/multilingual-e5-small",
+        "dimensions": 384,
+        "adapter_version": 1
+      },
+      "retrieval_mode": "chunks",
+      "context_max_chars": 6000,
+      "index_signature": {
+        "schema_version": 1,
+        "files": {
+          "01_purchase_process.pdf": "09b75af05d1e3eb9a5407e562b747a17ac75a2a4537d7e1bbc6c60d5dd7ba3be",
+          "02_approval_budget.pdf": "2c260deb0d342673eb44162e2d9af21437bcdfdf3f3ce597e37af1f7e47a6b47",
+          "03_it_security.pdf": "dc8851bde13b3530b56c5016f106495a71903b59cf8007da83c64582e6d4c767",
+          "04_contract_settlement.pdf": "e4dcdca62a1e08c7eb595467c672f7cb05cc7ef3a91f666ff99dbcc3c0ecf795"
+        },
+        "embedding": {
+          "provider": "fastembed",
+          "model": "intfloat/multilingual-e5-small",
+          "dimensions": 384,
+          "adapter_version": 1
+        },
+        "chunking": {
+          "size": 800,
+          "overlap": 120
+        },
+        "extraction_versions": {
+          "PyMuPDF": "1.28.2",
+          "langchain-text-splitters": "1.1.3"
+        },
+        "distance": "cosine"
+      },
+      "index_collection": "enterprise_rag_7b2aeb14ef4b4d8a95eeafd75383fe33",
+      "chunk_count": 22,
+      "python": "3.12.10",
+      "libraries": {
+        "anthropic": "1.13.0",
+        "fastembed": "0.9.0",
+        "chromadb": "1.5.9",
+        "langsmith": "0.14.8"
+      },
+      "source_sha256": {
+        "rag.py": "5314d350b56f05a654e71f9c41123278e2e5a378aa57f3c698b3d1107a0423c1",
+        "retrieval_context.py": "a0db5b1d714f1a0037b9872d880e791ab360e2e3e9239090f593d787457acf92",
+        "grounding.py": "4d3e4a3253d2873f6b2920ca027cb8f33b7bd1354e23d93c3d4604a789c9e838",
+        "llm.py": "abc1f6554b0f0cde797af709dd12c515466c8009cecb5767a91d21ade1485454",
+        "embeddings.py": "4c798defd8224d80c7f598701b26447a1106ffb438b6c75764b7ebbe473f0e35",
+        "index_store.py": "021aa85872fcff42d7b4a99677b06b148cb1a0def24a99fde823cb8eb77fd3fd",
+        "tracing.py": "a0b87d3e52122fea9f7b067bab02195883dd77d37ce498abc8383b29f5d18d3b"
+      },
+      "tracing_requested": false
+    },
+    "pages5": {
+      "provider": "anthropic",
+      "chat_model": "claude-sonnet-5-5",
+      "max_tokens": 2048,
+      "timeout_seconds": 30.0,
+      "top_k": 5,
+      "embedding": {
+        "provider": "fastembed",
+        "model": "intfloat/multilingual-e5-small",
+        "dimensions": 384,
+        "adapter_version": 1
+      },
+      "retrieval_mode": "pages",
+      "context_max_chars": 6000,
+      "index_signature": {
+        "schema_version": 1,
+        "files": {
+          "01_purchase_process.pdf": "09b75af05d1e3eb9a5407e562b747a17ac75a2a4537d7e1bbc6c60d5dd7ba3be",
+          "02_approval_budget.pdf": "2c260deb0d342673eb44162e2d9af21437bcdfdf3f3ce597e37af1f7e47a6b47",
+          "03_it_security.pdf": "dc8851bde13b3530b56c5016f106495a71903b59cf8007da83c64582e6d4c767",
+          "04_contract_settlement.pdf": "e4dcdca62a1e08c7eb595467c672f7cb05cc7ef3a91f666ff99dbcc3c0ecf795"
+        },
+        "embedding": {
+          "provider": "fastembed",
+          "model": "intfloat/multilingual-e5-small",
+          "dimensions": 384,
+          "adapter_version": 1
+        },
+        "chunking": {
+          "size": 800,
+          "overlap": 120
+        },
+        "extraction_versions": {
+          "PyMuPDF": "1.28.2",
+          "langchain-text-splitters": "1.1.3"
+        },
+        "distance": "cosine"
+      },
+      "index_collection": "enterprise_rag_7b2aeb14ef4b4d8a95eeafd75383fe33",
+      "chunk_count": 22,
+      "python": "3.12.10",
+      "libraries": {
+        "anthropic": "1.13.0",
+        "fastembed": "0.9.0",
+        "chromadb": "1.5.9",
+        "langsmith": "0.14.8"
+      },
+      "source_sha256": {
+        "rag.py": "5314d350b56f05a654e71f9c41123278e2e5a378aa57f3c698b3d1107a0423c1",
+        "retrieval_context.py": "a0db5b1d714f1a0037b9872d880e791ab360e2e3e9239090f593d787457acf92",
+        "grounding.py": "4d3e4a3253d2873f6b2920ca027cb8f33b7bd1354e23d93c3d4604a789c9e838",
+        "llm.py": "abc1f6554b0f0cde797af709dd12c515466c8009cecb5767a91d21ade1485454",
+        "embeddings.py": "4c798defd8224d80c7f598701b26447a1106ffb438b6c75764b7ebbe473f0e35",
+        "index_store.py": "021aa85872fcff42d7b4a99677b06b148cb1a0def24a99fde823cb8eb77fd3fd",
+        "tracing.py": "a0b87d3e52122fea9f7b067bab02195883dd77d37ce498abc8383b29f5d18d3b"
+      },
+      "tracing_requested": false
+    }
+  },
+  "answer_prompt_sha256": "a26710cf31171e13de999893e6fb627f7f1ec67dd91e709213bfdc53f7750dea",
+  "judge_prompt_sha256": "ddaf138e6d636653d48e9e7562a9c6814fc9a2fa0c4f6bd61e3ab55fdcbe79e0",
+  "judge": {
+    "model": "claude-sonnet-5-5",
+    "max_tokens": 4096,
+    "timeout_seconds": 60
+  },
+  "execution": {
+    "max_answers": 40,
+    "max_judge_calls": 40,
+    "max_total_calls": 80,
+    "max_calls": 80,
+    "judge_workers": 2,
+    "order": "alternate configuration order per question",
+    "automatic_retries": 0
+  },
+  "dataset_info": {
+    "path": "eval/questions_v3.json",
+    "sha256": "5633f2f3423924985da611798a662b82c8b7b78234c5cba9708e746014266432",
+    "split": "dev",
+    "source_question_count": 40,
+    "question_count": 20
+  },
+  "sha256": "326de9b86b7c053197cf2331f45f202059280f62ee9ef66838d2997f53654118"
+}

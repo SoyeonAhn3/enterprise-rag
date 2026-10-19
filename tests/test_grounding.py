@@ -82,6 +82,21 @@ def test_unknown_source_and_fabricated_or_wrong_source_quotes_are_rejected(ident
         validate_answer(json.dumps(payload), sources())
 
 
+def test_table_rows_must_be_contiguous_and_disjoint_quotes_must_remain_separate():
+    context = [{"source_id": "S1", "source_file": "table.pdf", "page": 1, "chunk_id": "row",
+                "text": "Up to 10\nTeam\nExample 7\nOver 10\nDirector\nExample 15"}]
+    payload = {"answerable": True, "claims": [{"text": "Different approval bands apply.",
+               "evidence": [{"source_id": "S1", "quote": "Up to 10 Team Over 10 Director"}]}]}
+    with pytest.raises(AnswerValidationError) as caught:
+        validate_answer(json.dumps(payload), context)
+    assert caught.value.rule == "quote_not_in_source"
+    assert caught.value.path == "/claims/0/evidence/0/quote"
+    payload["claims"][0]["evidence"] = [{"source_id": "S1", "quote": "Up to 10 Team"},
+                                        {"source_id": "S1", "quote": "Over 10 Director"}]
+    accepted = validate_answer(json.dumps(payload), context)
+    assert [e["quote"] for e in accepted["claims"][0]["evidence"]] == ["Up to 10\nTeam", "Over 10\nDirector"]
+
+
 @pytest.mark.parametrize("change", ["missing_evidence", "empty_evidence", "empty_text", "inline_id",
                                         "invented_file", "invented_page", "too_many_claims", "false_with_claims"])
 def test_inconsistent_or_uncited_claims_cannot_be_displayed(change):

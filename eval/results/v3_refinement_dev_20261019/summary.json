@@ -1,0 +1,188 @@
+{
+  "protocol_sha256": "8e0119621bce6c63d87dd64f3368b6278434787311af32633e303ccdb8d849b2",
+  "answers_sha256": "51a189a5e292871ea772e7192acd25877f79ad8e69772b261c9eb915e2f9dff7",
+  "scope": "Observed dev cases; saved baseline and new answers graded by the same revised AI judge. No human or final evaluation.",
+  "metrics": {
+    "before": {
+      "page_hit_at_k": {
+        "passed": 16,
+        "total": 16,
+        "rate": 1.0
+      },
+      "complete_quote_coverage": {
+        "passed": 12,
+        "total": 16,
+        "rate": 0.75
+      },
+      "evidence_group_recall": {
+        "passed": 39,
+        "total": 43,
+        "rate": 0.9069767441860465
+      },
+      "multi_page_coverage": {
+        "passed": 6,
+        "total": 10,
+        "rate": 0.6
+      },
+      "expected": 20,
+      "attempted": 20,
+      "successful": 19,
+      "rag_errors": [
+        "v3_d04"
+      ],
+      "missing": [],
+      "judge_errors": [
+        "v3_d04"
+      ],
+      "ai_correctness": {
+        "passed": 17,
+        "total": 20,
+        "rate": 0.85
+      },
+      "ai_answerable_correctness": {
+        "passed": 13,
+        "total": 16,
+        "rate": 0.8125
+      },
+      "ai_grounding_substantive": {
+        "passed": 14,
+        "total": 15,
+        "rate": 0.9333333333333333
+      },
+      "abstention_contract": {
+        "passed": 4,
+        "total": 4,
+        "rate": 1.0
+      },
+      "answerable_abstentions": [],
+      "latency_ms": {
+        "successful_mean": 5370.183684210527,
+        "p50": 4542.93,
+        "p95": 13062.49
+      },
+      "generation_tokens": {
+        "input_tokens": 119142,
+        "output_tokens": 13226,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0
+      },
+      "judge_tokens": {
+        "input_tokens": 169786,
+        "output_tokens": 7334,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0
+      }
+    },
+    "after": {
+      "page_hit_at_k": {
+        "passed": 16,
+        "total": 16,
+        "rate": 1.0
+      },
+      "complete_quote_coverage": {
+        "passed": 14,
+        "total": 16,
+        "rate": 0.875
+      },
+      "evidence_group_recall": {
+        "passed": 41,
+        "total": 43,
+        "rate": 0.9534883720930233
+      },
+      "multi_page_coverage": {
+        "passed": 8,
+        "total": 10,
+        "rate": 0.8
+      },
+      "expected": 20,
+      "attempted": 20,
+      "successful": 20,
+      "rag_errors": [],
+      "missing": [],
+      "judge_errors": [],
+      "ai_correctness": {
+        "passed": 17,
+        "total": 20,
+        "rate": 0.85
+      },
+      "ai_answerable_correctness": {
+        "passed": 13,
+        "total": 16,
+        "rate": 0.8125
+      },
+      "ai_grounding_substantive": {
+        "passed": 14,
+        "total": 15,
+        "rate": 0.9333333333333333
+      },
+      "abstention_contract": {
+        "passed": 4,
+        "total": 4,
+        "rate": 1.0
+      },
+      "answerable_abstentions": [
+        "v3_d10"
+      ],
+      "latency_ms": {
+        "successful_mean": 4206.303,
+        "p50": 4138.505,
+        "p95": 7191.95
+      },
+      "generation_tokens": {
+        "input_tokens": 124273,
+        "output_tokens": 9811,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0
+      },
+      "judge_tokens": {
+        "input_tokens": 178570,
+        "output_tokens": 7666,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0
+      }
+    }
+  },
+  "assessment": {
+    "before": {
+      "completed_reviews": 19,
+      "eligible_answers": 19,
+      "judge_errors": [],
+      "fully_assessed": true,
+      "validation_errors": [
+        "v3_d04"
+      ],
+      "end_to_end_ai_correctness": {
+        "passed": 17,
+        "total": 20,
+        "rate": 0.85
+      }
+    },
+    "after": {
+      "completed_reviews": 20,
+      "eligible_answers": 20,
+      "judge_errors": [],
+      "fully_assessed": true,
+      "validation_errors": [],
+      "end_to_end_ai_correctness": {
+        "passed": 17,
+        "total": 20,
+        "rate": 0.85
+      }
+    }
+  },
+  "paired": {
+    "assessed_outcomes": 20,
+    "gains": [
+      "v3_d04",
+      "v3_d08"
+    ],
+    "regressions": [
+      "v3_d10",
+      "v3_d12"
+    ]
+  },
+  "new_answer_attempts": 20,
+  "review_calls": 39,
+  "reused_answers": 20,
+  "sha256": "e09f57de88226e0b23c95c8966851e4b5b13eefbd0d725105d23d73985dd3233"
+}

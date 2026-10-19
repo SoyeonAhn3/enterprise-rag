@@ -1,0 +1,2914 @@
+{
+  "protocol_sha256": "326de9b86b7c053197cf2331f45f202059280f62ee9ef66838d2997f53654118",
+  "answers_sha256": "16c656491124fd97fe7f92c64493da477bd2601a12906f4f42363813d3c247da",
+  "scope": "Explicitly selected question split on the same synthetic PDFs. PDF-checked references, no completed independent human review or external blind validation. Same-model AI grading; page mode changes candidate depth and context assembly. Reserve final questions before tuning; after inspecting results, treat them as regression cases.",
+  "metrics": {
+    "chunks5": {
+      "page_hit_at_k": {
+        "passed": 16,
+        "total": 16,
+        "rate": 1.0
+      },
+      "complete_quote_coverage": {
+        "passed": 10,
+        "total": 16,
+        "rate": 0.625
+      },
+      "evidence_group_recall": {
+        "passed": 33,
+        "total": 43,
+        "rate": 0.7674418604651163
+      },
+      "multi_page_coverage": {
+        "passed": 4,
+        "total": 10,
+        "rate": 0.4
+      },
+      "expected": 20,
+      "attempted": 20,
+      "successful": 20,
+      "rag_errors": [],
+      "missing": [],
+      "judge_errors": [],
+      "ai_correctness": {
+        "passed": 14,
+        "total": 20,
+        "rate": 0.7
+      },
+      "ai_answerable_correctness": {
+        "passed": 10,
+        "total": 16,
+        "rate": 0.625
+      },
+      "ai_grounding_substantive": {
+        "passed": 11,
+        "total": 14,
+        "rate": 0.7857142857142857
+      },
+      "abstention_contract": {
+        "passed": 4,
+        "total": 4,
+        "rate": 1.0
+      },
+      "answerable_abstentions": [
+        "v3_d05",
+        "v3_d07"
+      ],
+      "latency_ms": {
+        "successful_mean": 5050.5435,
+        "p50": 4319.995,
+        "p95": 10698.68
+      },
+      "generation_tokens": {
+        "input_tokens": 98938,
+        "output_tokens": 11636,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0
+      },
+      "judge_tokens": {
+        "input_tokens": 139716,
+        "output_tokens": 9472,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0
+      },
+      "mean_context_chars": 3162,
+      "ai_criteria_satisfied": {
+        "passed": 33,
+        "total": 45,
+        "rate": 0.7333333333333333
+      }
+    },
+    "pages5": {
+      "page_hit_at_k": {
+        "passed": 16,
+        "total": 16,
+        "rate": 1.0
+      },
+      "complete_quote_coverage": {
+        "passed": 12,
+        "total": 16,
+        "rate": 0.75
+      },
+      "evidence_group_recall": {
+        "passed": 39,
+        "total": 43,
+        "rate": 0.9069767441860465
+      },
+      "multi_page_coverage": {
+        "passed": 6,
+        "total": 10,
+        "rate": 0.6
+      },
+      "expected": 20,
+      "attempted": 20,
+      "successful": 19,
+      "rag_errors": [
+        "v3_d04"
+      ],
+      "missing": [],
+      "judge_errors": [
+        "v3_d04"
+      ],
+      "ai_correctness": {
+        "passed": 15,
+        "total": 20,
+        "rate": 0.75
+      },
+      "ai_answerable_correctness": {
+        "passed": 11,
+        "total": 16,
+        "rate": 0.6875
+      },
+      "ai_grounding_substantive": {
+        "passed": 13,
+        "total": 15,
+        "rate": 0.8666666666666667
+      },
+      "abstention_contract": {
+        "passed": 4,
+        "total": 4,
+        "rate": 1.0
+      },
+      "answerable_abstentions": [],
+      "latency_ms": {
+        "successful_mean": 5370.183684210527,
+        "p50": 4542.93,
+        "p95": 13062.49
+      },
+      "generation_tokens": {
+        "input_tokens": 119142,
+        "output_tokens": 13226,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0
+      },
+      "judge_tokens": {
+        "input_tokens": 160115,
+        "output_tokens": 7289,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0
+      },
+      "mean_context_chars": 4159.55,
+      "ai_criteria_satisfied": {
+        "passed": 40,
+        "total": 45,
+        "rate": 0.8888888888888888
+      }
+    }
+  },
+  "diagnostics": {
+    "chunks5": [
+      {
+        "id": "v3_d01",
+        "flags": [
+          "ai_incorrect_with_complete_evidence"
+        ],
+        "failed_criteria": [
+          "c2"
+        ],
+        "issues": [
+          {
+            "kind": "missing_condition",
+            "answer_span": "",
+            "missing_fact": "정확히 100만원은 부서장(100만원 초과 구간)으로 올리지 않고 팀장이 최종 결재한다는 명시적 설명",
+            "reason": "답변은 팀장이 최종 승인자라고만 밝히고 부서장 상신이 불필요하다는 점은 직접 말하지 않았다. 구간 판단상 암시는 되지만 기준이 요구한 설명이 명시적으로 빠졌다.",
+            "evidence": [
+              {
+                "source": "S2",
+                "quote": "금액 구간의 경계값은 위 표 그대로 적용한다."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "v3_d04",
+        "flags": [
+          "reference_quote_missing",
+          "ai_incorrect",
+          "ai_unsupported_answer"
+        ],
+        "failed_criteria": [
+          "c2"
+        ],
+        "issues": [
+          {
+            "kind": "missing_condition",
+            "answer_span": "",
+            "missing_fact": "예산 내 500만원 이하는 예산코드와 잔여예산을 확인한 뒤 정상 결재한다.",
+            "reason": "예산 검토 부분에서 예산코드 및 잔여예산 확인이라는 필수 설명이 빠졌다.",
+            "evidence": [
+              {
+                "source": "R2",
+                "quote": "예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재"
+              }
+            ]
+          },
+          {
+            "kind": "unsupported_claim",
+            "answer_span": "따라서 정규 예산이 충분한 이 계약에는 별도 예산 사전검토가 요구되지 않습니다.",
+            "missing_fact": "",
+            "reason": "retrieved에는 500만원 초과 시 예산 사전검토가 필요하다는 직접 규정이나 예산 내 500만원 이하의 정상 결재 규정이 없다. 답변은 FAQ 사례에 문구가 붙어 있지 않다는 점에서 추론했을 뿐이다.",
+            "evidence": [
+              {
+                "source": "S4",
+                "quote": "공급가액 500만원 정확히\n부서장 최종 결재"
+              },
+              {
+                "source": "S4",
+                "quote": "공급가액 550만원\nCFO 최종 결재 + 재무팀 예산 사전검토"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "v3_d05",
+        "flags": [
+          "reference_quote_missing",
+          "ai_incorrect",
+          "answerable_abstention"
+        ],
+        "failed_criteria": [
+          "c1",
+          "c2",
+          "c3"
+        ],
+        "issues": [
+          {
+            "kind": "wrong_abstention",
+            "answer_span": "등록된 문서에서 해당 정보를 확인할 수 없습니다.",
+            "missing_fact": "보안 승인만으로 발주할 수 없고 구매요청과 최종 결재가 필요하다. 90만원은 100만원 이하 구간이므로 최종 결재권자는 팀장이다. 사전검토와 결재 완료 후 구매운영팀이 PO를 발행한다.",
+            "reason": "검색 자료에 답변에 필요한 정보가 있었는데도 답변을 보류했다.",
+            "evidence": [
+              {
+                "source": "S1",
+                "quote": "아니요. 구매요청과 금액별 최종 결재도 필요합니다."
+              },
+              {
+                "source": "S4",
+                "quote": "구매운영팀은 사전검토와 결재가 완료된 건에 한해 발주서(PO)를 발행한다."
+              }
+            ]
+          },
+          {
+            "kind": "missing_condition",
+            "answer_span": "",
+            "missing_fact": "공급가액 90만원은 100만원 이하 구간이므로 최종 결재권자는 팀장이다.",
+            "reason": "검색된 S1~S5에는 결재 금액 구간표가 없어, 팀장 결재권 판단 근거를 답변 모델이 볼 수 없었다. 그래도 정답 요구사항은 충족하지 못했다.",
+            "evidence": [
+              {
+                "source": "R3",
+                "quote": "100만원 이하 팀장 공급가액 100만원"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "v3_d07",
+        "flags": [
+          "reference_quote_missing",
+          "ai_incorrect",
+          "answerable_abstention"
+        ],
+        "failed_criteria": [
+          "c1",
+          "c2",
+          "c3",
+          "c4"
+        ],
+        "issues": [
+          {
+            "kind": "wrong_abstention",
+            "answer_span": "등록된 문서에서 해당 정보를 확인할 수 없습니다.",
+            "missing_fact": "600만원, CFO 최종 결재, 예산 사전검토 필요, 법무 사전검토 필요(500만원 이상 또는 12개월 이상)를 답해야 한다.",
+            "reason": "검색 자료만으로 최소 총액 계산, CFO 결재, 예산·법무 검토는 답변 가능했는데 전체를 보류했다.",
+            "evidence": [
+              {
+                "source": "S5",
+                "quote": "월 구독처럼 주기적으로 지급하는 계약은 최초 약정한 총 계약기간 비용으로 판단한다."
+              },
+              {
+                "source": "S4",
+                "quote": "공급가액 550만원 CFO 최종 결재 + 재무팀 예산 사전검토"
+              },
+              {
+                "source": "S3",
+                "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다."
+              }
+            ]
+          },
+          {
+            "kind": "missing_condition",
+            "answer_span": "",
+            "missing_fact": "신규 유료 SaaS는 금액과 관계없이 발주·계약 전에 정보보안팀 검토가 필요하다.",
+            "reason": "retrieved에는 보안팀 검토 규정 원문이 없어 보류가 부분적으로 이해되지만, 기준 c4는 충족하지 못했다.",
+            "evidence": [
+              {
+                "source": "S2",
+                "quote": "IT 자산·SaaS·개인정보 처리 전 보안검토: GB-SEC-03"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "v3_d08",
+        "flags": [
+          "reference_quote_missing",
+          "ai_incorrect",
+          "ai_unsupported_answer"
+        ],
+        "failed_criteria": [
+          "c1",
+          "c2"
+        ],
+        "issues": [
+          {
+            "kind": "missing_condition",
+            "answer_span": "",
+            "missing_fact": "250만원, 6개월, 개인정보 위탁 없음 조건은 500만원 이상, 12개월 이상, 개인정보 처리 위탁 중 어느 것에도 해당하지 않아 법무 사전검토 대상이 아니다.",
+            "reason": "주어진 조건이 법무 검토 기준에 해당하지 않는다는 판단이 답변에 없다.",
+            "evidence": [
+              {
+                "source": "R1",
+                "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다."
+              }
+            ]
+          },
+          {
+            "kind": "missing_condition",
+            "answer_span": "이는 견적 자체를 생략해도 된다는 뜻은 아닙니다.",
+            "missing_fact": "300만원 미만이라도 견적 1부와 금액 합리성 검토가 필요하다.",
+            "reason": "견적 생략 불가만 말하고 필요한 견적 수량(1부)과 합리성 검토를 밝히지 않았다.",
+            "evidence": [
+              {
+                "source": "R3",
+                "quote": "300만원 미만 비교견적 의무는 없지만 금액의 합리성 검토와 견적 1부는 필요"
+              }
+            ]
+          },
+          {
+            "kind": "unsupported_claim",
+            "answer_span": "이는 견적 자체를 생략해도 된다는 뜻은 아닙니다.",
+            "missing_fact": "",
+            "reason": "검색된 S3와 S4는 비교견적 2부 의무가 없다는 점만 말한다. 견적 1부가 필요하다는 근거는 검색 결과에 없어서 이 주장은 뒷받침되지 않는다.",
+            "evidence": [
+              {
+                "source": "S4",
+                "quote": "다만 300만원 미만이므로 비교견적 2부 의무는 없다."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "v3_d10",
+        "flags": [
+          "reference_quote_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "v3_d11",
+        "flags": [
+          "reference_quote_missing",
+          "ai_incorrect",
+          "ai_unsupported_answer"
+        ],
+        "failed_criteria": [
+          "c1"
+        ],
+        "issues": [
+          {
+            "kind": "missing_condition",
+            "answer_span": "",
+            "missing_fact": "80만원은 100만원 이하이므로 팀장 결재 구간이라는 점을 명확히 언급해야 한다.",
+            "reason": "답변이 질문의 전제를 반복했을 뿐 80만원이 팀장 결재 구간임을 검증하거나 명시하지 않았다.",
+            "evidence": [
+              {
+                "source": "R1",
+                "quote": "100만원 이하 팀장 공급가액 100만원"
+              }
+            ]
+          },
+          {
+            "kind": "unsupported_claim",
+            "answer_span": "다만 이는 예산 검토 기준이고, 사전 승인 없는 선결제에 대한 재무팀 별도 검토는 따로 요구됩니다.",
+            "missing_fact": "",
+            "reason": "S3는 소액 구매의 서면검토 면제와 예산코드 기재만 말한다. 이를 예산 검토 기준과 선결제 검토 요구로 구분하는 해석은 S3 문장 자체에서 나오지 않으며 S1·S2가 뒷받침하는 별도 사실과 결합한 추론이다.",
+            "evidence": [
+              {
+                "source": "S3",
+                "quote": "단, 정규 예산 내 소액 구매는 재무팀 별도 서면검토를 필수로 하지 않는다."
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "pages5": [
+      {
+        "id": "v3_d04",
+        "flags": [
+          "rag_error_or_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "v3_d07",
+        "flags": [
+          "reference_quote_missing",
+          "ai_incorrect"
+        ],
+        "failed_criteria": [
+          "c2"
+        ],
+        "issues": [
+          {
+            "kind": "missing_condition",
+            "answer_span": "",
+            "missing_fact": "500만원 초과 거래는 금액별 결재 전에 재무팀의 예산 사전검토가 필수라는 점(결재 전 시점)이 빠졌다.",
+            "reason": "답변은 사례를 근거로 예산 사전검토가 필요하다고만 했고, 500만원 초과이므로 금액별 결재 전에 받아야 한다는 시점과 조건을 명시하지 않았다.",
+            "evidence": [
+              {
+                "source": "R3",
+                "quote": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수"
+              },
+              {
+                "source": "S3",
+                "quote": "공급가액 550만원 CFO 최종 결재 + 재무팀 예산 사전검토"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "v3_d08",
+        "flags": [
+          "reference_quote_missing",
+          "ai_incorrect"
+        ],
+        "failed_criteria": [
+          "c2"
+        ],
+        "issues": [
+          {
+            "kind": "missing_condition",
+            "answer_span": "",
+            "missing_fact": "300만원 미만이어도 견적 1부와 금액의 합리성 검토는 필요하다.",
+            "reason": "견적을 생략할 수 있는지가 질문의 핵심인데, 답변은 견적 1부와 합리성 검토 필요성을 말하지 않았다. 비교견적 의무가 없다는 사실만 언급해 견적 생략 가능 여부가 불명확하다.",
+            "evidence": [
+              {
+                "source": "R3",
+                "quote": "300만원 미만 비교견적 의무는 없지만 금액의 합리성 검토와 견적 1부는 필요"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "v3_d10",
+        "flags": [
+          "reference_quote_missing"
+        ],
+        "failed_criteria": [],
+        "issues": []
+      },
+      {
+        "id": "v3_d11",
+        "flags": [
+          "reference_quote_missing",
+          "ai_incorrect",
+          "ai_unsupported_answer"
+        ],
+        "failed_criteria": [],
+        "issues": [
+          {
+            "kind": "unsupported_claim",
+            "answer_span": "소액 구매도 구매요청과 금액별 결재 절차 대상이며, 모든 구매요청에는 예산코드와 잔여예산을 기재해야 합니다.",
+            "missing_fact": "",
+            "reason": "S1 FAQ는 50만원 비품이 구매요청 대상이라는 내용만 있어 '소액 구매 일반'이 금액별 결재 절차 대상이라는 주장은 직접 뒷받침되지 않는다. 또 예산코드·잔여예산 기재는 S2에 근거하는데, 문장에는 [S1] [S2]가 함께 붙어 있다. S2는 정규 예산 내 소액 구매는 재무팀 별도 서면검토가 필수가 아니라고도 하여 답변의 일반화는 오해를 줄 수 있다.",
+            "evidence": [
+              {
+                "source": "S1",
+                "quote": "필요하다. 다만 300만원 미만이므로 비교견적 2부 의무는 없다."
+              },
+              {
+                "source": "S2",
+                "quote": "단, 정규 예산 내 소액 구매는 재무팀 별도 서면검토를 필수로 하지 않는다."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "v3_d15",
+        "flags": [
+          "ai_incorrect_with_complete_evidence",
+          "ai_unsupported_answer"
+        ],
+        "failed_criteria": [],
+        "issues": [
+          {
+            "kind": "unsupported_claim",
+            "answer_span": "영업일 기준이므로 휴무일은 세지 않는 것으로 볼 수 있으나, 문서에 별도의 휴무일 처리 문구는 없습니다.",
+            "missing_fact": "",
+            "reason": "5영업일의 휴무일 처리에 대해 문서에 규정이 없는데 휴무일을 세지 않는 것으로 볼 수 있다고 추론했음. 문서가 뒷받침하지 않는 해석이며, 문서에 문구가 없다는 단서를 달았지만 추가 주장임.",
+            "evidence": [
+              {
+                "source": "S1",
+                "quote": "정산 서류 제출\n검수 완료일부터 5영업일 이내 제출"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "paired": {
+    "assessed": 19,
+    "gains": [
+      "v3_d01",
+      "v3_d05"
+    ],
+    "regressions": [
+      "v3_d15"
+    ],
+    "unassessed": [
+      "v3_d04"
+    ]
+  },
+  "question_count": 20,
+  "assessment": {
+    "chunks5": {
+      "eligible_answers": 20,
+      "completed_reviews": 20,
+      "judge_errors": [],
+      "missing_reviews": [],
+      "skipped_failed_answers": [],
+      "unassessed_eligible": [],
+      "fully_assessed": true,
+      "end_to_end_ai_correctness": {
+        "passed": 14,
+        "total": 20,
+        "rate": 0.7
+      },
+      "failure_stages": {}
+    },
+    "pages5": {
+      "eligible_answers": 19,
+      "completed_reviews": 19,
+      "judge_errors": [],
+      "missing_reviews": [],
+      "skipped_failed_answers": [
+        "v3_d04"
+      ],
+      "unassessed_eligible": [],
+      "fully_assessed": true,
+      "end_to_end_ai_correctness": {
+        "passed": 15,
+        "total": 20,
+        "rate": 0.75
+      },
+      "failure_stages": {
+        "validation": 1
+      }
+    }
+  },
+  "breakdown": {
+    "category": {
+      "multi_document": {
+        "scope": "Explicitly selected question split on the same synthetic PDFs. PDF-checked references, no completed independent human review or external blind validation. Same-model AI grading; page mode changes candidate depth and context assembly. Reserve final questions before tuning; after inspecting results, treat them as regression cases.",
+        "metrics": {
+          "chunks5": {
+            "page_hit_at_k": {
+              "passed": 10,
+              "total": 10,
+              "rate": 1.0
+            },
+            "complete_quote_coverage": {
+              "passed": 4,
+              "total": 10,
+              "rate": 0.4
+            },
+            "evidence_group_recall": {
+              "passed": 21,
+              "total": 31,
+              "rate": 0.6774193548387096
+            },
+            "multi_page_coverage": {
+              "passed": 4,
+              "total": 10,
+              "rate": 0.4
+            },
+            "expected": 10,
+            "attempted": 10,
+            "successful": 10,
+            "rag_errors": [],
+            "missing": [],
+            "judge_errors": [],
+            "ai_correctness": {
+              "passed": 5,
+              "total": 10,
+              "rate": 0.5
+            },
+            "ai_answerable_correctness": {
+              "passed": 5,
+              "total": 10,
+              "rate": 0.5
+            },
+            "ai_grounding_substantive": {
+              "passed": 5,
+              "total": 8,
+              "rate": 0.625
+            },
+            "abstention_contract": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "answerable_abstentions": [
+              "v3_d05",
+              "v3_d07"
+            ],
+            "latency_ms": {
+              "successful_mean": 6399.999,
+              "p50": 5396.71,
+              "p95": 13027.94
+            },
+            "generation_tokens": {
+              "input_tokens": 48219,
+              "output_tokens": 8272,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "judge_tokens": {
+              "input_tokens": 73140,
+              "output_tokens": 6429,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "mean_context_chars": 3034.4,
+            "ai_criteria_satisfied": {
+              "passed": 14,
+              "total": 25,
+              "rate": 0.56
+            }
+          },
+          "pages5": {
+            "page_hit_at_k": {
+              "passed": 10,
+              "total": 10,
+              "rate": 1.0
+            },
+            "complete_quote_coverage": {
+              "passed": 6,
+              "total": 10,
+              "rate": 0.6
+            },
+            "evidence_group_recall": {
+              "passed": 27,
+              "total": 31,
+              "rate": 0.8709677419354839
+            },
+            "multi_page_coverage": {
+              "passed": 6,
+              "total": 10,
+              "rate": 0.6
+            },
+            "expected": 10,
+            "attempted": 10,
+            "successful": 9,
+            "rag_errors": [
+              "v3_d04"
+            ],
+            "missing": [],
+            "judge_errors": [
+              "v3_d04"
+            ],
+            "ai_correctness": {
+              "passed": 6,
+              "total": 10,
+              "rate": 0.6
+            },
+            "ai_answerable_correctness": {
+              "passed": 6,
+              "total": 10,
+              "rate": 0.6
+            },
+            "ai_grounding_substantive": {
+              "passed": 8,
+              "total": 9,
+              "rate": 0.8888888888888888
+            },
+            "abstention_contract": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "answerable_abstentions": [],
+            "latency_ms": {
+              "successful_mean": 7585.3133333333335,
+              "p50": 5483.27,
+              "p95": 13062.49
+            },
+            "generation_tokens": {
+              "input_tokens": 60560,
+              "output_tokens": 9960,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "judge_tokens": {
+              "input_tokens": 81660,
+              "output_tokens": 4351,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "mean_context_chars": 4256.1,
+            "ai_criteria_satisfied": {
+              "passed": 20,
+              "total": 25,
+              "rate": 0.8
+            }
+          }
+        },
+        "diagnostics": {
+          "chunks5": [
+            {
+              "id": "v3_d04",
+              "flags": [
+                "reference_quote_missing",
+                "ai_incorrect",
+                "ai_unsupported_answer"
+              ],
+              "failed_criteria": [
+                "c2"
+              ],
+              "issues": [
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "",
+                  "missing_fact": "예산 내 500만원 이하는 예산코드와 잔여예산을 확인한 뒤 정상 결재한다.",
+                  "reason": "예산 검토 부분에서 예산코드 및 잔여예산 확인이라는 필수 설명이 빠졌다.",
+                  "evidence": [
+                    {
+                      "source": "R2",
+                      "quote": "예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재"
+                    }
+                  ]
+                },
+                {
+                  "kind": "unsupported_claim",
+                  "answer_span": "따라서 정규 예산이 충분한 이 계약에는 별도 예산 사전검토가 요구되지 않습니다.",
+                  "missing_fact": "",
+                  "reason": "retrieved에는 500만원 초과 시 예산 사전검토가 필요하다는 직접 규정이나 예산 내 500만원 이하의 정상 결재 규정이 없다. 답변은 FAQ 사례에 문구가 붙어 있지 않다는 점에서 추론했을 뿐이다.",
+                  "evidence": [
+                    {
+                      "source": "S4",
+                      "quote": "공급가액 500만원 정확히\n부서장 최종 결재"
+                    },
+                    {
+                      "source": "S4",
+                      "quote": "공급가액 550만원\nCFO 최종 결재 + 재무팀 예산 사전검토"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "v3_d05",
+              "flags": [
+                "reference_quote_missing",
+                "ai_incorrect",
+                "answerable_abstention"
+              ],
+              "failed_criteria": [
+                "c1",
+                "c2",
+                "c3"
+              ],
+              "issues": [
+                {
+                  "kind": "wrong_abstention",
+                  "answer_span": "등록된 문서에서 해당 정보를 확인할 수 없습니다.",
+                  "missing_fact": "보안 승인만으로 발주할 수 없고 구매요청과 최종 결재가 필요하다. 90만원은 100만원 이하 구간이므로 최종 결재권자는 팀장이다. 사전검토와 결재 완료 후 구매운영팀이 PO를 발행한다.",
+                  "reason": "검색 자료에 답변에 필요한 정보가 있었는데도 답변을 보류했다.",
+                  "evidence": [
+                    {
+                      "source": "S1",
+                      "quote": "아니요. 구매요청과 금액별 최종 결재도 필요합니다."
+                    },
+                    {
+                      "source": "S4",
+                      "quote": "구매운영팀은 사전검토와 결재가 완료된 건에 한해 발주서(PO)를 발행한다."
+                    }
+                  ]
+                },
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "",
+                  "missing_fact": "공급가액 90만원은 100만원 이하 구간이므로 최종 결재권자는 팀장이다.",
+                  "reason": "검색된 S1~S5에는 결재 금액 구간표가 없어, 팀장 결재권 판단 근거를 답변 모델이 볼 수 없었다. 그래도 정답 요구사항은 충족하지 못했다.",
+                  "evidence": [
+                    {
+                      "source": "R3",
+                      "quote": "100만원 이하 팀장 공급가액 100만원"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "v3_d07",
+              "flags": [
+                "reference_quote_missing",
+                "ai_incorrect",
+                "answerable_abstention"
+              ],
+              "failed_criteria": [
+                "c1",
+                "c2",
+                "c3",
+                "c4"
+              ],
+              "issues": [
+                {
+                  "kind": "wrong_abstention",
+                  "answer_span": "등록된 문서에서 해당 정보를 확인할 수 없습니다.",
+                  "missing_fact": "600만원, CFO 최종 결재, 예산 사전검토 필요, 법무 사전검토 필요(500만원 이상 또는 12개월 이상)를 답해야 한다.",
+                  "reason": "검색 자료만으로 최소 총액 계산, CFO 결재, 예산·법무 검토는 답변 가능했는데 전체를 보류했다.",
+                  "evidence": [
+                    {
+                      "source": "S5",
+                      "quote": "월 구독처럼 주기적으로 지급하는 계약은 최초 약정한 총 계약기간 비용으로 판단한다."
+                    },
+                    {
+                      "source": "S4",
+                      "quote": "공급가액 550만원 CFO 최종 결재 + 재무팀 예산 사전검토"
+                    },
+                    {
+                      "source": "S3",
+                      "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다."
+                    }
+                  ]
+                },
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "",
+                  "missing_fact": "신규 유료 SaaS는 금액과 관계없이 발주·계약 전에 정보보안팀 검토가 필요하다.",
+                  "reason": "retrieved에는 보안팀 검토 규정 원문이 없어 보류가 부분적으로 이해되지만, 기준 c4는 충족하지 못했다.",
+                  "evidence": [
+                    {
+                      "source": "S2",
+                      "quote": "IT 자산·SaaS·개인정보 처리 전 보안검토: GB-SEC-03"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "v3_d08",
+              "flags": [
+                "reference_quote_missing",
+                "ai_incorrect",
+                "ai_unsupported_answer"
+              ],
+              "failed_criteria": [
+                "c1",
+                "c2"
+              ],
+              "issues": [
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "",
+                  "missing_fact": "250만원, 6개월, 개인정보 위탁 없음 조건은 500만원 이상, 12개월 이상, 개인정보 처리 위탁 중 어느 것에도 해당하지 않아 법무 사전검토 대상이 아니다.",
+                  "reason": "주어진 조건이 법무 검토 기준에 해당하지 않는다는 판단이 답변에 없다.",
+                  "evidence": [
+                    {
+                      "source": "R1",
+                      "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다."
+                    }
+                  ]
+                },
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "이는 견적 자체를 생략해도 된다는 뜻은 아닙니다.",
+                  "missing_fact": "300만원 미만이라도 견적 1부와 금액 합리성 검토가 필요하다.",
+                  "reason": "견적 생략 불가만 말하고 필요한 견적 수량(1부)과 합리성 검토를 밝히지 않았다.",
+                  "evidence": [
+                    {
+                      "source": "R3",
+                      "quote": "300만원 미만 비교견적 의무는 없지만 금액의 합리성 검토와 견적 1부는 필요"
+                    }
+                  ]
+                },
+                {
+                  "kind": "unsupported_claim",
+                  "answer_span": "이는 견적 자체를 생략해도 된다는 뜻은 아닙니다.",
+                  "missing_fact": "",
+                  "reason": "검색된 S3와 S4는 비교견적 2부 의무가 없다는 점만 말한다. 견적 1부가 필요하다는 근거는 검색 결과에 없어서 이 주장은 뒷받침되지 않는다.",
+                  "evidence": [
+                    {
+                      "source": "S4",
+                      "quote": "다만 300만원 미만이므로 비교견적 2부 의무는 없다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "v3_d10",
+              "flags": [
+                "reference_quote_missing"
+              ],
+              "failed_criteria": [],
+              "issues": []
+            },
+            {
+              "id": "v3_d11",
+              "flags": [
+                "reference_quote_missing",
+                "ai_incorrect",
+                "ai_unsupported_answer"
+              ],
+              "failed_criteria": [
+                "c1"
+              ],
+              "issues": [
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "",
+                  "missing_fact": "80만원은 100만원 이하이므로 팀장 결재 구간이라는 점을 명확히 언급해야 한다.",
+                  "reason": "답변이 질문의 전제를 반복했을 뿐 80만원이 팀장 결재 구간임을 검증하거나 명시하지 않았다.",
+                  "evidence": [
+                    {
+                      "source": "R1",
+                      "quote": "100만원 이하 팀장 공급가액 100만원"
+                    }
+                  ]
+                },
+                {
+                  "kind": "unsupported_claim",
+                  "answer_span": "다만 이는 예산 검토 기준이고, 사전 승인 없는 선결제에 대한 재무팀 별도 검토는 따로 요구됩니다.",
+                  "missing_fact": "",
+                  "reason": "S3는 소액 구매의 서면검토 면제와 예산코드 기재만 말한다. 이를 예산 검토 기준과 선결제 검토 요구로 구분하는 해석은 S3 문장 자체에서 나오지 않으며 S1·S2가 뒷받침하는 별도 사실과 결합한 추론이다.",
+                  "evidence": [
+                    {
+                      "source": "S3",
+                      "quote": "단, 정규 예산 내 소액 구매는 재무팀 별도 서면검토를 필수로 하지 않는다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "pages5": [
+            {
+              "id": "v3_d04",
+              "flags": [
+                "rag_error_or_missing"
+              ],
+              "failed_criteria": [],
+              "issues": []
+            },
+            {
+              "id": "v3_d07",
+              "flags": [
+                "reference_quote_missing",
+                "ai_incorrect"
+              ],
+              "failed_criteria": [
+                "c2"
+              ],
+              "issues": [
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "",
+                  "missing_fact": "500만원 초과 거래는 금액별 결재 전에 재무팀의 예산 사전검토가 필수라는 점(결재 전 시점)이 빠졌다.",
+                  "reason": "답변은 사례를 근거로 예산 사전검토가 필요하다고만 했고, 500만원 초과이므로 금액별 결재 전에 받아야 한다는 시점과 조건을 명시하지 않았다.",
+                  "evidence": [
+                    {
+                      "source": "R3",
+                      "quote": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수"
+                    },
+                    {
+                      "source": "S3",
+                      "quote": "공급가액 550만원 CFO 최종 결재 + 재무팀 예산 사전검토"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "v3_d08",
+              "flags": [
+                "reference_quote_missing",
+                "ai_incorrect"
+              ],
+              "failed_criteria": [
+                "c2"
+              ],
+              "issues": [
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "",
+                  "missing_fact": "300만원 미만이어도 견적 1부와 금액의 합리성 검토는 필요하다.",
+                  "reason": "견적을 생략할 수 있는지가 질문의 핵심인데, 답변은 견적 1부와 합리성 검토 필요성을 말하지 않았다. 비교견적 의무가 없다는 사실만 언급해 견적 생략 가능 여부가 불명확하다.",
+                  "evidence": [
+                    {
+                      "source": "R3",
+                      "quote": "300만원 미만 비교견적 의무는 없지만 금액의 합리성 검토와 견적 1부는 필요"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "v3_d10",
+              "flags": [
+                "reference_quote_missing"
+              ],
+              "failed_criteria": [],
+              "issues": []
+            },
+            {
+              "id": "v3_d11",
+              "flags": [
+                "reference_quote_missing",
+                "ai_incorrect",
+                "ai_unsupported_answer"
+              ],
+              "failed_criteria": [],
+              "issues": [
+                {
+                  "kind": "unsupported_claim",
+                  "answer_span": "소액 구매도 구매요청과 금액별 결재 절차 대상이며, 모든 구매요청에는 예산코드와 잔여예산을 기재해야 합니다.",
+                  "missing_fact": "",
+                  "reason": "S1 FAQ는 50만원 비품이 구매요청 대상이라는 내용만 있어 '소액 구매 일반'이 금액별 결재 절차 대상이라는 주장은 직접 뒷받침되지 않는다. 또 예산코드·잔여예산 기재는 S2에 근거하는데, 문장에는 [S1] [S2]가 함께 붙어 있다. S2는 정규 예산 내 소액 구매는 재무팀 별도 서면검토가 필수가 아니라고도 하여 답변의 일반화는 오해를 줄 수 있다.",
+                  "evidence": [
+                    {
+                      "source": "S1",
+                      "quote": "필요하다. 다만 300만원 미만이므로 비교견적 2부 의무는 없다."
+                    },
+                    {
+                      "source": "S2",
+                      "quote": "단, 정규 예산 내 소액 구매는 재무팀 별도 서면검토를 필수로 하지 않는다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "paired": {
+          "assessed": 9,
+          "gains": [
+            "v3_d05"
+          ],
+          "regressions": [],
+          "unassessed": [
+            "v3_d04"
+          ]
+        },
+        "question_count": 10,
+        "assessment": {
+          "chunks5": {
+            "eligible_answers": 10,
+            "completed_reviews": 10,
+            "judge_errors": [],
+            "missing_reviews": [],
+            "skipped_failed_answers": [],
+            "unassessed_eligible": [],
+            "fully_assessed": true,
+            "end_to_end_ai_correctness": {
+              "passed": 5,
+              "total": 10,
+              "rate": 0.5
+            },
+            "failure_stages": {}
+          },
+          "pages5": {
+            "eligible_answers": 9,
+            "completed_reviews": 9,
+            "judge_errors": [],
+            "missing_reviews": [],
+            "skipped_failed_answers": [
+              "v3_d04"
+            ],
+            "unassessed_eligible": [],
+            "fully_assessed": true,
+            "end_to_end_ai_correctness": {
+              "passed": 6,
+              "total": 10,
+              "rate": 0.6
+            },
+            "failure_stages": {
+              "validation": 1
+            }
+          }
+        }
+      },
+      "single_document": {
+        "scope": "Explicitly selected question split on the same synthetic PDFs. PDF-checked references, no completed independent human review or external blind validation. Same-model AI grading; page mode changes candidate depth and context assembly. Reserve final questions before tuning; after inspecting results, treat them as regression cases.",
+        "metrics": {
+          "chunks5": {
+            "page_hit_at_k": {
+              "passed": 6,
+              "total": 6,
+              "rate": 1.0
+            },
+            "complete_quote_coverage": {
+              "passed": 6,
+              "total": 6,
+              "rate": 1.0
+            },
+            "evidence_group_recall": {
+              "passed": 12,
+              "total": 12,
+              "rate": 1.0
+            },
+            "multi_page_coverage": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "expected": 6,
+            "attempted": 6,
+            "successful": 6,
+            "rag_errors": [],
+            "missing": [],
+            "judge_errors": [],
+            "ai_correctness": {
+              "passed": 5,
+              "total": 6,
+              "rate": 0.8333333333333334
+            },
+            "ai_answerable_correctness": {
+              "passed": 5,
+              "total": 6,
+              "rate": 0.8333333333333334
+            },
+            "ai_grounding_substantive": {
+              "passed": 6,
+              "total": 6,
+              "rate": 1.0
+            },
+            "abstention_contract": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "answerable_abstentions": [],
+            "latency_ms": {
+              "successful_mean": 5177.735000000001,
+              "p50": 4227.48,
+              "p95": 8830.68
+            },
+            "generation_tokens": {
+              "input_tokens": 29274,
+              "output_tokens": 3296,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "judge_tokens": {
+              "input_tokens": 41241,
+              "output_tokens": 1977,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "mean_context_chars": 3085.5,
+            "ai_criteria_satisfied": {
+              "passed": 11,
+              "total": 12,
+              "rate": 0.9166666666666666
+            }
+          },
+          "pages5": {
+            "page_hit_at_k": {
+              "passed": 6,
+              "total": 6,
+              "rate": 1.0
+            },
+            "complete_quote_coverage": {
+              "passed": 6,
+              "total": 6,
+              "rate": 1.0
+            },
+            "evidence_group_recall": {
+              "passed": 12,
+              "total": 12,
+              "rate": 1.0
+            },
+            "multi_page_coverage": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "expected": 6,
+            "attempted": 6,
+            "successful": 6,
+            "rag_errors": [],
+            "missing": [],
+            "judge_errors": [],
+            "ai_correctness": {
+              "passed": 5,
+              "total": 6,
+              "rate": 0.8333333333333334
+            },
+            "ai_answerable_correctness": {
+              "passed": 5,
+              "total": 6,
+              "rate": 0.8333333333333334
+            },
+            "ai_grounding_substantive": {
+              "passed": 5,
+              "total": 6,
+              "rate": 0.8333333333333334
+            },
+            "abstention_contract": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "answerable_abstentions": [],
+            "latency_ms": {
+              "successful_mean": 4466.865,
+              "p50": 3867.8,
+              "p95": 6825.73
+            },
+            "generation_tokens": {
+              "input_tokens": 35218,
+              "output_tokens": 3198,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "judge_tokens": {
+              "input_tokens": 49637,
+              "output_tokens": 1938,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "mean_context_chars": 4056.5,
+            "ai_criteria_satisfied": {
+              "passed": 12,
+              "total": 12,
+              "rate": 1.0
+            }
+          }
+        },
+        "diagnostics": {
+          "chunks5": [
+            {
+              "id": "v3_d01",
+              "flags": [
+                "ai_incorrect_with_complete_evidence"
+              ],
+              "failed_criteria": [
+                "c2"
+              ],
+              "issues": [
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "",
+                  "missing_fact": "정확히 100만원은 부서장(100만원 초과 구간)으로 올리지 않고 팀장이 최종 결재한다는 명시적 설명",
+                  "reason": "답변은 팀장이 최종 승인자라고만 밝히고 부서장 상신이 불필요하다는 점은 직접 말하지 않았다. 구간 판단상 암시는 되지만 기준이 요구한 설명이 명시적으로 빠졌다.",
+                  "evidence": [
+                    {
+                      "source": "S2",
+                      "quote": "금액 구간의 경계값은 위 표 그대로 적용한다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "pages5": [
+            {
+              "id": "v3_d15",
+              "flags": [
+                "ai_incorrect_with_complete_evidence",
+                "ai_unsupported_answer"
+              ],
+              "failed_criteria": [],
+              "issues": [
+                {
+                  "kind": "unsupported_claim",
+                  "answer_span": "영업일 기준이므로 휴무일은 세지 않는 것으로 볼 수 있으나, 문서에 별도의 휴무일 처리 문구는 없습니다.",
+                  "missing_fact": "",
+                  "reason": "5영업일의 휴무일 처리에 대해 문서에 규정이 없는데 휴무일을 세지 않는 것으로 볼 수 있다고 추론했음. 문서가 뒷받침하지 않는 해석이며, 문서에 문구가 없다는 단서를 달았지만 추가 주장임.",
+                  "evidence": [
+                    {
+                      "source": "S1",
+                      "quote": "정산 서류 제출\n검수 완료일부터 5영업일 이내 제출"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "paired": {
+          "assessed": 6,
+          "gains": [
+            "v3_d01"
+          ],
+          "regressions": [
+            "v3_d15"
+          ],
+          "unassessed": []
+        },
+        "question_count": 6,
+        "assessment": {
+          "chunks5": {
+            "eligible_answers": 6,
+            "completed_reviews": 6,
+            "judge_errors": [],
+            "missing_reviews": [],
+            "skipped_failed_answers": [],
+            "unassessed_eligible": [],
+            "fully_assessed": true,
+            "end_to_end_ai_correctness": {
+              "passed": 5,
+              "total": 6,
+              "rate": 0.8333333333333334
+            },
+            "failure_stages": {}
+          },
+          "pages5": {
+            "eligible_answers": 6,
+            "completed_reviews": 6,
+            "judge_errors": [],
+            "missing_reviews": [],
+            "skipped_failed_answers": [],
+            "unassessed_eligible": [],
+            "fully_assessed": true,
+            "end_to_end_ai_correctness": {
+              "passed": 5,
+              "total": 6,
+              "rate": 0.8333333333333334
+            },
+            "failure_stages": {}
+          }
+        }
+      },
+      "unanswerable": {
+        "scope": "Explicitly selected question split on the same synthetic PDFs. PDF-checked references, no completed independent human review or external blind validation. Same-model AI grading; page mode changes candidate depth and context assembly. Reserve final questions before tuning; after inspecting results, treat them as regression cases.",
+        "metrics": {
+          "chunks5": {
+            "page_hit_at_k": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "complete_quote_coverage": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "evidence_group_recall": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "multi_page_coverage": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "expected": 4,
+            "attempted": 4,
+            "successful": 4,
+            "rag_errors": [],
+            "missing": [],
+            "judge_errors": [],
+            "ai_correctness": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "ai_answerable_correctness": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "ai_grounding_substantive": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "abstention_contract": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "answerable_abstentions": [],
+            "latency_ms": {
+              "successful_mean": 1486.1175,
+              "p50": 1485.355,
+              "p95": 1584.25
+            },
+            "generation_tokens": {
+              "input_tokens": 21445,
+              "output_tokens": 68,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "judge_tokens": {
+              "input_tokens": 25335,
+              "output_tokens": 1066,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "mean_context_chars": 3595.75,
+            "ai_criteria_satisfied": {
+              "passed": 8,
+              "total": 8,
+              "rate": 1.0
+            }
+          },
+          "pages5": {
+            "page_hit_at_k": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "complete_quote_coverage": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "evidence_group_recall": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "multi_page_coverage": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "expected": 4,
+            "attempted": 4,
+            "successful": 4,
+            "rag_errors": [],
+            "missing": [],
+            "judge_errors": [],
+            "ai_correctness": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "ai_answerable_correctness": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "ai_grounding_substantive": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "abstention_contract": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "answerable_abstentions": [],
+            "latency_ms": {
+              "successful_mean": 1741.1200000000001,
+              "p50": 1664.8000000000002,
+              "p95": 2173.76
+            },
+            "generation_tokens": {
+              "input_tokens": 23364,
+              "output_tokens": 68,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "judge_tokens": {
+              "input_tokens": 28818,
+              "output_tokens": 1000,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "mean_context_chars": 4072.75,
+            "ai_criteria_satisfied": {
+              "passed": 8,
+              "total": 8,
+              "rate": 1.0
+            }
+          }
+        },
+        "diagnostics": {
+          "chunks5": [],
+          "pages5": []
+        },
+        "paired": {
+          "assessed": 4,
+          "gains": [],
+          "regressions": [],
+          "unassessed": []
+        },
+        "question_count": 4,
+        "assessment": {
+          "chunks5": {
+            "eligible_answers": 4,
+            "completed_reviews": 4,
+            "judge_errors": [],
+            "missing_reviews": [],
+            "skipped_failed_answers": [],
+            "unassessed_eligible": [],
+            "fully_assessed": true,
+            "end_to_end_ai_correctness": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "failure_stages": {}
+          },
+          "pages5": {
+            "eligible_answers": 4,
+            "completed_reviews": 4,
+            "judge_errors": [],
+            "missing_reviews": [],
+            "skipped_failed_answers": [],
+            "unassessed_eligible": [],
+            "fully_assessed": true,
+            "end_to_end_ai_correctness": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "failure_stages": {}
+          }
+        }
+      }
+    },
+    "test_type": {
+      "boundary": {
+        "scope": "Explicitly selected question split on the same synthetic PDFs. PDF-checked references, no completed independent human review or external blind validation. Same-model AI grading; page mode changes candidate depth and context assembly. Reserve final questions before tuning; after inspecting results, treat them as regression cases.",
+        "metrics": {
+          "chunks5": {
+            "page_hit_at_k": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "complete_quote_coverage": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "evidence_group_recall": {
+              "passed": 8,
+              "total": 10,
+              "rate": 0.8
+            },
+            "multi_page_coverage": {
+              "passed": 1,
+              "total": 2,
+              "rate": 0.5
+            },
+            "expected": 4,
+            "attempted": 4,
+            "successful": 4,
+            "rag_errors": [],
+            "missing": [],
+            "judge_errors": [],
+            "ai_correctness": {
+              "passed": 2,
+              "total": 4,
+              "rate": 0.5
+            },
+            "ai_answerable_correctness": {
+              "passed": 2,
+              "total": 4,
+              "rate": 0.5
+            },
+            "ai_grounding_substantive": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "abstention_contract": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "answerable_abstentions": [],
+            "latency_ms": {
+              "successful_mean": 5540.8550000000005,
+              "p50": 4956.605,
+              "p95": 8830.68
+            },
+            "generation_tokens": {
+              "input_tokens": 18715,
+              "output_tokens": 2755,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "judge_tokens": {
+              "input_tokens": 27978,
+              "output_tokens": 2062,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "mean_context_chars": 2910.5,
+            "ai_criteria_satisfied": {
+              "passed": 7,
+              "total": 9,
+              "rate": 0.7777777777777778
+            }
+          },
+          "pages5": {
+            "page_hit_at_k": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "complete_quote_coverage": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "evidence_group_recall": {
+              "passed": 10,
+              "total": 10,
+              "rate": 1.0
+            },
+            "multi_page_coverage": {
+              "passed": 2,
+              "total": 2,
+              "rate": 1.0
+            },
+            "expected": 4,
+            "attempted": 4,
+            "successful": 3,
+            "rag_errors": [
+              "v3_d04"
+            ],
+            "missing": [],
+            "judge_errors": [
+              "v3_d04"
+            ],
+            "ai_correctness": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "ai_answerable_correctness": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "ai_grounding_substantive": {
+              "passed": 3,
+              "total": 3,
+              "rate": 1.0
+            },
+            "abstention_contract": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "answerable_abstentions": [],
+            "latency_ms": {
+              "successful_mean": 5052.01,
+              "p50": 4542.93,
+              "p95": 6825.73
+            },
+            "generation_tokens": {
+              "input_tokens": 23946,
+              "output_tokens": 2543,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "judge_tokens": {
+              "input_tokens": 24979,
+              "output_tokens": 890,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "mean_context_chars": 4203,
+            "ai_criteria_satisfied": {
+              "passed": 6,
+              "total": 9,
+              "rate": 0.6666666666666666
+            }
+          }
+        },
+        "diagnostics": {
+          "chunks5": [
+            {
+              "id": "v3_d01",
+              "flags": [
+                "ai_incorrect_with_complete_evidence"
+              ],
+              "failed_criteria": [
+                "c2"
+              ],
+              "issues": [
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "",
+                  "missing_fact": "정확히 100만원은 부서장(100만원 초과 구간)으로 올리지 않고 팀장이 최종 결재한다는 명시적 설명",
+                  "reason": "답변은 팀장이 최종 승인자라고만 밝히고 부서장 상신이 불필요하다는 점은 직접 말하지 않았다. 구간 판단상 암시는 되지만 기준이 요구한 설명이 명시적으로 빠졌다.",
+                  "evidence": [
+                    {
+                      "source": "S2",
+                      "quote": "금액 구간의 경계값은 위 표 그대로 적용한다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "v3_d04",
+              "flags": [
+                "reference_quote_missing",
+                "ai_incorrect",
+                "ai_unsupported_answer"
+              ],
+              "failed_criteria": [
+                "c2"
+              ],
+              "issues": [
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "",
+                  "missing_fact": "예산 내 500만원 이하는 예산코드와 잔여예산을 확인한 뒤 정상 결재한다.",
+                  "reason": "예산 검토 부분에서 예산코드 및 잔여예산 확인이라는 필수 설명이 빠졌다.",
+                  "evidence": [
+                    {
+                      "source": "R2",
+                      "quote": "예산 내 500만원 이하 예산코드 및 잔여예산 확인 후 정상 결재"
+                    }
+                  ]
+                },
+                {
+                  "kind": "unsupported_claim",
+                  "answer_span": "따라서 정규 예산이 충분한 이 계약에는 별도 예산 사전검토가 요구되지 않습니다.",
+                  "missing_fact": "",
+                  "reason": "retrieved에는 500만원 초과 시 예산 사전검토가 필요하다는 직접 규정이나 예산 내 500만원 이하의 정상 결재 규정이 없다. 답변은 FAQ 사례에 문구가 붙어 있지 않다는 점에서 추론했을 뿐이다.",
+                  "evidence": [
+                    {
+                      "source": "S4",
+                      "quote": "공급가액 500만원 정확히\n부서장 최종 결재"
+                    },
+                    {
+                      "source": "S4",
+                      "quote": "공급가액 550만원\nCFO 최종 결재 + 재무팀 예산 사전검토"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "pages5": [
+            {
+              "id": "v3_d04",
+              "flags": [
+                "rag_error_or_missing"
+              ],
+              "failed_criteria": [],
+              "issues": []
+            }
+          ]
+        },
+        "paired": {
+          "assessed": 3,
+          "gains": [
+            "v3_d01"
+          ],
+          "regressions": [],
+          "unassessed": [
+            "v3_d04"
+          ]
+        },
+        "question_count": 4,
+        "assessment": {
+          "chunks5": {
+            "eligible_answers": 4,
+            "completed_reviews": 4,
+            "judge_errors": [],
+            "missing_reviews": [],
+            "skipped_failed_answers": [],
+            "unassessed_eligible": [],
+            "fully_assessed": true,
+            "end_to_end_ai_correctness": {
+              "passed": 2,
+              "total": 4,
+              "rate": 0.5
+            },
+            "failure_stages": {}
+          },
+          "pages5": {
+            "eligible_answers": 3,
+            "completed_reviews": 3,
+            "judge_errors": [],
+            "missing_reviews": [],
+            "skipped_failed_answers": [
+              "v3_d04"
+            ],
+            "unassessed_eligible": [],
+            "fully_assessed": true,
+            "end_to_end_ai_correctness": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "failure_stages": {
+              "validation": 1
+            }
+          }
+        }
+      },
+      "composite": {
+        "scope": "Explicitly selected question split on the same synthetic PDFs. PDF-checked references, no completed independent human review or external blind validation. Same-model AI grading; page mode changes candidate depth and context assembly. Reserve final questions before tuning; after inspecting results, treat them as regression cases.",
+        "metrics": {
+          "chunks5": {
+            "page_hit_at_k": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "complete_quote_coverage": {
+              "passed": 1,
+              "total": 4,
+              "rate": 0.25
+            },
+            "evidence_group_recall": {
+              "passed": 8,
+              "total": 14,
+              "rate": 0.5714285714285714
+            },
+            "multi_page_coverage": {
+              "passed": 1,
+              "total": 4,
+              "rate": 0.25
+            },
+            "expected": 4,
+            "attempted": 4,
+            "successful": 4,
+            "rag_errors": [],
+            "missing": [],
+            "judge_errors": [],
+            "ai_correctness": {
+              "passed": 1,
+              "total": 4,
+              "rate": 0.25
+            },
+            "ai_answerable_correctness": {
+              "passed": 1,
+              "total": 4,
+              "rate": 0.25
+            },
+            "ai_grounding_substantive": {
+              "passed": 1,
+              "total": 2,
+              "rate": 0.5
+            },
+            "abstention_contract": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "answerable_abstentions": [
+              "v3_d05",
+              "v3_d07"
+            ],
+            "latency_ms": {
+              "successful_mean": 5078.8875,
+              "p50": 4605.87,
+              "p95": 8685.64
+            },
+            "generation_tokens": {
+              "input_tokens": 18137,
+              "output_tokens": 2266,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "judge_tokens": {
+              "input_tokens": 27235,
+              "output_tokens": 3167,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "mean_context_chars": 2754.75,
+            "ai_criteria_satisfied": {
+              "passed": 2,
+              "total": 11,
+              "rate": 0.18181818181818182
+            }
+          },
+          "pages5": {
+            "page_hit_at_k": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "complete_quote_coverage": {
+              "passed": 2,
+              "total": 4,
+              "rate": 0.5
+            },
+            "evidence_group_recall": {
+              "passed": 12,
+              "total": 14,
+              "rate": 0.8571428571428571
+            },
+            "multi_page_coverage": {
+              "passed": 2,
+              "total": 4,
+              "rate": 0.5
+            },
+            "expected": 4,
+            "attempted": 4,
+            "successful": 4,
+            "rag_errors": [],
+            "missing": [],
+            "judge_errors": [],
+            "ai_correctness": {
+              "passed": 2,
+              "total": 4,
+              "rate": 0.5
+            },
+            "ai_answerable_correctness": {
+              "passed": 2,
+              "total": 4,
+              "rate": 0.5
+            },
+            "ai_grounding_substantive": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "abstention_contract": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "answerable_abstentions": [],
+            "latency_ms": {
+              "successful_mean": 7895.4,
+              "p50": 7074.55,
+              "p95": 12882.63
+            },
+            "generation_tokens": {
+              "input_tokens": 24756,
+              "output_tokens": 4292,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "judge_tokens": {
+              "input_tokens": 37776,
+              "output_tokens": 2022,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "mean_context_chars": 4386.75,
+            "ai_criteria_satisfied": {
+              "passed": 9,
+              "total": 11,
+              "rate": 0.8181818181818182
+            }
+          }
+        },
+        "diagnostics": {
+          "chunks5": [
+            {
+              "id": "v3_d05",
+              "flags": [
+                "reference_quote_missing",
+                "ai_incorrect",
+                "answerable_abstention"
+              ],
+              "failed_criteria": [
+                "c1",
+                "c2",
+                "c3"
+              ],
+              "issues": [
+                {
+                  "kind": "wrong_abstention",
+                  "answer_span": "등록된 문서에서 해당 정보를 확인할 수 없습니다.",
+                  "missing_fact": "보안 승인만으로 발주할 수 없고 구매요청과 최종 결재가 필요하다. 90만원은 100만원 이하 구간이므로 최종 결재권자는 팀장이다. 사전검토와 결재 완료 후 구매운영팀이 PO를 발행한다.",
+                  "reason": "검색 자료에 답변에 필요한 정보가 있었는데도 답변을 보류했다.",
+                  "evidence": [
+                    {
+                      "source": "S1",
+                      "quote": "아니요. 구매요청과 금액별 최종 결재도 필요합니다."
+                    },
+                    {
+                      "source": "S4",
+                      "quote": "구매운영팀은 사전검토와 결재가 완료된 건에 한해 발주서(PO)를 발행한다."
+                    }
+                  ]
+                },
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "",
+                  "missing_fact": "공급가액 90만원은 100만원 이하 구간이므로 최종 결재권자는 팀장이다.",
+                  "reason": "검색된 S1~S5에는 결재 금액 구간표가 없어, 팀장 결재권 판단 근거를 답변 모델이 볼 수 없었다. 그래도 정답 요구사항은 충족하지 못했다.",
+                  "evidence": [
+                    {
+                      "source": "R3",
+                      "quote": "100만원 이하 팀장 공급가액 100만원"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "v3_d07",
+              "flags": [
+                "reference_quote_missing",
+                "ai_incorrect",
+                "answerable_abstention"
+              ],
+              "failed_criteria": [
+                "c1",
+                "c2",
+                "c3",
+                "c4"
+              ],
+              "issues": [
+                {
+                  "kind": "wrong_abstention",
+                  "answer_span": "등록된 문서에서 해당 정보를 확인할 수 없습니다.",
+                  "missing_fact": "600만원, CFO 최종 결재, 예산 사전검토 필요, 법무 사전검토 필요(500만원 이상 또는 12개월 이상)를 답해야 한다.",
+                  "reason": "검색 자료만으로 최소 총액 계산, CFO 결재, 예산·법무 검토는 답변 가능했는데 전체를 보류했다.",
+                  "evidence": [
+                    {
+                      "source": "S5",
+                      "quote": "월 구독처럼 주기적으로 지급하는 계약은 최초 약정한 총 계약기간 비용으로 판단한다."
+                    },
+                    {
+                      "source": "S4",
+                      "quote": "공급가액 550만원 CFO 최종 결재 + 재무팀 예산 사전검토"
+                    },
+                    {
+                      "source": "S3",
+                      "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다."
+                    }
+                  ]
+                },
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "",
+                  "missing_fact": "신규 유료 SaaS는 금액과 관계없이 발주·계약 전에 정보보안팀 검토가 필요하다.",
+                  "reason": "retrieved에는 보안팀 검토 규정 원문이 없어 보류가 부분적으로 이해되지만, 기준 c4는 충족하지 못했다.",
+                  "evidence": [
+                    {
+                      "source": "S2",
+                      "quote": "IT 자산·SaaS·개인정보 처리 전 보안검토: GB-SEC-03"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "v3_d08",
+              "flags": [
+                "reference_quote_missing",
+                "ai_incorrect",
+                "ai_unsupported_answer"
+              ],
+              "failed_criteria": [
+                "c1",
+                "c2"
+              ],
+              "issues": [
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "",
+                  "missing_fact": "250만원, 6개월, 개인정보 위탁 없음 조건은 500만원 이상, 12개월 이상, 개인정보 처리 위탁 중 어느 것에도 해당하지 않아 법무 사전검토 대상이 아니다.",
+                  "reason": "주어진 조건이 법무 검토 기준에 해당하지 않는다는 판단이 답변에 없다.",
+                  "evidence": [
+                    {
+                      "source": "R1",
+                      "quote": "다음 중 하나라도 해당하면 계약 체결 전에 법무지원팀 사전검토를 받아야 한다."
+                    }
+                  ]
+                },
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "이는 견적 자체를 생략해도 된다는 뜻은 아닙니다.",
+                  "missing_fact": "300만원 미만이라도 견적 1부와 금액 합리성 검토가 필요하다.",
+                  "reason": "견적 생략 불가만 말하고 필요한 견적 수량(1부)과 합리성 검토를 밝히지 않았다.",
+                  "evidence": [
+                    {
+                      "source": "R3",
+                      "quote": "300만원 미만 비교견적 의무는 없지만 금액의 합리성 검토와 견적 1부는 필요"
+                    }
+                  ]
+                },
+                {
+                  "kind": "unsupported_claim",
+                  "answer_span": "이는 견적 자체를 생략해도 된다는 뜻은 아닙니다.",
+                  "missing_fact": "",
+                  "reason": "검색된 S3와 S4는 비교견적 2부 의무가 없다는 점만 말한다. 견적 1부가 필요하다는 근거는 검색 결과에 없어서 이 주장은 뒷받침되지 않는다.",
+                  "evidence": [
+                    {
+                      "source": "S4",
+                      "quote": "다만 300만원 미만이므로 비교견적 2부 의무는 없다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "pages5": [
+            {
+              "id": "v3_d07",
+              "flags": [
+                "reference_quote_missing",
+                "ai_incorrect"
+              ],
+              "failed_criteria": [
+                "c2"
+              ],
+              "issues": [
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "",
+                  "missing_fact": "500만원 초과 거래는 금액별 결재 전에 재무팀의 예산 사전검토가 필수라는 점(결재 전 시점)이 빠졌다.",
+                  "reason": "답변은 사례를 근거로 예산 사전검토가 필요하다고만 했고, 500만원 초과이므로 금액별 결재 전에 받아야 한다는 시점과 조건을 명시하지 않았다.",
+                  "evidence": [
+                    {
+                      "source": "R3",
+                      "quote": "공급가액 500만원 초과 금액별 결재 전에 재무팀의 예산 사전검토 필수"
+                    },
+                    {
+                      "source": "S3",
+                      "quote": "공급가액 550만원 CFO 최종 결재 + 재무팀 예산 사전검토"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "v3_d08",
+              "flags": [
+                "reference_quote_missing",
+                "ai_incorrect"
+              ],
+              "failed_criteria": [
+                "c2"
+              ],
+              "issues": [
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "",
+                  "missing_fact": "300만원 미만이어도 견적 1부와 금액의 합리성 검토는 필요하다.",
+                  "reason": "견적을 생략할 수 있는지가 질문의 핵심인데, 답변은 견적 1부와 합리성 검토 필요성을 말하지 않았다. 비교견적 의무가 없다는 사실만 언급해 견적 생략 가능 여부가 불명확하다.",
+                  "evidence": [
+                    {
+                      "source": "R3",
+                      "quote": "300만원 미만 비교견적 의무는 없지만 금액의 합리성 검토와 견적 1부는 필요"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "paired": {
+          "assessed": 4,
+          "gains": [
+            "v3_d05"
+          ],
+          "regressions": [],
+          "unassessed": []
+        },
+        "question_count": 4,
+        "assessment": {
+          "chunks5": {
+            "eligible_answers": 4,
+            "completed_reviews": 4,
+            "judge_errors": [],
+            "missing_reviews": [],
+            "skipped_failed_answers": [],
+            "unassessed_eligible": [],
+            "fully_assessed": true,
+            "end_to_end_ai_correctness": {
+              "passed": 1,
+              "total": 4,
+              "rate": 0.25
+            },
+            "failure_stages": {}
+          },
+          "pages5": {
+            "eligible_answers": 4,
+            "completed_reviews": 4,
+            "judge_errors": [],
+            "missing_reviews": [],
+            "skipped_failed_answers": [],
+            "unassessed_eligible": [],
+            "fully_assessed": true,
+            "end_to_end_ai_correctness": {
+              "passed": 2,
+              "total": 4,
+              "rate": 0.5
+            },
+            "failure_stages": {}
+          }
+        }
+      },
+      "exception": {
+        "scope": "Explicitly selected question split on the same synthetic PDFs. PDF-checked references, no completed independent human review or external blind validation. Same-model AI grading; page mode changes candidate depth and context assembly. Reserve final questions before tuning; after inspecting results, treat them as regression cases.",
+        "metrics": {
+          "chunks5": {
+            "page_hit_at_k": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "complete_quote_coverage": {
+              "passed": 2,
+              "total": 4,
+              "rate": 0.5
+            },
+            "evidence_group_recall": {
+              "passed": 10,
+              "total": 12,
+              "rate": 0.8333333333333334
+            },
+            "multi_page_coverage": {
+              "passed": 2,
+              "total": 4,
+              "rate": 0.5
+            },
+            "expected": 4,
+            "attempted": 4,
+            "successful": 4,
+            "rag_errors": [],
+            "missing": [],
+            "judge_errors": [],
+            "ai_correctness": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "ai_answerable_correctness": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "ai_grounding_substantive": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "abstention_contract": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "answerable_abstentions": [],
+            "latency_ms": {
+              "successful_mean": 8604.8425,
+              "p50": 8431.615,
+              "p95": 13027.94
+            },
+            "generation_tokens": {
+              "input_tokens": 20907,
+              "output_tokens": 4821,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "judge_tokens": {
+              "input_tokens": 31737,
+              "output_tokens": 2031,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "mean_context_chars": 3426,
+            "ai_criteria_satisfied": {
+              "passed": 8,
+              "total": 9,
+              "rate": 0.8888888888888888
+            }
+          },
+          "pages5": {
+            "page_hit_at_k": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "complete_quote_coverage": {
+              "passed": 2,
+              "total": 4,
+              "rate": 0.5
+            },
+            "evidence_group_recall": {
+              "passed": 10,
+              "total": 12,
+              "rate": 0.8333333333333334
+            },
+            "multi_page_coverage": {
+              "passed": 2,
+              "total": 4,
+              "rate": 0.5
+            },
+            "expected": 4,
+            "attempted": 4,
+            "successful": 4,
+            "rag_errors": [],
+            "missing": [],
+            "judge_errors": [],
+            "ai_correctness": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "ai_answerable_correctness": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "ai_grounding_substantive": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "abstention_contract": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "answerable_abstentions": [],
+            "latency_ms": {
+              "successful_mean": 8035.8225,
+              "p50": 7405.860000000001,
+              "p95": 13062.49
+            },
+            "generation_tokens": {
+              "input_tokens": 23779,
+              "output_tokens": 4438,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "judge_tokens": {
+              "input_tokens": 35774,
+              "output_tokens": 2031,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "mean_context_chars": 4137,
+            "ai_criteria_satisfied": {
+              "passed": 9,
+              "total": 9,
+              "rate": 1.0
+            }
+          }
+        },
+        "diagnostics": {
+          "chunks5": [
+            {
+              "id": "v3_d10",
+              "flags": [
+                "reference_quote_missing"
+              ],
+              "failed_criteria": [],
+              "issues": []
+            },
+            {
+              "id": "v3_d11",
+              "flags": [
+                "reference_quote_missing",
+                "ai_incorrect",
+                "ai_unsupported_answer"
+              ],
+              "failed_criteria": [
+                "c1"
+              ],
+              "issues": [
+                {
+                  "kind": "missing_condition",
+                  "answer_span": "",
+                  "missing_fact": "80만원은 100만원 이하이므로 팀장 결재 구간이라는 점을 명확히 언급해야 한다.",
+                  "reason": "답변이 질문의 전제를 반복했을 뿐 80만원이 팀장 결재 구간임을 검증하거나 명시하지 않았다.",
+                  "evidence": [
+                    {
+                      "source": "R1",
+                      "quote": "100만원 이하 팀장 공급가액 100만원"
+                    }
+                  ]
+                },
+                {
+                  "kind": "unsupported_claim",
+                  "answer_span": "다만 이는 예산 검토 기준이고, 사전 승인 없는 선결제에 대한 재무팀 별도 검토는 따로 요구됩니다.",
+                  "missing_fact": "",
+                  "reason": "S3는 소액 구매의 서면검토 면제와 예산코드 기재만 말한다. 이를 예산 검토 기준과 선결제 검토 요구로 구분하는 해석은 S3 문장 자체에서 나오지 않으며 S1·S2가 뒷받침하는 별도 사실과 결합한 추론이다.",
+                  "evidence": [
+                    {
+                      "source": "S3",
+                      "quote": "단, 정규 예산 내 소액 구매는 재무팀 별도 서면검토를 필수로 하지 않는다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "pages5": [
+            {
+              "id": "v3_d10",
+              "flags": [
+                "reference_quote_missing"
+              ],
+              "failed_criteria": [],
+              "issues": []
+            },
+            {
+              "id": "v3_d11",
+              "flags": [
+                "reference_quote_missing",
+                "ai_incorrect",
+                "ai_unsupported_answer"
+              ],
+              "failed_criteria": [],
+              "issues": [
+                {
+                  "kind": "unsupported_claim",
+                  "answer_span": "소액 구매도 구매요청과 금액별 결재 절차 대상이며, 모든 구매요청에는 예산코드와 잔여예산을 기재해야 합니다.",
+                  "missing_fact": "",
+                  "reason": "S1 FAQ는 50만원 비품이 구매요청 대상이라는 내용만 있어 '소액 구매 일반'이 금액별 결재 절차 대상이라는 주장은 직접 뒷받침되지 않는다. 또 예산코드·잔여예산 기재는 S2에 근거하는데, 문장에는 [S1] [S2]가 함께 붙어 있다. S2는 정규 예산 내 소액 구매는 재무팀 별도 서면검토가 필수가 아니라고도 하여 답변의 일반화는 오해를 줄 수 있다.",
+                  "evidence": [
+                    {
+                      "source": "S1",
+                      "quote": "필요하다. 다만 300만원 미만이므로 비교견적 2부 의무는 없다."
+                    },
+                    {
+                      "source": "S2",
+                      "quote": "단, 정규 예산 내 소액 구매는 재무팀 별도 서면검토를 필수로 하지 않는다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "paired": {
+          "assessed": 4,
+          "gains": [],
+          "regressions": [],
+          "unassessed": []
+        },
+        "question_count": 4,
+        "assessment": {
+          "chunks5": {
+            "eligible_answers": 4,
+            "completed_reviews": 4,
+            "judge_errors": [],
+            "missing_reviews": [],
+            "skipped_failed_answers": [],
+            "unassessed_eligible": [],
+            "fully_assessed": true,
+            "end_to_end_ai_correctness": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "failure_stages": {}
+          },
+          "pages5": {
+            "eligible_answers": 4,
+            "completed_reviews": 4,
+            "judge_errors": [],
+            "missing_reviews": [],
+            "skipped_failed_answers": [],
+            "unassessed_eligible": [],
+            "fully_assessed": true,
+            "end_to_end_ai_correctness": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "failure_stages": {}
+          }
+        }
+      },
+      "timing": {
+        "scope": "Explicitly selected question split on the same synthetic PDFs. PDF-checked references, no completed independent human review or external blind validation. Same-model AI grading; page mode changes candidate depth and context assembly. Reserve final questions before tuning; after inspecting results, treat them as regression cases.",
+        "metrics": {
+          "chunks5": {
+            "page_hit_at_k": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "complete_quote_coverage": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "evidence_group_recall": {
+              "passed": 7,
+              "total": 7,
+              "rate": 1.0
+            },
+            "multi_page_coverage": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "expected": 4,
+            "attempted": 4,
+            "successful": 4,
+            "rag_errors": [],
+            "missing": [],
+            "judge_errors": [],
+            "ai_correctness": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "ai_answerable_correctness": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "ai_grounding_substantive": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "abstention_contract": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "answerable_abstentions": [],
+            "latency_ms": {
+              "successful_mean": 4542.015,
+              "p50": 4227.48,
+              "p95": 6001.52
+            },
+            "generation_tokens": {
+              "input_tokens": 19734,
+              "output_tokens": 1726,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "judge_tokens": {
+              "input_tokens": 27431,
+              "output_tokens": 1146,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "mean_context_chars": 3123,
+            "ai_criteria_satisfied": {
+              "passed": 8,
+              "total": 8,
+              "rate": 1.0
+            }
+          },
+          "pages5": {
+            "page_hit_at_k": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "complete_quote_coverage": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "evidence_group_recall": {
+              "passed": 7,
+              "total": 7,
+              "rate": 1.0
+            },
+            "multi_page_coverage": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "expected": 4,
+            "attempted": 4,
+            "successful": 4,
+            "rag_errors": [],
+            "missing": [],
+            "judge_errors": [],
+            "ai_correctness": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "ai_answerable_correctness": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "ai_grounding_substantive": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "abstention_contract": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "answerable_abstentions": [],
+            "latency_ms": {
+              "successful_mean": 4047.0225,
+              "p50": 3673.45,
+              "p95": 5453.33
+            },
+            "generation_tokens": {
+              "input_tokens": 23297,
+              "output_tokens": 1885,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "judge_tokens": {
+              "input_tokens": 32768,
+              "output_tokens": 1346,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "mean_context_chars": 3998.25,
+            "ai_criteria_satisfied": {
+              "passed": 8,
+              "total": 8,
+              "rate": 1.0
+            }
+          }
+        },
+        "diagnostics": {
+          "chunks5": [],
+          "pages5": [
+            {
+              "id": "v3_d15",
+              "flags": [
+                "ai_incorrect_with_complete_evidence",
+                "ai_unsupported_answer"
+              ],
+              "failed_criteria": [],
+              "issues": [
+                {
+                  "kind": "unsupported_claim",
+                  "answer_span": "영업일 기준이므로 휴무일은 세지 않는 것으로 볼 수 있으나, 문서에 별도의 휴무일 처리 문구는 없습니다.",
+                  "missing_fact": "",
+                  "reason": "5영업일의 휴무일 처리에 대해 문서에 규정이 없는데 휴무일을 세지 않는 것으로 볼 수 있다고 추론했음. 문서가 뒷받침하지 않는 해석이며, 문서에 문구가 없다는 단서를 달았지만 추가 주장임.",
+                  "evidence": [
+                    {
+                      "source": "S1",
+                      "quote": "정산 서류 제출\n검수 완료일부터 5영업일 이내 제출"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "paired": {
+          "assessed": 4,
+          "gains": [],
+          "regressions": [
+            "v3_d15"
+          ],
+          "unassessed": []
+        },
+        "question_count": 4,
+        "assessment": {
+          "chunks5": {
+            "eligible_answers": 4,
+            "completed_reviews": 4,
+            "judge_errors": [],
+            "missing_reviews": [],
+            "skipped_failed_answers": [],
+            "unassessed_eligible": [],
+            "fully_assessed": true,
+            "end_to_end_ai_correctness": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "failure_stages": {}
+          },
+          "pages5": {
+            "eligible_answers": 4,
+            "completed_reviews": 4,
+            "judge_errors": [],
+            "missing_reviews": [],
+            "skipped_failed_answers": [],
+            "unassessed_eligible": [],
+            "fully_assessed": true,
+            "end_to_end_ai_correctness": {
+              "passed": 3,
+              "total": 4,
+              "rate": 0.75
+            },
+            "failure_stages": {}
+          }
+        }
+      },
+      "unanswerable": {
+        "scope": "Explicitly selected question split on the same synthetic PDFs. PDF-checked references, no completed independent human review or external blind validation. Same-model AI grading; page mode changes candidate depth and context assembly. Reserve final questions before tuning; after inspecting results, treat them as regression cases.",
+        "metrics": {
+          "chunks5": {
+            "page_hit_at_k": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "complete_quote_coverage": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "evidence_group_recall": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "multi_page_coverage": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "expected": 4,
+            "attempted": 4,
+            "successful": 4,
+            "rag_errors": [],
+            "missing": [],
+            "judge_errors": [],
+            "ai_correctness": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "ai_answerable_correctness": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "ai_grounding_substantive": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "abstention_contract": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "answerable_abstentions": [],
+            "latency_ms": {
+              "successful_mean": 1486.1175,
+              "p50": 1485.355,
+              "p95": 1584.25
+            },
+            "generation_tokens": {
+              "input_tokens": 21445,
+              "output_tokens": 68,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "judge_tokens": {
+              "input_tokens": 25335,
+              "output_tokens": 1066,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "mean_context_chars": 3595.75,
+            "ai_criteria_satisfied": {
+              "passed": 8,
+              "total": 8,
+              "rate": 1.0
+            }
+          },
+          "pages5": {
+            "page_hit_at_k": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "complete_quote_coverage": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "evidence_group_recall": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "multi_page_coverage": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "expected": 4,
+            "attempted": 4,
+            "successful": 4,
+            "rag_errors": [],
+            "missing": [],
+            "judge_errors": [],
+            "ai_correctness": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "ai_answerable_correctness": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "ai_grounding_substantive": {
+              "passed": 0,
+              "total": 0,
+              "rate": null
+            },
+            "abstention_contract": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "answerable_abstentions": [],
+            "latency_ms": {
+              "successful_mean": 1741.1200000000001,
+              "p50": 1664.8000000000002,
+              "p95": 2173.76
+            },
+            "generation_tokens": {
+              "input_tokens": 23364,
+              "output_tokens": 68,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "judge_tokens": {
+              "input_tokens": 28818,
+              "output_tokens": 1000,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "mean_context_chars": 4072.75,
+            "ai_criteria_satisfied": {
+              "passed": 8,
+              "total": 8,
+              "rate": 1.0
+            }
+          }
+        },
+        "diagnostics": {
+          "chunks5": [],
+          "pages5": []
+        },
+        "paired": {
+          "assessed": 4,
+          "gains": [],
+          "regressions": [],
+          "unassessed": []
+        },
+        "question_count": 4,
+        "assessment": {
+          "chunks5": {
+            "eligible_answers": 4,
+            "completed_reviews": 4,
+            "judge_errors": [],
+            "missing_reviews": [],
+            "skipped_failed_answers": [],
+            "unassessed_eligible": [],
+            "fully_assessed": true,
+            "end_to_end_ai_correctness": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "failure_stages": {}
+          },
+          "pages5": {
+            "eligible_answers": 4,
+            "completed_reviews": 4,
+            "judge_errors": [],
+            "missing_reviews": [],
+            "skipped_failed_answers": [],
+            "unassessed_eligible": [],
+            "fully_assessed": true,
+            "end_to_end_ai_correctness": {
+              "passed": 4,
+              "total": 4,
+              "rate": 1.0
+            },
+            "failure_stages": {}
+          }
+        }
+      }
+    }
+  },
+  "dataset_info": {
+    "path": "eval/questions_v3.json",
+    "sha256": "5633f2f3423924985da611798a662b82c8b7b78234c5cba9708e746014266432",
+    "split": "dev",
+    "source_question_count": 40,
+    "question_count": 20
+  },
+  "sha256": "088052a7704bd819854530366b2ab2cf25f9343f4cf378d7bcb7d2ddce485740"
+}

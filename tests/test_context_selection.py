@@ -72,3 +72,40 @@ def test_late_corrupted_candidate_cannot_bypass_integrity_checks():
     ranked = [hit(1, "budget", 1), hit(2, "approval", 2), hit(3, "budget", 3), hit(4, "fabricated", 4)]
     with pytest.raises(IndexErrorBase):
         context.assemble(ranked, question="budget account change", max_sources=3, max_chars=1000)
+
+
+def test_direct_sections_replace_redundant_context_even_when_keywords_already_present():
+    texts = ["1. Overview\nbudget quotes purchase", "2. Contract\nbudget quotes purchase",
+             "FAQ: budget quotes purchase", "3. Shipping\nbudget quotes purchase",
+             "4. Security\nbudget quotes purchase", "5. Budget\nReview before approval.",
+             "6. Quotes\nObtain a written quotation."]
+    chosen = select(texts, "Explain budget and quotes requirements", k=5)
+    assert [c["page"] for c in chosen[:2]] == [1, 2]
+    assert {6, 7} <= {c["page"] for c in chosen}
+    assert [c["source_id"] for c in chosen] == [f"S{i}" for i in range(1, 6)]
+    assert len({c["page"] for c in chosen}) == 5
+
+
+def test_section_refinement_retains_an_existing_distinct_requested_rule():
+    texts = ["budget quotes privacy", "budget quotes privacy", "1. Privacy\nprivacy rule",
+             "2. Shipping\nbudget quotes privacy", "3. Budget\nbudget rule", "4. Quotes\nquotes rule"]
+    chosen = select(texts, "Explain privacy budget quotes", k=5)
+    assert {3, 5, 6} <= {c["page"] for c in chosen}
+    assert [c["page"] for c in chosen[:2]] == [1, 2]
+
+
+def test_last_sentence_focus_does_not_promote_background_sections_over_requested_rule():
+    texts = ["privacy budget contract", "privacy budget contract", "privacy budget contract",
+             "1. Privacy\nprivacy guidance", "2. Contract\ncontract guidance", "3. Budget\nbudget requirements"]
+    chosen = select(texts, "The scenario includes privacy and a contract. Explain budget requirements.", k=5)
+    assert 6 in {c["page"] for c in chosen}
+    assert [c["page"] for c in chosen[:2]] == [1, 2]
+
+
+def test_unavailable_section_title_in_unsent_page_cannot_trigger_replacement():
+    context = pages({1: "budget", 2: "budget", 3: "budget", 4: "budget", 5: "budget",
+                     6: "seed " + "x" * 200 + "\n6. Budget\nA direct rule."})
+    ranked = [hit(i, "budget", i) for i in range(1, 6)] + [hit(6, "seed", 6)]
+    chosen = context.assemble(ranked, question="Explain budget", max_sources=5, max_chars=40)
+    assert [c["page"] for c in chosen] == [1, 2, 3, 4, 5]
+    assert sum(len(c["text"]) for c in chosen) <= 40

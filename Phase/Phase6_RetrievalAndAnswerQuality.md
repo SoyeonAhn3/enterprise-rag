@@ -1,14 +1,16 @@
-# Phase 6 — Retrieval and Answer Quality `✅ Local implementation · ⏸ AI grading`
+# Phase 6 — Retrieval and Answer Quality `✅ Local implementation · ✅ V3 dev evaluation`
 
 > Improve complete evidence retrieval and condition-preserving answers with a bounded, auditable context.
 
 **Started**: 2026-10-16 (Asia/Seoul)\
 **Completed locally**: 2026-10-16\
-**Status**: Local implementation/tests and real remote tracing verified. Comparison attempts completed; 87 failed AI reviews are deferred after confirmed API credit exhaustion and the user's decision not to recharge now. Cloud settings/reboot remain owner-reported, not independently verified.\
+**Status**: Local implementation/tests and real remote tracing verified. The owner funded credits and resumed API evaluation on 2026-10-19; v3 dev evaluation is complete. The earlier 87 failed reviews remain a separate recovery task. Cloud settings/reboot remain owner-reported, not independently verified.\
 **Prerequisites**: Phases 1–4 implemented; Phase 5 demo deployed. The user explicitly deferred remaining Phase 5 checks and authorized Phase 6 documentation, development, and tests.\
 **Technology**: Python 3.12, existing E5/Chroma/Claude stack, pytest.
 
-## Latest user decision — 2026-10-16
+**Latest follow-up (2026-10-19):** [Development refinement](#v3-development-refinement--2026-10-19) and **439 tests** are complete. Page evidence coverage improves 12/16→14/16 and validated outputs 19/20→20/20. With the same revised judge, old and new page answers both pass **17/20**; overall accuracy improvement is not established. The run used 59 new model calls. Grading inconsistencies and remaining retrieval/citation issues are recorded; final questions remain unexecuted.
+
+## Earlier user decision — 2026-10-16
 
 The owner reported applying `RAG_RETRIEVAL_MODE="pages"`, `RAG_TOP_K=5`, and `RAG_CONTEXT_MAX_CHARS=6000` in Streamlit Community Cloud and rebooting the app. Record this as owner-reported completion of the settings action, not an independently verified Cloud test. The implementation was pushed to `main` as [b89ed76](https://github.com/SoyeonAhn3/enterprise-rag/commit/b89ed76b615a02c13c5e9ce80928a4ae9bcdadaa).
 
@@ -189,6 +191,132 @@ Evidence: [comparison and historical error audit](../eval/results/phase6_selecti
 
 This revision packages these completed local changes for GitHub publication; Cloud runtime verification remains deferred. The next quality work is preparing fresh independent questions; later live answers should confirm diagnostic capture and the new selector's answer quality when the owner resumes API use. Usability remains deferred and concurrency testing excluded.
 
+### Dataset tooling and v3 preparation — 2026-10-19
+
+The owner authorized development and tests for dataset tooling and new questions. The implementation is local; paid evaluation, deployment, and the deferred 87 reviews remain outside this run. Retrieval and answer prompts are unchanged.
+
+| Task | Implementation | Acceptance / verification |
+| --- | --- | --- |
+| Dataset validation | [datasets.py](../eval/datasets.py): reusable list schema, filename-safe unique IDs, wording duplicates, split/family separation, criteria/evidence completeness, physical page and whitespace-only quote checks | Reject malformed annotations before opening runtime resources; compare normalized wording with v2 |
+| Paired evaluator | [quality.py](../eval/quality.py): explicit dataset and dev/final selection, version 2 protocols, calculated call limits, grouped diagnostics and reporting | Freeze/run/audit tested with fake clients; selected questions alone reach generation; references reach only the judge |
+| New questions | [questions_v3.json](../eval/questions_v3.json), reproducible from [new_cases.py](../eval/new_cases.py) | 40 questions; 20 dev / 20 final; 16 answerable and 4 unanswerable per split; every quote checked against the PDF |
+| Compatibility | Default freeze still uses legacy v2/60 questions and version 1; legacy verification/report text retained | Existing Phase 5/6 artifacts and reports reproduced offline; source PDFs, v1/v2 datasets and old results preserved |
+
+Each split contains four boundary, composite, exception, timing, and unanswerable questions. The full set has 19 multi-document, 13 single-document, and 8 unanswerable cases. New combinations cover installation/transport costs, different budget/legal thresholds, authorization gates, contract changes, emergency procedures, and separate business-day clocks. No normalized question text repeats v2. Families are disjoint between dev and final by annotation; shared rules and semantic similarity still exist. These are AI-authored scenarios on the same small synthetic corpus, not an externally authored blind benchmark. PDF matching checks provenance, not rubric completeness; independent human review remains pending.
+
+For a custom list, required fields are `id`, `split` (`dev`/`final`), `family`, `category` (`single_document`/`multi_document`/`unanswerable`), `question`, `answerable`, `expected_answer`, `grading_criteria`, and `evidence_groups`. Optional `test_type` gives the second report grouping. Each evidence group contains `id`, `claim`, and nonempty `any_of` alternatives with PDF `document`, physical `page` (starting at 1), and `quote`. Unanswerable questions have no evidence groups and require the existing full-abstention contract; partial answers were not introduced.
+
+Run from the project root:
+
+```powershell
+# Offline schema, source quotes, split counts and duplicate-wording check.
+.\.venv\Scripts\python.exe -X utf8 -m eval.quality validate --dataset eval/questions_v3.json --against eval/questions_v2.json
+# Offline reproducibility check of the saved v3 specification.
+.\.venv\Scripts\python.exe -X utf8 -m eval.new_cases
+# Prepare a NEW directory; requires the existing index and cached local E5 model.
+# No questions are searched/generated by freeze. It opens the index to record its configuration.
+.\.venv\Scripts\python.exe -X utf8 -m eval.quality freeze --dataset eval/questions_v3.json --split dev --max-calls 80 --output-dir eval/results/v3_dev_new_run
+```
+
+One 20-question split × two configurations permits at most 40 answers and 40 AI reviews (80 total requests). `--max-calls` caps the planned requests, not monetary spend; a smaller limit rejects the full plan instead of silently dropping questions. Version 2 freezes the selected questions, the entire source dataset hash, split, code/PDF/prompt/settings hashes and execution limits. Any source-dataset change, including the reserved split, blocks reuse for live execution. Historical auditing uses the frozen snapshot without requiring the current source dataset, credentials, or models.
+
+Only after API evaluation is explicitly resumed, `python -m eval.quality run --output-dir <frozen-directory>` makes live requests; `--resume` reuses completed attempts and never repeats a pending or failed request. `verify` and `report` use the same directory offline. New reports separate RAG errors, failure stages, skipped grading, judge errors, missing grades, confirmed passes, and fully assessed outcomes. Missing grades do not become a measured accuracy. Grouped results are available by category and test type. Existing reports are protected from overwriting.
+
+The final split was validated for annotations only; no v3 retrieval scores, generated answers, AI grades, or human grades were produced. Keep its results unobserved while tuning on dev; once used to guide changes, it becomes a regression set. The next task is explicit live dev evaluation, followed by fixed-implementation final evaluation when authorized. The old 87-review recovery plans remain historical; changes to evaluation code invalidate their current-source guard. Prepare a new recovery plan before any future review-only run; those reviews still assess the old saved answers.
+
+The full suite passed **409 tests in 41.14 seconds** (62 new). All 359 baseline files, including 340 historical evaluation artifacts, remain byte-identical. Freezing the 20-question development selection and checking current conditions against the real local index also passed without question retrieval or generation. Verification is recorded in [the offline development record](../eval/results/phase6_datasets_20261019/verification.json). Separate dev-log is unavailable; history is recorded below.
+
+### V3 development evaluation — 2026-10-19
+
+The owner reported replenished credits and requested the next step. This run measures the latest implementation on the **20 v3 dev questions**, comparing chunks/k=5 with pages/k=5/6,000 characters. It ran locally from 10:03 to 10:08 KST using `claude-sonnet-5-5` for generation and separate AI grading. Code, dataset, PDFs, prompts and settings were frozen before execution; none changed during the run. Final questions and the historical 87-review backlog were not executed.
+
+| Measure | chunks/5 | pages/5 |
+| --- | ---: | ---: |
+| Original AI passes / all questions, including failed outputs | 14/20 (70%) | 15/20 (75%) |
+| Original AI passes / answerable questions | 10/16 | 11/16 |
+| Complete required-quote coverage | 10/16 | 12/16 |
+| Evidence groups retrieved | 33/43 | 39/43 |
+| Validated responses | 20/20 | 19/20 |
+| Completed AI reviews / valid responses | 20/20 | 19/19 |
+| Abstention on unanswerable questions | 4/4 | 4/4 |
+| Abstentions on answerable questions | 2 | 0 |
+| Mean / p95 RAG latency, successful responses | 5.05 / 10.70 seconds | 5.37 / 13.06 seconds |
+| Generation input / output tokens, including failed outputs | 98,938 / 11,636 | 119,142 / 13,226 |
+
+All eligible responses were graded. The invalid page response counts as an unsuccessful end-to-end outcome, with no judge call; it is not an unresolved grading failure. The frozen limit was 80 model requests; actual use was **40 generation + 39 grading = 79**, with no retries or provider errors. Total grading input/output tokens were 299,831/16,761; caches were unused. Page mode used 20.42% more generation input tokens and 31.55% more context characters. These are usage/latency observations, not a currency estimate or a Cloud performance test.
+
+The original paired grades show gains on `v3_d01`, `v3_d05`, a regression on `v3_d15`, and 19 jointly graded pairs. Only `v3_d05` clearly demonstrates the observed retrieval improvement; the `d01`/`d15` changes involve disputed grading interpretations. The one-question net difference does not establish general answer-quality improvement. Multi-document passes are 5/10 versus 6/10; composite cases remain the weakest group at 1/4 versus 2/4.
+
+| Case | Observation | Follow-up |
+| --- | --- | --- |
+| `d05` | Chunks lacked the approval table and abstained. Pages selected the table at candidate rank 11 and passed. | Preserve grounded abstention; improve access to required clauses. |
+| `d07`, `d08` | Pages omitted the budget rule at candidate rank 8 and the quotation rule at rank 15. Answers missed the review-before-approval timing and the one-quotation/reasonableness requirements respectively. | Improve final context selection using dev cases; references must remain outside generation. |
+| `d04` | Pages had every required quote, but `quote_not_in_source` at `/claims/0/evidence/1/quote` blocked the answer. Chunks instead lacked the budget rule and inferred a waiver from an example. | Keep exact contiguous-quote validation. The rejected raw answer was not retained, so its exact text alteration cannot be diagnosed. Investigate general quote instructions and source binding. |
+| `d01`, `d11`, `d15` | The judge penalized an equivalent final-approver answer, treated the question's premise inconsistently, or rejected the ordinary business-day interpretation. `d11` also raises support for extra explanatory claims. | Clarify semantic equivalence, premise handling and permitted inference; retain the raw grades for independent adjudication. |
+| `d10` | Both modes passed by inferring the 700만원 authority from 550만원/720만원 examples while the explicit authority table was absent. | Review the inference and reference requirements; quote coverage and AI correctness are distinct measurements. |
+
+This analysis is an agent review, **not completed human adjudication**. No corrected accuracy was manufactured and no stored grade was overwritten. The existing 34-entry human queue remains intact; `d01`, `d10`, `d11`, `d15` are additional question-level review candidates recorded in the separate analysis.
+
+Next: clarify the disputed grading policy, develop context-selection and quote-generation improvements against dev, then reevaluate dev. Freeze code and scoring criteria before executing the reserved final 20 questions. Final annotations were already inspected during preparation, but no final retrieval scores, answers or grades have been produced. The shared synthetic corpus, AI authorship, same-model grading and single-run sample limit external conclusions.
+
+Evidence: [protocol](../eval/results/v3_dev_20261019_1003/protocol.json), [answers and original reviews](../eval/results/v3_dev_20261019_1003/answers.json), [report](../eval/results/v3_dev_20261019_1003/report.md), [case analysis](../eval/results/v3_dev_20261019_1003/analysis.json), [verification](../eval/results/v3_dev_20261019_1003/verification.json). Offline `verify` and report reproduction passed. All **376 baseline files**, including **341 prior evaluation files**, remain byte-identical. Code/tests still match the previous **409-test** snapshot; this evaluation turn did not rerun the software suite. No commit, push or Cloud changes were made.
+
+```powershell
+# Offline; no model requests or credentials required.
+.\.venv\Scripts\python.exe -X utf8 -m eval.quality verify --output-dir eval/results/v3_dev_20261019_1003
+.\.venv\Scripts\python.exe -X utf8 -m eval.quality report --output-dir eval/results/v3_dev_20261019_1003
+```
+
+### V3 development refinement — 2026-10-19
+
+**Implementation and dev testing completed; overall answer-accuracy improvement not established.** The owner authorized this development and test step. Original datasets, PDFs, answers and grades are preserved, and no final questions were executed.
+
+| Change | Implemented behavior | Verification |
+| --- | --- | --- |
+| Context selection | `query_and_section_coverage_v2` retains the existing final-slot pass, then can replace redundant non-leading slots. It protects the first two hits when possible, all covered question features, and existing focused section-title features. The last question sentence focuses title matching; a swap must add a requested section. | Dev required quotes 12/16→14/16 (`d07`, `d08`); known v2 48/48 retained. No complete-evidence regressions in either replay. No extra search, references, dependencies, or clipping. |
+| Generation instructions | Require original contiguous table text or separate evidence entries; verify source binding. Reject deriving a new general rule from isolated examples or silence. The common instructions apply to both retrieval modes. | All 20 new outputs validated; table-row concatenation is rejected in regression tests. Strict validation and one generation attempt remain. |
+| Judge instructions | Clarify equivalent meanings, question facts versus policy claims, logical evidence combination, ordinary word meanings and forbidden example-based extrapolation. | The old `d15` answer now passes, but real grading still violates parts of the instructions. Prompt clarification is not a complete grading fix. |
+| Comparable evaluation | New [refinement.py](../eval/refinement.py) freezes an explicit dev baseline, reuses its 20 page answers, generates only 20 new answers, and grades both with the same revised judge. | Frozen code/data/settings and request limits; durable attempts; no automatic retries; reject pending requests, source drift, changed links and report overwrites. Offline audit and report reproduction passed. |
+
+The initial broader lexical replacement experiment regressed on dev and was rejected before live calls. The accepted selector requires added direct section coverage and preserves existing coverage; it remains a heuristic, not a guarantee of semantic completeness. Runtime defaults, the five-source/6,000-character candidate setting, source text and index contents are unchanged.
+
+| Comparable page-mode measure | Saved answers, regraded | Refined answers |
+| --- | ---: | ---: |
+| End-to-end AI passes | 17/20 (85%) | 17/20 (85%) |
+| Complete required-quote coverage | 12/16 | 14/16 |
+| Evidence groups | 39/43 | 41/43 |
+| Validated outputs | 19/20 | 20/20 |
+| Valid responses graded | 19/19 | 20/20 |
+| Unanswerable cases correctly abstained | 4/4 | 4/4 |
+| Answerable cases abstained | 0 | 1 (`d10`) |
+| Successful-response mean latency | 5.37 s (earlier run) | 4.21 s |
+
+The original baseline's **15/20** was produced by the previous judge instructions; regrading those same answers changes `d07` and `d15` to passes, yielding **17/20**. Do not claim 15→17 as an implementation gain. Under the same revised judge, gains `d04`/`d08` and regressions `d10`/`d12` cancel. Retrieval selection and generation instructions changed together; their separate contributions and latency differences are not isolated.
+
+Remaining evidence:
+
+- `d07`: the new answer includes the budget rule and explicitly states review before approval. The judge nevertheless passed the old answer by referring to unseen `R3` and extrapolating from an example. Reference contamination remains a grading concern.
+- `d10`: the explicit approval table is still missing. The new answer abstains rather than interpolating between examples; this is an end-to-end failure. The judge still passed the old interpolation despite its new instructions.
+- `d11`: the approval table is absent, and the rubric demands restating the question's team-approval premise. The new answer gives the requested advance-payment rejection and finance review, but still fails that criterion. Retrieval and rubric interpretation need separate review.
+- `d12`: both correctness criteria pass, but the judge rejects a combination it calls logically valid because no single source sentence says everything. The first new claim also lacks a direct `S2` citation for its budget assertion. Review grading consistency and per-claim source completeness; do not silently correct the score.
+- `d04`: the new quote passed, but a single run does not prove the failure is eliminated; the old rejected raw text remains unavailable.
+
+Actual requests were **20 new answers + 39 new reviews = 59**, with no provider/review errors or retries. New generation used 124,273 input / 9,811 output tokens; grading used 348,356 / 15,000. The 20 baseline answers were reused without generation. The software suite passed **439 tests in 46.05 seconds** (30 new); saved live contexts exactly match all 20 offline dev replays. All **434 protected files**, including **427 historical evaluation artifacts**, remain byte-identical. Human review is still pending; no commit, push or Cloud change was performed.
+
+Next: design grounding review so reference answers cannot supply missing retrieved evidence; calibrate it with independent adjudication. Address the remaining explicit-rule retrieval and per-claim citation gaps, reevaluate dev, then freeze code/scoring before final evaluation. The final 20 questions remain reserved. Historical 87-review recovery now also needs compatibility with the original judge prompt; a newly generated recovery plan alone is not enough. Historical selector-replay commands have a deliberate current-source guard; their old records are preserved, while current replay evidence is linked below.
+
+Evidence: [offline retrieval replay](../eval/results/v3_refinement_checks_20261019/retrieval_replay.json), [software tests](../eval/results/v3_refinement_checks_20261019/software_tests.json), [live report](../eval/results/v3_refinement_dev_20261019/report.md), [case analysis](../eval/results/v3_refinement_dev_20261019/analysis.json), [verification](../eval/results/v3_refinement_dev_20261019/verification.json).
+
+```powershell
+# Offline preparation into a NEW folder; the baseline must be an explicit dev split.
+.\.venv\Scripts\python.exe -X utf8 -m eval.refinement freeze --source-dir eval/results/v3_dev_20261019_1003 --output-dir eval/results/v3_refinement_new_run --max-calls 59
+# Billable, at most 59 model calls for this baseline; not needed to verify saved results.
+.\.venv\Scripts\python.exe -X utf8 -m eval.refinement run --output-dir eval/results/v3_refinement_new_run
+# Offline verification/reproduction of the completed run.
+.\.venv\Scripts\python.exe -X utf8 -m eval.refinement verify --output-dir eval/results/v3_refinement_dev_20261019
+.\.venv\Scripts\python.exe -X utf8 -m eval.refinement report --output-dir eval/results/v3_refinement_dev_20261019
+```
+
 ## Change Log
 
 | Date | Description |
@@ -199,20 +327,25 @@ This revision packages these completed local changes for GitHub publication; Clo
 | 2026-10-16 | Recorded the owner's settings/reboot completion report and clarified the RAG demonstration objective: logic, measured accuracy, precise evidence, and explained improvements. Excluded concurrency testing; kept usability deferred. Prioritized tracing/evaluation proposals without executing new remote checks. Separate dev-log unavailable; history recorded here. |
 | 2026-10-16 | Completed trace metadata/readback fixes, verified real LangSmith, ran the frozen 120-answer comparison, diagnosed partial grading and insufficient credit, and prepared 87 review recoveries offline. Owner deferred charging/grading. Final 305 tests passed; historical 90 artifacts preserved. Local changes only; separate dev-log unavailable. |
 | 2026-10-16 | Added safe validation-rule/path records and conservative final-page selection; offline coverage improved 47/48 to 48/48 with no complete-evidence regressions. 347 tests passed, 336 artifacts preserved, and an updated 87-review plan prepared without execution. No model calls, push, or Cloud change; dev-log unavailable. |
+| 2026-10-19 | Implemented reusable dataset validation, split-specific version 2 evaluation protocols, call planning and grouped reports; added 40 PDF-checked v3 questions. Tested locally and retained legacy artifacts. No paid evaluation or publication; dev-log unavailable. |
+| 2026-10-19 | After the owner funded credits, completed v3 dev comparison with 79 model calls; original AI passes 14/20 and 15/20, one quote-validation failure, no provider/judge errors. Preserved raw grades and all baseline files; recorded retrieval failures and grading disputes. Final questions, old review recovery and Cloud unchanged; dev-log unavailable. |
+| 2026-10-19 | Implemented section-aware context refinement, quotation/inference guidance, revised judge instructions and a saved-answer comparison tool. 439 tests passed; 59 live calls. Coverage 12/16→14/16 and valid outputs 19/20→20/20, but same-judge passes 17/20→17/20. Preserved 434 files and documented remaining grading/retrieval issues. Final evaluation and publication pending; dev-log unavailable. |
 
 ---
 
-# Phase 6 — 검색·답변 품질 개선 `✅ 로컬 구현 · ⏸ AI 채점`
+# Phase 6 — 검색·답변 품질 개선 `✅ 로컬 구현 · ✅ V3 개발용 평가`
 
 > 길이를 제한하고 근거를 추적할 수 있는 문맥으로 필수 근거 검색과 조건을 보존하는 답변을 개선한다.
 
 **시작일**: 2026-10-16 (한국 시간)\
 **로컬 완료일**: 2026-10-16\
-**상태**: 로컬 구현·테스트 및 실제 원격 추적 검증 완료. 확대 비교 시도는 완료했으나 API 잔액 부족 확인 후 사용자가 충전하지 않고 AI 채점 실패 87건을 보류하기로 했다. Cloud 설정·Reboot는 사용자 보고 기준이며 실제 동작은 별도 검증하지 않았다.\
+**상태**: 로컬 구현·테스트 및 실제 원격 추적 검증 완료. 사용자가 2026-10-19 충전 후 API 평가를 재개했고 v3 개발용 평가를 완료했다. 과거 AI 채점 실패 87건은 별도 복구 과제로 남아 있다. Cloud 설정·Reboot는 사용자 보고 기준이며 실제 동작은 별도 검증하지 않았다.\
 **선행 조건**: Phase 1~4 구현, Phase 5 데모 배포. 사용자가 남은 Phase 5 검증을 보류하고 Phase 6 문서·개발·테스트를 명시적으로 요청했다.\
 **기술 구성**: Python 3.12, 기존 E5/Chroma/Claude, pytest.
 
-## 최신 사용자 결정 — 2026-10-16
+**최신 후속(2026-10-19):** [개발 후속 개선](#v3-개발-후속-개선--2026-10-19)과 **테스트 439개**를 완료했다. 페이지 근거 확보는 12/16→14/16, 출력 검증은 19/20→20/20이다. 같은 새 채점 기준에서 이전·새 답변 모두 **17/20**으로 전체 정확도 개선은 입증하지 않았다. 새 모델 호출은 59회다. 채점 불일치와 남은 검색·인용 문제를 기록했으며 최종 문항은 미실행이다.
+
+## 이전 사용자 결정 — 2026-10-16
 
 사용자가 Streamlit Community Cloud에 `RAG_RETRIEVAL_MODE="pages"`, `RAG_TOP_K=5`, `RAG_CONTEXT_MAX_CHARS=6000`을 적용하고 앱을 Reboot했다고 보고했다. 설정 작업은 사용자 보고 기준 완료로 기록하며 별도의 Cloud 테스트 통과로 간주하지 않는다. 구현 코드는 [b89ed76](https://github.com/SoyeonAhn3/enterprise-rag/commit/b89ed76b615a02c13c5e9ce80928a4ae9bcdadaa)으로 `main`에 푸시했다.
 
@@ -393,6 +526,132 @@ $env:RAG_CONTEXT_MAX_CHARS = "6000"
 
 이번 개정은 완료한 로컬 변경을 GitHub에 게시하도록 묶었으며 Cloud 실행 검증은 계속 보류한다. 다음 품질 작업은 새 독립 질문 준비이며, 사용자가 API 사용을 재개하면 실제 응답의 진단 기록과 새 선택 방식의 답변 품질을 확인한다. 사용성은 보류하고 동시 접속 검사는 제외한다.
 
+### 평가 도구 확장과 v3 준비 — 2026-10-19
+
+사용자가 평가 도구 확장과 새 질문 작성·테스트를 승인했다. 로컬 구현 범위이며 유료 평가, 배포, 보류 중인 87건 채점은 실행하지 않았다. 검색 로직과 답변 프롬프트는 유지한다.
+
+| 작업 | 구현 | 완료 기준 / 검증 |
+| --- | --- | --- |
+| 평가셋 검사 | [datasets.py](../eval/datasets.py): 공통 목록 스키마, 파일명으로 안전한 고유 ID, 문구 중복, split/family 분리, 기준·근거 필수값, 실제 페이지·공백 차이만 허용하는 인용 검사 | 잘못된 주석은 실행 자원을 열기 전에 거절하며 기존 v2와 정규화 문구 중복 확인 |
+| 비교 평가기 | [quality.py](../eval/quality.py): 데이터셋·dev/final 명시 선택, 버전 2 프로토콜, 호출 한도 계산, 유형별 진단·보고서 | 대역 클라이언트로 고정→실행→감사 검증. 선택 문항만 생성기에 전달하고 정답·참고 근거는 채점기에만 전달 |
+| 새 질문 | [questions_v3.json](../eval/questions_v3.json), [new_cases.py](../eval/new_cases.py)에서 재현 | 총 40문항, 개발 20·최종 20. 각 묶음은 답변 가능 16·불가 4이며 모든 인용문을 PDF와 대조 |
+| 과거 호환 | 옵션 없는 freeze는 기존 v2 60문항·버전 1을 유지하고 기존 검증·보고서 문구도 유지 | Phase 5/6 저장 산출물과 보고서 오프라인 재현. PDF·v1/v2 평가셋·기존 결과 보존 |
+
+각 묶음에 경계값·복합 조건·예외·기한·답변 불가 질문을 4개씩 포함한다. 전체는 다중 문서 19·단일 문서 13·답변 불가 8개다. 설치·운송비 합산, 예산·법무의 다른 경계값, 승인 단계, 계약 변경, 긴급 절차, 서로 다른 영업일 기산점 등을 조합했다. v2와 정규화한 질문 문구 중복은 없다. family 주석은 dev/final 사이에 겹치지 않지만 공통 규정과 의미 유사성은 남는다. 같은 소규모 합성 문서에 대해 AI가 작성한 시나리오이며 외부 작성자의 블라인드 평가가 아니다. 인용문 일치는 출처를 검증할 뿐 채점 기준의 완전성을 보장하지 않으며 독립적인 사람 검토는 미완료다.
+
+새 목록의 필수 필드는 `id`, `split`(`dev`/`final`), `family`, `category`(`single_document`/`multi_document`/`unanswerable`), `question`, `answerable`, `expected_answer`, `grading_criteria`, `evidence_groups`다. 선택 필드 `test_type`으로 추가 유형별 집계를 한다. 근거 그룹은 `id`, `claim`, 비어 있지 않은 `any_of`를 가지며 각 대안은 PDF 파일명 `document`, 1부터 시작하는 실제 `page`, `quote`를 포함한다. 답변 불가 문항은 근거 그룹이 비어 있고 기존 전체 답변 보류 계약을 따른다. 부분 답변 정책은 추가하지 않았다.
+
+프로젝트 루트에서 실행한다.
+
+```powershell
+# 스키마·원문 근거·묶음별 개수·문구 중복 검사. API 호출 없음.
+.\.venv\Scripts\python.exe -X utf8 -m eval.quality validate --dataset eval/questions_v3.json --against eval/questions_v2.json
+# 저장한 v3가 작성 명세와 같은지 오프라인 검사.
+.\.venv\Scripts\python.exe -X utf8 -m eval.new_cases
+# 기존 인덱스·로컬 E5 캐시 필요. 매번 새 출력 폴더 지정.
+# freeze는 질문 검색·답변 생성 없이 인덱스를 열어 설정을 기록한다.
+.\.venv\Scripts\python.exe -X utf8 -m eval.quality freeze --dataset eval/questions_v3.json --split dev --max-calls 80 --output-dir eval/results/v3_dev_new_run
+```
+
+20문항 한 묶음을 두 설정으로 비교하면 답변 최대 40회·AI 채점 최대 40회, 합계 최대 80회다. `--max-calls`는 금액이 아닌 계획 요청 수의 상한이다. 한도가 작으면 문항을 몰래 줄이지 않고 전체 계획을 거절한다. 버전 2는 선택 문항, 전체 원본 데이터셋 해시, split, 코드·PDF·프롬프트·설정 해시와 실행 한도를 고정한다. 최종 평가용 묶음을 포함해 원본 데이터셋이 바뀌면 실시간 실행 재사용을 막는다. 과거 결과 감사는 고정 스냅샷을 사용하므로 현재 원본 데이터셋 파일·인증 정보·모델이 필요 없다.
+
+API 평가를 명시적으로 재개한 뒤에만 `python -m eval.quality run --output-dir <고정한-폴더>`로 실제 요청한다. `--resume`은 완료 시도를 재사용하며 pending·실패 요청을 반복하지 않는다. `verify`와 `report`는 같은 폴더를 오프라인으로 검사한다. 새 보고서는 RAG 오류·발생 단계, 채점 건너뛰기, 채점 오류·누락, 확인된 통과, 전체 판정 완료를 구분한다. 미채점을 포함한 수치를 측정한 정확도로 확정하지 않는다. category와 test_type별 결과를 제공하고 기존 보고서를 덮어쓰지 않는다.
+
+최종 평가용 문항은 주석만 검사했다. v3 검색 성능·생성 답변·AI 채점·사람 채점 결과는 만들지 않았다. 개발용으로 조정하는 동안 최종 묶음의 성적은 확인하지 않고, 결과를 변경에 활용한 뒤부터는 회귀 평가셋으로 취급한다. 다음 작업은 승인 후 실제 개발용 평가, 구현을 고정한 뒤 최종 평가다. 기존 87건 복구 계획은 과거 증빙으로 유지하며 평가 코드가 바뀌어 현재 소스 검사에서 차단된다. 향후 채점만 복구하기 전 새 계획을 준비해야 하고, 복구 대상은 여전히 과거 저장 답변이다.
+
+전체 테스트 **409개가 41.14초에 통과**했다(신규 62개). 기존 평가 산출물 340개를 포함한 기준 파일 359개가 바이트 단위로 유지됐다. 실제 로컬 인덱스를 사용한 개발용 20문항 조건 고정·현재 조건 대조도 통과했으며 질문 검색·생성 호출은 없었다. 검증 결과는 [오프라인 개발 기록](../eval/results/phase6_datasets_20261019/verification.json)에 저장했다. 별도 dev-log는 미설치로 아래 변경 이력에 기록한다.
+
+### V3 개발용 평가 — 2026-10-19
+
+사용자가 크레딧 충전과 다음 단계 진행을 요청했다. 최신 구현을 **v3 개발용 20문항**으로 측정하며 chunks/k=5와 pages/k=5/6,000자를 비교했다. 한국 시간 10:03~10:08에 로컬에서 실행했고 `claude-sonnet-5-5`로 답변과 별도 AI 채점을 수행했다. 코드·평가셋·PDF·프롬프트·설정을 실행 전에 고정했으며 실행 중 변경하지 않았다. 최종 문항과 과거 미완료 채점 87건은 실행하지 않았다.
+
+| 지표 | chunks/5 | pages/5 |
+| --- | ---: | ---: |
+| 원본 AI 통과 / 전체 문항, 출력 실패 포함 | 14/20 (70%) | 15/20 (75%) |
+| 원본 AI 통과 / 답변 가능 문항 | 10/16 | 11/16 |
+| 필수 인용 근거 전체 확보 | 10/16 | 12/16 |
+| 근거 그룹 확보 | 33/43 | 39/43 |
+| 출력 검증 통과 응답 | 20/20 | 19/20 |
+| AI 채점 완료 / 유효 응답 | 20/20 | 19/19 |
+| 답변 불가 문항에서 보류 | 4/4 | 4/4 |
+| 답변 가능 문항에서 보류 | 2 | 0 |
+| 성공 응답의 평균 / p95 RAG 지연시간 | 5.05 / 10.70초 | 5.37 / 13.06초 |
+| 생성 입력 / 출력 토큰, 실패 응답 포함 | 98,938 / 11,636 | 119,142 / 13,226 |
+
+채점 가능한 응답은 모두 채점했다. 무효 페이지 응답은 전체 실행의 실패 결과에 포함하며 채점 요청을 하지 않았고, 미해결 채점 실패와는 구분한다. 한도는 모델 요청 80회였으며 실제 **답변 40회 + 채점 39회 = 79회**를 실행했다. 자동 재시도와 제공업체 오류는 없었다. 채점 입력/출력 토큰 합계는 299,831/16,761이며 캐시는 사용하지 않았다. 페이지 방식의 생성 입력 토큰은 20.42%, 문맥 글자 수는 31.55% 많았다. 금액 추정이나 Cloud 성능 검사가 아닌 이번 실행의 사용량·지연시간 관측이다.
+
+원본 쌍별 판정은 `v3_d01`·`v3_d05` 개선, `v3_d15` 악화이며 두 방식 모두 채점한 문항은 19개다. `v3_d05`에서는 검색 개선이 확인되지만 `d01`·`d15`의 변화에는 채점 해석 논쟁이 있다. 순증 1문항을 일반적인 답변 품질 개선으로 단정하지 않는다. 복수 문서 통과는 5/10·6/10이고, 복합 조건 유형은 1/4·2/4로 가장 약하다.
+
+| 사례 | 관측 | 후속 작업 |
+| --- | --- | --- |
+| `d05` | 청크는 결재 금액표가 없어 보류했지만 페이지는 후보 11위 금액표를 선택해 통과했다. | 근거 부족 시 보류를 유지하고 필요한 조항 확보를 개선한다. |
+| `d07`, `d08` | 페이지도 후보 8위 예산 규정과 15위 견적 규정을 빠뜨려 각각 결재 전 검토 시점, 견적 1부·금액 합리성 검토 조건을 누락했다. | 개발용으로 최종 문맥 선택을 개선하며 정답 주석을 생성에 전달하지 않는다. |
+| `d04` | 페이지는 근거를 모두 확보했지만 `/claims/0/evidence/1/quote`에서 `quote_not_in_source`가 발생했다. 청크는 예산 규정 없이 사례로 면제를 추론했다. | 연속 인용 일치 검증을 유지한다. 거부된 답변 원문은 저장하지 않아 정확한 변형 문자는 알 수 없다. 일반적인 인용 지시와 출처 연결을 점검한다. |
+| `d01`, `d11`, `d15` | 의미상 동등한 최종 승인자 답변 감점, 질문 전제의 일관되지 않은 취급, 영업일의 통상 해석을 미지원 주장으로 보는 판정이 있다. `d11`은 추가 설명의 근거성도 쟁점이다. | 의미 동등성·전제·허용 추론의 기준을 정리하고 원본 판정을 유지해 독립 검토한다. |
+| `d10` | 두 방식 모두 명시적 금액표 없이 550만원·720만원 예시에서 700만원 결재권자를 추론해 통과했다. | 추론과 근거 요구를 검토한다. 인용문 확보율과 AI 정답률은 다른 지표다. |
+
+이 분석은 에이전트 검토이며 **사람 판정 완료가 아니다.** 보정 정답률을 만들거나 저장 점수를 덮어쓰지 않았다. 기존 사람 검토 목록 34건을 유지했고 `d01`·`d10`·`d11`·`d15`는 별도 분석에 추가 문항별 검토 후보로 기록했다.
+
+다음은 채점 해석 정리, 개발용 문항을 이용한 근거 선택·인용 생성 개선, 개발용 재평가다. 이후 코드와 채점 기준을 고정한 뒤 예약한 최종 20문항을 실행한다. 최종 문항 주석은 준비 과정에서 확인했지만 검색 성적·답변·채점은 생성하지 않았다. 같은 합성 문서, AI 작성 질문, 동일 모델 채점과 단일 소표본의 한계를 유지한다.
+
+근거: [프로토콜](../eval/results/v3_dev_20261019_1003/protocol.json), [답변·원본 채점](../eval/results/v3_dev_20261019_1003/answers.json), [보고서](../eval/results/v3_dev_20261019_1003/report.md), [사례 분석](../eval/results/v3_dev_20261019_1003/analysis.json), [검증 기록](../eval/results/v3_dev_20261019_1003/verification.json). 오프라인 `verify`와 보고서 재현을 통과했고 **기준 파일 376개**, 그중 **기존 평가 파일 341개**를 바이트 단위로 보존했다. 코드·테스트는 이전 **409개 테스트 통과** 시점과 같으며 이번 평가에서는 소프트웨어 테스트를 반복하지 않았다. 커밋·푸시·Cloud 변경은 하지 않았다.
+
+```powershell
+# 오프라인 검사. 모델 요청·인증 정보 불필요.
+.\.venv\Scripts\python.exe -X utf8 -m eval.quality verify --output-dir eval/results/v3_dev_20261019_1003
+.\.venv\Scripts\python.exe -X utf8 -m eval.quality report --output-dir eval/results/v3_dev_20261019_1003
+```
+
+### V3 개발 후속 개선 — 2026-10-19
+
+**구현·개발용 테스트 완료, 전체 답변 정확도 개선은 미입증.** 사용자가 이번 개발·테스트를 승인했다. 원본 평가셋·PDF·답변·채점은 보존했고 최종 문항을 실행하지 않았다.
+
+| 변경 | 구현한 동작 | 검증 |
+| --- | --- | --- |
+| 문맥 선택 | `query_and_section_coverage_v2`는 기존 마지막 슬롯 개선 후 중복된 후순위 슬롯도 바꾼다. 가능한 경우 첫 두 검색 결과, 이미 확보한 질문 표현과 요청한 절 제목 표현을 보존한다. 질문의 마지막 문장으로 절 제목 검색의 초점을 정하고 필요한 절이 추가될 때 교체한다. | 개발용 필수 근거 12/16→14/16(`d07`, `d08`), 알려진 v2 48/48 유지. 두 재생에서 전체 근거 확보 악화 없음. 추가 검색·정답 전달·의존성·본문 자르기 없음. |
+| 생성 지시 | 표도 원문 연속 구간을 복사하거나 근거 항목을 나누고 출처 연결을 확인한다. 개별 사례나 문구 부재로 일반 규정을 만들지 않는다. 두 검색 모드의 공통 지시다. | 새 출력 20건 검증 통과. 표 행을 합친 잘못된 인용은 회귀 테스트에서 차단. 엄격한 검증·생성 1회 유지. |
+| 채점 지시 | 동등 의미, 질문 상황과 규정 주장, 근거의 논리적 결합, 단어의 통상 의미, 사례 일반화 금지를 명확히 했다. | 이전 `d15` 답변은 통과했지만 실제 채점에서 일부 지시 위반이 남았다. 프롬프트 명확화만으로 채점 문제를 해결한 것은 아니다. |
+| 전후 비교 | 새 [refinement.py](../eval/refinement.py)는 개발용 기준 실행을 고정하고 이전 페이지 답변 20개를 재사용한다. 새 답변 20개만 생성하며 양쪽을 같은 새 기준으로 채점한다. | 코드·데이터·설정·호출 한도 고정, 요청 전 시도 저장, 자동 재시도 없음. pending·소스 변경·연결 변조·보고서 덮어쓰기 차단. 오프라인 감사·재현 통과. |
+
+초기의 폭넓은 단어 기반 교체 실험은 개발용 근거 확보를 악화해 실제 호출 전에 제외했다. 채택한 선택기는 직접 요청한 절의 추가와 기존 근거 표현 보존을 요구하지만 의미상 완전성을 보장하지 않는 휴리스틱이다. 실행 기본값, 비교 후보의 출처 5개·6,000자 한도, 원문과 인덱스는 유지했다.
+
+| 같은 기준으로 비교한 페이지 지표 | 이전 답변 재채점 | 개선 후 답변 |
+| --- | ---: | ---: |
+| 전체 실행 AI 통과 | 17/20 (85%) | 17/20 (85%) |
+| 필수 인용 근거 전체 확보 | 12/16 | 14/16 |
+| 근거 그룹 확보 | 39/43 | 41/43 |
+| 출력 검증 통과 | 19/20 | 20/20 |
+| 유효 응답 채점 완료 | 19/19 | 20/20 |
+| 답변 불가 문항의 적절한 보류 | 4/4 | 4/4 |
+| 답변 가능 문항의 보류 | 0 | 1 (`d10`) |
+| 성공 응답 평균 지연시간 | 5.37초 (이전 실행) | 4.21초 |
+
+원래 기준 실행의 **15/20**은 이전 채점 지시의 점수다. 같은 답변을 재채점하면 `d07`·`d15`가 통과로 바뀌어 **17/20**이 된다. 15→17을 구현 개선량으로 주장하지 않는다. 같은 새 채점 기준에서는 `d04`·`d08` 개선과 `d10`·`d12` 악화가 상쇄된다. 검색 선택과 생성 지시를 함께 바꿨으므로 각 효과와 지연시간 차이의 원인을 분리하지 않았다.
+
+남은 증빙과 문제:
+
+- `d07`: 새 답변은 예산 규정을 확보해 결재 전 검토 시점을 명시했다. 그러나 채점기는 이전 답변도 모델이 보지 못한 `R3`와 사례를 사용했다고 설명하면서 통과시켰다. 참고 정답이 근거성 판단에 섞이는 문제가 남았다.
+- `d10`: 명시적 결재 금액표가 여전히 빠졌다. 새 답변은 사례 사이를 추정하는 대신 보류했고 전체 실행의 실패로 계수한다. 채점기는 새 지시에도 이전 답변의 사례 보간을 통과시켰다.
+- `d11`: 금액표 누락과 질문의 팀장 구간 전제를 다시 입증하도록 요구하는 기준이 남았다. 새 답변은 선결제 불인정·재무팀 검토를 설명하지만 해당 기준으로 실패한다. 검색과 기준 해석을 구분해 검토한다.
+- `d12`: 필수 기준은 모두 통과했으나 채점기가 타당한 논리적 결합이라고 인정하면서도 한 문장에 직접 쓰이지 않았다고 감점했다. 동시에 새 첫 claim의 예산 주장에 `S2`가 직접 인용되지 않은 문제도 있다. 채점 일관성과 주장별 출처 완전성을 검토하고 점수를 임의 보정하지 않는다.
+- `d04`: 새 인용은 통과했지만 한 번의 실행으로 오류 제거를 증명하지 않는다. 이전 거부 원문은 여전히 없어 정확한 변형을 확인할 수 없다.
+
+실제 **새 답변 20회 + 새 채점 39회 = 59회**를 요청했고 제공업체·채점 오류와 재시도는 없었다. 새 생성 입력/출력은 124,273/9,811토큰, 채점은 348,356/15,000토큰이다. 이전 답변 20개는 생성 없이 재사용했다. 전체 테스트 **439개가 46.05초에 통과**했다(신규 30개). 실제 개발용 문맥 20개는 오프라인 재생과 모두 일치했다. **보호 대상 434개**, 그중 **과거 평가 산출물 427개**를 바이트 단위로 보존했다. 사람 검토는 미완료이며 커밋·푸시·Cloud 변경은 하지 않았다.
+
+다음은 참고 정답이 누락된 검색 근거를 대신하지 못하도록 근거성 채점을 분리하는 설계와 독립적인 사람 판정으로 기준을 점검하는 작업이다. 남은 명시적 규정 검색·주장별 인용 누락을 개선하고 개발용으로 재평가한 뒤 코드·기준을 고정해 최종 평가한다. 최종 20문항은 예약 상태로 유지한다. 과거 87건 복구는 원래 채점 프롬프트와의 호환도 필요하므로 새 복구 계획만 만드는 것으로 충분하지 않다. 과거 선택 재생 명령은 현재 소스 검사로 차단될 수 있으며 원본 기록은 보존하고 현재 재생 결과를 아래에 연결했다.
+
+근거: [오프라인 검색 재생](../eval/results/v3_refinement_checks_20261019/retrieval_replay.json), [소프트웨어 테스트](../eval/results/v3_refinement_checks_20261019/software_tests.json), [실제 비교 보고서](../eval/results/v3_refinement_dev_20261019/report.md), [사례 분석](../eval/results/v3_refinement_dev_20261019/analysis.json), [검증](../eval/results/v3_refinement_dev_20261019/verification.json).
+
+```powershell
+# 새 폴더에 오프라인 준비. 기준 실행은 개발용 묶음이어야 한다.
+.\.venv\Scripts\python.exe -X utf8 -m eval.refinement freeze --source-dir eval/results/v3_dev_20261019_1003 --output-dir eval/results/v3_refinement_new_run --max-calls 59
+# 과금: 이 기준 실행에서는 모델 최대 59회. 저장 결과 검사에는 실행할 필요 없음.
+.\.venv\Scripts\python.exe -X utf8 -m eval.refinement run --output-dir eval/results/v3_refinement_new_run
+# 완료한 결과의 오프라인 검사·재현.
+.\.venv\Scripts\python.exe -X utf8 -m eval.refinement verify --output-dir eval/results/v3_refinement_dev_20261019
+.\.venv\Scripts\python.exe -X utf8 -m eval.refinement report --output-dir eval/results/v3_refinement_dev_20261019
+```
+
 ## 변경 이력
 
 | 날짜 | 내용 |
@@ -403,3 +662,6 @@ $env:RAG_CONTEXT_MAX_CHARS = "6000"
 | 2026-10-16 | 사용자의 설정 변경·Reboot 완료 보고를 기록하고 목표를 RAG 로직·측정된 정확도·정교한 근거 처리·개선 설명으로 명확히 했다. 동시 접속 검사는 제외하고 사용성 보류를 유지했다. 추적·평가를 다음 제안으로 우선했으며 새 원격 검사는 실행하지 않았다. 별도 dev-log 미설치로 문서 이력에 기록했다. |
 | 2026-10-16 | 추적 기록·원격 대조 수정 및 실제 LangSmith 검증, 고정한 답변 120회 비교를 완료했다. 일부 채점 실패와 잔액 부족을 확인하고 87건 복구를 오프라인 준비했다. 사용자 결정으로 충전·채점 보류. 최종 테스트 305개 통과·과거 산출물 90개 보존. 로컬 변경이며 별도 dev-log는 미설치로 생략. |
 | 2026-10-16 | 검증 규칙·위치 기록과 마지막 페이지 선택 개선. 오프라인 근거 확보 47/48→48/48, 전체 근거 확보 악화 없음. 테스트 347개 통과·기존 파일 336개 보존·87건 복구 계획만 새로 준비. 모델 호출·푸시·Cloud 변경 없음. 별도 dev-log 미설치로 여기에 기록. |
+| 2026-10-19 | 공통 데이터셋 검사, 묶음별 버전 2 평가 프로토콜, 호출 계획·유형별 보고서와 PDF 대조한 v3 40문항 구현. 로컬 테스트·과거 산출물 호환 확인. 유료 평가·게시 없음. 별도 dev-log 미설치로 여기에 기록. |
+| 2026-10-19 | 사용자 충전 후 모델 79회 호출로 v3 개발용 비교 완료. 원본 AI 통과 14/20·15/20, 인용 검증 실패 1건, 제공업체·채점 오류 없음. 원본 점수·기준 파일을 보존하고 검색 실패·채점 논쟁을 기록했다. 최종 문항·과거 채점 복구·Cloud 변경 없음. dev-log 미설치로 여기에 기록. |
+| 2026-10-19 | 절 제목 기반 문맥 선택, 인용·추론 지시, 채점 지시, 저장 답변 비교 도구 구현. 테스트 439개·실제 호출 59회. 근거 12/16→14/16, 유효 출력 19/20→20/20이나 동일 기준 AI 통과는 17/20→17/20. 파일 434개를 보존하고 채점·검색 한계를 기록했다. 최종 평가·게시 대기, dev-log 미설치로 여기에 기록. |
