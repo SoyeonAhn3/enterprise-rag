@@ -61,6 +61,12 @@ Click **Save**, then use the app's **⋮ → Reboot** to reload settings and cac
 
 `pages` expands selected hits to their original PDF pages where the budget allows. `5` limits context to at most five distinct page sources, with whole-chunk fallback; `6000` limits their combined text characters, not tokens or output-answer length. The default remains `chunks`/`3`. No index rebuild is required. See the [Phase 6 results](Phase/Phase6_RetrievalAndAnswerQuality.md) for the 267-test verification, development coverage, and six known live cases; formal Cloud checks remain deferred. A reboot for activation does not complete the broader restart/resource validation.
 
+### Citation output allowance (2026-10-19)
+
+The citation-completeness update raises the default output limit to **4,096 tokens**. A recorded complex answer exhausted the former 2,048-token limit while including its supporting quotations. This remains one generation call with no automatic retries; the limit allows a longer response but does not require one.
+
+After publishing this revision, replace an existing top-level `ANTHROPIC_MAX_TOKENS` override in Cloud Secrets with `4096`, then save and reboot using the procedure above. Apply the same value to a local `.env` override when running locally. Existing overrides take precedence over the new code default; neither private settings file was changed by this development task. Keep pages/5/6000 for the recorded regression configuration. Cloud rollout and this setting change still require operator confirmation.
+
 ### Optional LangSmith verification
 
 Set `LANGSMITH_TRACING=true`, `LANGSMITH_API_KEY`, `LANGSMITH_PROJECT`, and the appropriate regional `LANGSMITH_ENDPOINT` in the server environment or local `.env`. Tracing sends question/context/output payloads, so this demo uses synthetic public documents. Keys and settings objects are never included in trace payloads. Missing configuration or a failed write disables the sink while answers continue; restart the process after correcting a failed trace configuration.
@@ -138,6 +144,12 @@ RAG_CONTEXT_MAX_CHARS = 6000
 **Save**로 저장한 뒤 해당 앱의 **⋮ → Reboot**로 설정과 캐시된 자원을 다시 읽게 한다. 실행 화면의 표시 설정 메뉴가 아니라 Cloud 관리 화면의 메뉴를 사용한다. 공식 [Settings 안내](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/app-settings)와 [Reboot 안내](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/reboot-your-app)를 참고한다.
 
 `pages`는 검색 결과를 한도가 허용하는 범위에서 원래 PDF 페이지 본문으로 확장한다. `5`는 서로 다른 페이지의 근거를 최대 5개까지 구성한다는 뜻이며 페이지 전체가 안 들어가면 청크 전체를 사용한다. `6000`은 근거 본문의 합산 글자 수로, 토큰 수나 출력 답변 길이가 아니다. 코드 기본값은 `chunks`/`3`이며 인덱스 재생성은 필요 없다. 테스트 267개·개발용 근거 포함률·알려진 실제 사례 6건은 [Phase 6 결과](Phase/Phase6_RetrievalAndAnswerQuality.md)를 참고한다. 정식 Cloud 검사는 계속 보류한다. 활성화를 위한 재시작만으로 별도의 재시작·자원 검증까지 완료한 것은 아니다.
+
+### 인용문 출력 한도 (2026-10-19)
+
+인용 완전성 보완으로 기본 출력 한도를 **4,096토큰**으로 올렸다. 복합 질문의 근거 인용을 포함하던 답변이 이전 2,048토큰 한도에 도달한 기록이 있다. 생성 호출은 여전히 1회이며 자동 재시도는 없다. 늘어난 값은 출력 상한이며 항상 그 길이로 답변한다는 뜻은 아니다.
+
+이번 개정을 게시한 뒤 Cloud Secrets의 기존 최상위 `ANTHROPIC_MAX_TOKENS` 값을 `4096`으로 바꾸고 위 절차에 따라 저장·재시작한다. 로컬에서 실행할 때 `.env`에 같은 키가 있으면 그 값도 맞춘다. 기존 설정은 새 코드 기본값보다 우선하며 이번 개발에서 실제 비공개 설정 파일은 수정하지 않았다. 기록한 회귀 점검과 같은 검색 설정은 pages/5/6000이다. 실제 Cloud 반영과 설정 적용은 운영자가 확인해야 한다.
 
 ### 선택적 LangSmith 검증
 

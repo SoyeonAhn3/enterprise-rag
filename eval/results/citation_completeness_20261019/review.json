@@ -1,0 +1,118 @@
+{
+  "created_at": "2026-10-19T06:06:56.501760+00:00",
+  "protocol_sha256": "6a5b7c52ba52ab3fb93fdfc8d902fbad7c6997408717c841ef5c66dbf4467a8c",
+  "answers_sha256": "5d7f01fe0e31b5bac003d013cb361c4e781c88c994b94bb00b3474514154ac24",
+  "reviewer_kind": "codex_source_review_not_independent_human",
+  "method": "Reviewed all 11 final claims against their own citations and the original PDF passages. Question scenario values can be applied to cited rules. Phrase-anchor assertions are cross-checks, not a semantic grader.",
+  "cases": [
+    {
+      "id": "threshold",
+      "question": "비품 가격은 VAT 제외 290만원이며 계약상 필수 설치비가 10만원입니다. 견적 비교 기준과 최종 결재권자는 물품 가격만 보고 정하면 되나요?",
+      "required_answer_facts": [
+        "VAT 제외 필수 설치비 합산으로 300만원",
+        "300만원 이상이면 서로 다른 공급업체의 유효 견적 2부 이상 원칙",
+        "100만원 초과 500만원 이하의 최종 결재권자는 부서장"
+      ],
+      "content_pass": true,
+      "claim_citation_support_pass": true,
+      "notes": [
+        "VAT-exclusive supply total and required installation are supported by claim 0; 290+10=300 is an application of the question facts.",
+        "Claim 1 now quotes the 300만원 이상 threshold and two valid quotations from different suppliers together, retaining the contiguous table content.",
+        "Claim 2 quotes the final-approver header, 100만원 초과~500만원 이하 band and 부서장."
+      ]
+    },
+    {
+      "id": "timing",
+      "question": "고객 개인정보를 위탁 처리하는 외부 개발 서비스를 200만원·3개월로 계약합니다. 소액·단기인데도 필요한 법무 조치와 보안 검토의 예상 기간·시작점을 알려주세요.",
+      "required_answer_facts": [
+        "개인정보 위탁은 금액·기간과 무관하게 계약 체결 전에 법무지원팀 및 DPA 검토 필요",
+        "발주·계약 전 정보보안팀 검토",
+        "높음 위험도 5영업일 예상, 서류 완비 시점부터 계산",
+        "보완 시 연장 가능하며 법적 기한·승인 보장은 아님"
+      ],
+      "content_pass": true,
+      "claim_citation_support_pass": true,
+      "notes": [
+        "Claim 0 quotes both the pre-contract legal-review rule and the privacy-entrustment condition; a separate FAQ quote includes its question.",
+        "Claim 1 quotes the privacy-entrustment condition and DPA/data-scope requirements in one original passage.",
+        "Claim 2 quotes the company external-IT scope, amount-independent timing and information-security team; it no longer starts mid-word. The extra privacy-review condition is cited separately.",
+        "Claim 3 preserves high risk, five business days, complete-document start, possible extension and no legal deadline/approval guarantee in both its text and its own evidence."
+      ]
+    },
+    {
+      "id": "actor",
+      "question": "검수와 세금계산서는 준비됐는데 지급 요청에서 PO 자료가 빠졌고 공급업체 계좌가 바뀌는 경우 어떻게 해야함. PO 발행 담당 부서와 이후 단계에서도 같은 번호를 쓰는지도 알려주세요.",
+      "required_answer_facts": [
+        "유효한 발주서와 PO 번호 보완",
+        "계좌 확인 자료를 답변 본문에 명시",
+        "기존 계좌와 달라진 사유 및 구매운영팀 확인 기록",
+        "구매운영팀이 발주서를 발행하고 검수·정산에서도 같은 PO 번호 사용"
+      ],
+      "content_pass": true,
+      "claim_citation_support_pass": true,
+      "notes": [
+        "Claim 0 lists the missing valid PO plus required payment documents, including account confirmation material; the citation covers that list.",
+        "Claim 1 cites both the changed-account reason and purchasing-team confirmation record.",
+        "Claim 2 cites the purchasing team, review/approval preconditions, PO issuance and workflow responsibility; claim 3 separately cites same-number reuse through inspection/settlement.",
+        "This question adds an explicit PO-responsibility request to the observed owner wording; it is a known-case variant, not an exact paired comparison."
+      ]
+    },
+    {
+      "id": "abstention",
+      "question": "경영지원팀의 남은 잔여예산금액",
+      "required_answer_facts": [
+        "등록된 문서에서 해당 정보를 확인할 수 없습니다.",
+        "claims와 sources가 비어 있어야 함"
+      ],
+      "content_pass": true,
+      "claim_citation_support_pass": true,
+      "notes": [
+        "Exact fixed abstention with empty claims and sources; no budget amount was fabricated."
+      ]
+    }
+  ],
+  "final_outcome": {
+    "cases": 4,
+    "accepted_responses": 4,
+    "answerable_with_supported_claims": 3,
+    "correct_abstentions": 1,
+    "claims_reviewed": 11,
+    "claim_citations_reviewed": 16
+  },
+  "attempt_history": [
+    {
+      "folder": ".",
+      "calls": 2,
+      "accepted_responses": 1,
+      "errors": 1,
+      "not_run": 2,
+      "output_limit": 2048,
+      "finding": "Timing response reached 2,048 output tokens and was rejected as incomplete_response; preserved without automatic retry."
+    },
+    {
+      "folder": "recheck",
+      "calls": 4,
+      "accepted_responses": 4,
+      "output_limit": 4096,
+      "finding": "Timing legal-review citation fixed, but its security quote began in the middle of a PDF-split word and the answer omitted the no-guarantee qualifier. This round is not counted as a full content/citation pass."
+    },
+    {
+      "folder": "final",
+      "calls": 4,
+      "accepted_responses": 4,
+      "output_limit": 4096,
+      "finding": "Same four questions once after generic sentence-boundary and estimate-qualifier instructions. All frozen required facts and claim citations supported in this review."
+    }
+  ],
+  "total_answer_calls": 10,
+  "judge_calls": 0,
+  "automatic_retries": 0,
+  "limitations": [
+    "Known cases and one explicit-actor variant; not an independent holdout, overall accuracy estimate or causal before/after score.",
+    "Semantic completeness remains a generation instruction reviewed by Codex, not a new automatic semantic validator or a guarantee for every future response.",
+    "Original v3 final metrics and all earlier raw answers remain unchanged; no inferred new 20-question accuracy score.",
+    "Complex retrieval coverage is deferred, including the broad monitor-receipt question where settlement timing was not retrieved.",
+    "Local tests and Streamlit replay do not establish Cloud rollout. Existing .env or Cloud output-limit overrides must be updated separately."
+  ],
+  "sha256": "80d576d1c75134855bb51b010564e572a3ccf3f2ab916a8f83ea57a7081df776"
+}

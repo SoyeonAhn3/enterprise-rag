@@ -1,0 +1,51 @@
+{
+  "created_at": "2026-10-19T06:05:37.927930+00:00",
+  "answers_sha256": "5d7f01fe0e31b5bac003d013cb361c4e781c88c994b94bb00b3474514154ac24",
+  "checks": [
+    {
+      "id": "threshold",
+      "claim_count": 3,
+      "claim_citations": 3,
+      "source_expanders": 2,
+      "displayed_unique_quotes": 3,
+      "validation_replay_matches": true,
+      "quotes_match_original_pdf": true,
+      "saved_answer_unchanged": true
+    },
+    {
+      "id": "timing",
+      "claim_count": 4,
+      "claim_citations": 8,
+      "source_expanders": 4,
+      "displayed_unique_quotes": 8,
+      "validation_replay_matches": true,
+      "quotes_match_original_pdf": true,
+      "saved_answer_unchanged": true
+    },
+    {
+      "id": "actor",
+      "claim_count": 4,
+      "claim_citations": 5,
+      "source_expanders": 3,
+      "displayed_unique_quotes": 5,
+      "validation_replay_matches": true,
+      "quotes_match_original_pdf": true,
+      "saved_answer_unchanged": true
+    },
+    {
+      "id": "abstention",
+      "claim_count": 0,
+      "claim_citations": 0,
+      "source_expanders": 0,
+      "displayed_unique_quotes": 0,
+      "validation_replay_matches": true,
+      "quotes_match_original_pdf": true,
+      "saved_answer_unchanged": true
+    }
+  ],
+  "model_calls": 0,
+  "total_source_expanders": 9,
+  "total_displayed_quotes": 16,
+  "harness_note": "The first ad-hoc replay counted the example-question expander as a source. Corrected the harness to count source-labelled expanders; no app change or model call was needed.",
+  "sha256": "511bed1f5ea042dcdd0c8fdc7991aa3b3fea52ab8f0344ede19bc3c6d1ed9e7f"
+}

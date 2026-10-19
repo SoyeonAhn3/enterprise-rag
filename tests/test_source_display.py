@@ -1,9 +1,52 @@
 import json
+from copy import deepcopy
 
 import pymupdf
 
 from config import DOCUMENTS_DIR, PROJECT_ROOT
-from source_display import excerpt_html, readable_excerpt
+from grounding import validate_answer
+from source_display import excerpt_html, readable_excerpt, source_excerpts
+from tests.test_grounding import response, sources
+
+
+def test_all_quotes_from_reused_source_are_preserved_once_without_combining_passages():
+    payload = response()
+    payload["claims"][0]["evidence"].append({"source_id": "S1", "quote": "100만원 초과 부서장"})
+    payload["claims"].append({"text": "초과 구간은 부서장 결재입니다.", "evidence": [
+        {"source_id": "S1", "quote": "100만원 초과\n부서장"},
+        {"source_id": "S1", "quote": "구매 금액 100만원 이하 팀장"},
+    ]})
+    result = validate_answer(json.dumps(payload), sources())
+    original = deepcopy(result)
+    assert source_excerpts(result, result["sources"][0]) == [
+        "구매 금액\n100만원 이하 팀장", "100만원 초과 부서장",
+    ]
+    assert source_excerpts(result, result["sources"][1]) == ["회사 장비는 사전 검토 필요."]
+    assert result == original
+
+
+def test_legacy_answer_without_claims_keeps_its_original_excerpt():
+    source = {"source_id": "S1", "excerpt": "기존에 검증한 원문\n발췌"}
+    result = {"sources": [source]}
+    original = deepcopy(result)
+    assert source_excerpts(result, source) == [source["excerpt"]]
+    assert result == original
+
+
+def test_saved_po_answer_exposes_bank_change_rule_hidden_by_first_excerpt():
+    result = json.loads((PROJECT_ROOT / "eval/results/v3_closeout_20261019/final/v3_f08.json")
+                       .read_text(encoding="utf-8"))["payload"]
+    original = deepcopy(result)
+    source = next(s for s in result["sources"] if s["document"] == "04_contract_settlement.pdf"
+                  and s["page"] == 3)
+    excerpts = source_excerpts(result, source)
+    assert len(excerpts) > 1
+    assert "기존계좌와다르다는사유" not in "".join(source["excerpt"].split())
+    combined = "".join("".join(quote.split()) for quote in excerpts)
+    assert "계좌확인자료" in combined
+    assert "기존계좌와다르다는사유" in combined
+    assert "구매운영팀의확인기록" in combined
+    assert result == original
 
 
 def test_real_security_pdf_line_wraps_are_repaired_without_changing_characters():

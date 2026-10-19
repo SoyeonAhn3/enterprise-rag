@@ -9,7 +9,7 @@ from grounding import AnswerValidationError
 from index_store import IndexErrorBase
 from llm import ClaudeError
 from rag import RetrievalError, validate_question
-from source_display import excerpt_html
+from source_display import excerpt_html, source_excerpts
 
 
 @st.cache_resource(show_spinner=False)
@@ -30,7 +30,11 @@ def render_answer(result: dict):
     st.markdown(result["answer"])
     for source in result["sources"]:
         with st.expander(f"[{source['source_id']}] {source['document']} · {source['page']}쪽"):
-            st.html(excerpt_html(source["excerpt"]))
+            excerpts = source_excerpts(result, source)
+            for number, excerpt in enumerate(excerpts, start=1):
+                if len(excerpts) > 1:
+                    st.caption(f"인용 {number}")
+                st.html(excerpt_html(excerpt))
     st.caption(f"응답 시간 {result['latency_ms'] / 1000:.2f}초")
 
 

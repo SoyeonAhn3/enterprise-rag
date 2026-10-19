@@ -12,6 +12,27 @@ _WORD = re.compile(r"[^\W_]+")
 _SPLIT_WORD = re.compile(r"([^\W_]+)\n(?=([^\W_]+))")
 
 
+def source_excerpts(result: dict, source: dict) -> list[str]:
+    """Show every validated quote for this source, including saved answers.
+
+    The legacy sources[].excerpt stores only the first quote. Claim evidence
+    retains all quotes; prefer it without mutating the answer or its schema.
+    Keep separate passages separate and remove whitespace-only duplicates.
+    Older results without claim evidence still display their original excerpt.
+    """
+    excerpts, seen = [], set()
+    for claim in result.get("claims", []):
+        for evidence in claim["evidence"]:
+            if evidence["source_id"] != source["source_id"]:
+                continue
+            quote = evidence["quote"]
+            normalized = "".join(quote.split())
+            if normalized not in seen:
+                seen.add(normalized)
+                excerpts.append(quote)
+    return excerpts or [source["excerpt"]]
+
+
 @lru_cache(maxsize=1)
 def corpus_words() -> frozenset[str]:
     """Use only unbroken words in the fixed PDFs, never evaluation annotations.

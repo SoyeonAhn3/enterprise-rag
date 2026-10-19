@@ -12,6 +12,7 @@ from config import ConfigurationError, PROJECT_ROOT, Settings
 from grounding import ABSTENTION_MESSAGE
 from llm import ClaudeError
 from tests.test_answers import FakeClaude, FakeRetriever
+from tests.test_grounding import response
 from rag import RAGAssistant
 
 
@@ -108,3 +109,25 @@ def test_real_pdf_split_word_is_repaired_in_existing_chat_without_changing_evide
     assert all("금\n액과" not in node.proto.body for node in app.get("html"))
     assert app.session_state["messages"][0]["result"] == original
     assert not calls["questions"]  # Reformatting old chat incurs no model call.
+
+
+def test_reused_source_displays_all_distinct_quotes_in_one_expander_without_new_calls(ui):
+    app, calls = ui
+    payload = response()
+    payload["claims"][0]["evidence"].append({"source_id": "S1", "quote": "100만원 초과 부서장"})
+    payload["claims"].append({"text": "초과 금액에는 부서장 결재가 필요합니다.",
+                              "evidence": [{"source_id": "S1", "quote": "100만원 초과 부서장"}]})
+    result = RAGAssistant(FakeRetriever(), FakeClaude(json.dumps(payload))).answer("결재 구간은?")
+    original = deepcopy(result)
+    app.session_state["messages"] = [{"question": result["question"], "result": result}]
+    app.run()
+    assert not app.exception
+    expanders = [e for e in app.expander if "approval.pdf · 2쪽" in e.label]
+    assert len(expanders) == 1
+    rendered = expanders[0].get("html")
+    assert len(rendered) == 2
+    assert "100만원 이하 팀장" in rendered[0].proto.body
+    assert "100만원 초과 부서장" in rendered[1].proto.body
+    assert [c.value for c in expanders[0].caption] == ["인용 1", "인용 2"]
+    assert app.session_state["messages"][0]["result"] == original
+    assert not calls["questions"]

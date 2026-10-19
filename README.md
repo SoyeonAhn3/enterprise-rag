@@ -78,6 +78,8 @@ All figures come from a **small synthetic benchmark** (4 PDFs, 13 pages, 22 chun
 | V3 development evaluation (2026-10-19) | 20 (16 answerable) | chunks k=5 → pages k=5 | Original AI pass **14/20 → 15/20** · complete required evidence **10/16 → 12/16** · validated responses **20/20 → 19/20** |
 | V3 development refinement (2026-10-19) | Same 20 dev questions | Saved pages → refined pages, same revised judge | AI pass **17/20 → 17/20** · required evidence **12/16 → 14/16** · validated responses **19/20 → 20/20** |
 | V3 bounded final check (2026-10-19) | 20 (16 answerable) | Frozen pages/k=5/6,000 chars; Codex source review | Required evidence **12/16** · content **15/20** · content plus complete claim citations **13/20** · unanswerable abstention **4/4** |
+| Required-item and source-display check (2026-10-19) | 5 owner questions + 2 variants | pages/k=5/6,000 chars; Codex source review | Core requested facts present; bank confirmation material explicit in 3 related answers; UI replay showed all **23 distinct quotes** across 11 sources |
+| Focused citation regression (2026-10-19) | 3 known cases/variants + 1 abstention | Same retrieval; final output cap 4,096 tokens | Final four-case run: **3 answers with supported claim citations + 1 correct abstention**; 11 claims / 16 citations reviewed |
 
 The [earlier implementation](Phase/Phase6_RetrievalAndAnswerQuality.md#separate-grading-and-complete-rule-selection--2026-10-19) separates correctness from retrieved-only grounding review and normalizes rule topics during context selection. Offline dev required evidence improves **14/16 to 16/16**, retaining known-v2 **48/48**. The live grading pilot is partial: 10 requests, 6 accepted stages, 3 validation rejections and 1 provider error. Same-model judgment inconsistencies remain; no new answer-accuracy improvement is claimed.
 
@@ -92,7 +94,9 @@ How to read these numbers:
 
 Evidence: [baseline run](eval/results/phase5_baseline.json) · [AI review](eval/results/phase5_agent_review.json) · [60-question report](eval/results/phase5_v2_20261014/report.md) · [page-context report](eval/results/phase6_20261016/report.md) · [frozen comparison report](eval/results/phase6_quality_20261016/report.md) · [recovery plan](eval/results/phase6_review_recovery_selection_20261016/plan.json)
 
-Latest evidence: [bounded final report and human-review items](eval/results/v3_closeout_20261019/report.md) · [summary](eval/results/v3_closeout_20261019/summary.json) · [verification](eval/results/v3_closeout_20261019/verification.json). Six dev and twenty final answers were generated, with no separate judge calls. Final mean latency was 5.193 seconds. Codex source review is not independent human validation; final results were not used for another tuning pass.
+Earlier frozen evaluation: [bounded final report and human-review items](eval/results/v3_closeout_20261019/report.md) · [summary](eval/results/v3_closeout_20261019/summary.json) · [verification](eval/results/v3_closeout_20261019/verification.json). Six dev and twenty final answers were generated, with no separate judge calls. Final mean latency was 5.193 seconds. Those results and metrics are preserved unchanged.
+
+Latest focused work: [required-item review](eval/results/completeness_display_20261019/review.json) and [citation review with all attempts](eval/results/citation_completeness_20261019/review.json). The first check used seven answer calls. Citation work used ten calls total: an initial 2,048-token truncation, a recheck with one remaining content/citation issue, and the final four-case pass. There were no judge calls or automatic retries. These observed cases informed the fixes; this is regression evidence, not a new independent accuracy score. Codex source review is not independent human grading.
 
 To verify the saved results offline, without model calls or credentials:
 
@@ -166,6 +170,7 @@ Set `ANTHROPIC_API_KEY` in `.env`. Other settings are optional:
 | --- | --- | --- |
 | `ANTHROPIC_API_KEY` | (empty) | Required for answers |
 | `ANTHROPIC_MODEL` | `claude-sonnet-5-5` | Claude model for answers |
+| `ANTHROPIC_MAX_TOKENS` | `4096` | Output limit, including complete supporting quotations |
 | `RAG_TOP_K` | `3` | Number of retrieved chunks or pages |
 | `RAG_RETRIEVAL_MODE` | `chunks` | Set to `pages` for page-context retrieval |
 | `RAG_CONTEXT_MAX_CHARS` | `6000` | Context budget in page mode |
@@ -210,7 +215,7 @@ For the live trace check, Streamlit Community Cloud setup, secrets, and page-mod
 .\.venv\Scripts\python.exe -X utf8 ingest.py --dry-run
 ```
 
-The latest recorded run on 2026-10-19 passed **484 tests** ([test output](eval/results/v3_closeout_20261019/pytest.txt)). The closeout adds safe provider category/HTTP status propagation and retains existing ingestion, retrieval, generation, UI, tracing and evaluation checks. Tests use test doubles and make no live model calls; they do not establish answer accuracy.
+The latest recorded run on 2026-10-19 passed **488 tests** ([test output](eval/results/citation_completeness_20261019/final/pytest.txt)). This includes all-excerpt display, duplicate handling and legacy-result compatibility alongside the existing pipeline checks. Tests use test doubles and make no live model calls; they do not establish answer accuracy. A separate offline [UI replay](eval/results/citation_completeness_20261019/display_check.json) displayed all 16 final quotes across nine source expanders without changing the saved answers.
 
 The new [v3 dataset](eval/questions_v3.json) contains 20 development and 20 final questions. The final set has now been run once and is no longer unobserved. Each split has four boundary, composite, exception, timing, and unanswerable cases. Validate its structure, PDF quotes and duplicate wording without model calls:
 
@@ -263,35 +268,39 @@ Credentials, the local Chroma database, model downloads, private trace files, ge
 | [3 — Grounded answers](Phase/Phase3_GroundedAnswers.md) | ✅ Done | One Claude call per question, quote-validated citations, abstention |
 | [4 — Streamlit interface](Phase/Phase4_StreamlitInterface.md) | ✅ Done (local) | Chat with sources, example questions, safe errors, per-session limit |
 | [5 — Evaluation and deployment](Phase/Phase5_EvaluationAndDeployment.md) | 🔧 In progress | 10- and 60-question evaluations; [public demo](https://enterprise-rag-demo-project.streamlit.app/) deployed 2026-10-16; LangSmith trace verified against remote records for local execution. Human review and broader Cloud checks are deferred |
-| [6 — Retrieval and answer quality](Phase/Phase6_RetrievalAndAnswerQuality.md) | ✅ Local tests; bounded final check recorded | 484 tests; final content 15/20 and content/citations 13/20 by Codex; known failures and human review pending |
+| [6 — Retrieval and answer quality](Phase/Phase6_RetrievalAndAnswerQuality.md) | ✅ Agreed local improvements and checks complete | 488 tests; required-item instructions, all-excerpt display and focused citation fixes; historical final scores remain unchanged |
 
 - The code default is `chunks` with k=3. The owner reports that the live demo runs page mode (pages, k=5, 6,000 chars) after a reboot; this has not been independently verified.
-- This source revision includes the latest page selection, generation/judge instructions and bounded final evaluation. Effective Cloud runtime behavior still needs confirmation after rollout.
+- The owner manually checked five demo answers and reported no apparent issues; this was not a formal review of all benchmark answers and their quotations.
+- This revision adds required-item instructions, displays every distinct claim quotation, and instructs generation to retain conditions, actors, timing and estimate qualifiers in citations. Exact-source validation remains unchanged; semantic completeness is not automatically guaranteed.
+- The default output cap is now 4,096 tokens because a complex answer reached the old 2,048 limit. Existing `.env` or Cloud Secrets overrides must be updated separately; see [deployment instructions](DEPLOYMENT.md#citation-output-allowance-2026-10-19). This revision contains the completed improvements; Cloud rollout and the effective server settings still need confirmation.
 
 ## Limitations
 
 - **Small synthetic corpus.** 4 PDFs and 13 pages. Results do not show performance on real enterprise documents.
 - **Dev scores have limits.** The same-judge page comparison is 85%→85%; grading still shows reference contamination and inconsistent inference decisions. This does not establish general accuracy improvement. The earlier 60-question comparison remains incompletely graded.
 - **No independent human grading yet.** Historical scores used a Claude judge; the latest final answers were reviewed against the PDFs by Codex. Both are AI assessments.
-- **Final evaluation has limited scope.** Twenty same-corpus final questions were run once. Four answerable questions lacked complete retrieved evidence; one additional answer omitted a required item despite retrieving it; two content-correct answers had incomplete claim citations. The final set is now observed and is not an external benchmark.
+- **Final evaluation has limited scope.** The full twenty-question same-corpus run found four retrieval gaps, one answer omission and two claim-citation gaps. Later focused work addressed the observed omissions and citation cases; it does not recalculate the original twenty-question score. Complex retrieval gaps remain, including missing settlement timing in the broad monitor-receipt question.
 - **Fixed corpus.** No document upload, OCR, table recognition, authentication, or document permissions.
 - **Demo-scale serving.** Requests are serialized by a shared lock. The question limit is per session, not a provider-wide budget. Concurrent use has not been tested.
 - **Cloud behavior only partly verified.** Tracing was verified for local execution, not for the deployed app. Restart, startup time, and memory use on Streamlit Community Cloud have not been checked.
 
 ## Roadmap
 
-From the [development status and roadmap](Phase/DevelopmentStatusAndRoadmap.md):
+Current completion scope; the [development status and roadmap](Phase/DevelopmentStatusAndRoadmap.md) retains the earlier evaluation history:
 
-The owner limited completion to six dev checks, one final 20-question run and a demo check; these are recorded. Further judge development and repeated paid evaluation are deferred. Next owner action, if independent human validation is desired: review the [20-item report](eval/results/v3_closeout_20261019/report.md), especially f03/f05/f08. Fixing recorded limitations is optional follow-up and must treat final cases as regression cases. The preceding published snapshot was [8686fff](https://github.com/SoyeonAhn3/enterprise-rag/commit/8686fff76349cd1a2b615a5b365c80471941d390); this source revision includes the subsequent changes, while Cloud rollout remains unverified.
+The agreed local development is complete: prevent required-item omissions, show all citations, and fix the observed citation gaps. After this revision reaches the deployed app, set an existing Cloud `ANTHROPIC_MAX_TOKENS` override to `4096` and check the three corrected examples. No new evaluation set or grader is required to close this portfolio scope. The preceding published snapshot is [a8f2032](https://github.com/SoyeonAhn3/enterprise-rag/commit/a8f2032754a29c9765f39639cb370f7813f34128).
 
 The 87-review historical backlog concerns old answers, not the current selector. Both source and judge prompts changed: recovery needs a compatible original judge/version, not just a new plan. Earlier plans and results remain intact.
 
-The owner resumed API use on 2026-10-19. The 87 historical failed reviews remain a separate recovery task and were not run in this evaluation; the existing 34-entry human review is also pending. Optional later work: Cloud resource checks, CI, and SDK maintenance. Deferred or excluded: Phase 7 usability and concurrency testing.
+The 87 historical failed reviews and the existing 34-entry human-review queue are not completion gates for this bounded portfolio. Optional later work includes complex retrieval improvements, independent grading, Cloud resource checks, CI and SDK maintenance. Phase 7 usability and concurrency testing remain outside the agreed scope.
 
 ## Documentation
 
 | Document | Contents |
 | --- | --- |
+| [Focused citation review](eval/results/citation_completeness_20261019/review.json) | Final case findings, earlier failures, exact call count and remaining limits |
+| [Required-item and display review](eval/results/completeness_display_20261019/review.json) | Owner questions, two variants and remaining observations before the citation fix |
 | [Bounded final report](eval/results/v3_closeout_20261019/report.md) | Frozen final results, failures, timings and all 20 human-review items |
 | [DEPLOYMENT.md](DEPLOYMENT.md) | Cloud setup, secrets, page-mode activation, LangSmith verification (English + Korean) |
 | [Development status and roadmap](Phase/DevelopmentStatusAndRoadmap.md) | Latest audit, quality findings, prioritized next work |

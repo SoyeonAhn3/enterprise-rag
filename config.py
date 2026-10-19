@@ -15,6 +15,7 @@ PREVIEW_PATH = PROJECT_ROOT / "data" / "chunks_preview.json"
 INDEX_DIR = PROJECT_ROOT / "data" / "chroma_db"
 EMBEDDING_CACHE_DIR = PROJECT_ROOT / "data" / "embedding_models"
 DEFAULT_EMBEDDING_MODEL = "intfloat/multilingual-e5-small"
+DEFAULT_CHAT_MAX_TOKENS = 4096
 
 CHUNK_SIZE = 800
 CHUNK_OVERLAP = 120
@@ -36,7 +37,7 @@ class ConfigurationError(ValueError):
 class Settings:
     anthropic_api_key: str = field(default="", repr=False)
     chat_model: str = "claude-sonnet-5-5"
-    chat_max_tokens: int = 2048
+    chat_max_tokens: int = DEFAULT_CHAT_MAX_TOKENS
     embedding_provider: str = "fastembed"
     embedding_model: str = DEFAULT_EMBEDDING_MODEL
     embedding_dimensions: int = 384
@@ -130,7 +131,7 @@ def load_settings(
     return Settings(
         anthropic_api_key=text("ANTHROPIC_API_KEY", ""),
         chat_model=text("ANTHROPIC_MODEL", "claude-sonnet-5-5"),
-        chat_max_tokens=number("ANTHROPIC_MAX_TOKENS", "2048", int),
+        chat_max_tokens=number("ANTHROPIC_MAX_TOKENS", str(DEFAULT_CHAT_MAX_TOKENS), int),
         embedding_provider=text("EMBEDDING_PROVIDER", "fastembed"),
         embedding_model=text("EMBEDDING_MODEL", DEFAULT_EMBEDDING_MODEL),
         embedding_dimensions=number("EMBEDDING_DIMENSIONS", "384", int),
