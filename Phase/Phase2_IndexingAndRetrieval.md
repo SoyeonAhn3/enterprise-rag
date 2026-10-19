@@ -7,6 +7,8 @@
 **Prerequisites**: [Phase 1](Phase1_Foundation.md) verification complete; download the local model once, then use its cache. No API key is required for Phase 2.\
 **Technology**: Python 3.12, FastEmbed, ONNX Runtime, langchain-chroma, Chroma, pytest. Claude SDK prepared for Phase 3.
 
+**Portfolio review — 2026-10-19:** This report preserves the implementation contract and measurements at this phase’s completion. The agreed portfolio scope is now complete; later retrieval options, answer/citation improvements, 488 passing tests, and the owner-reported Cloud setting are recorded in the [current roadmap](DevelopmentStatusAndRoadmap.md). No foundation or indexing change was needed for this documentation review.
+
 ## Overview
 
 Extend the validated PDF pipeline with offline embeddings and persistent storage at `data/chroma_db/`. Query processing loads that index, embeds the question, and performs one top-three similarity search. Answer generation belongs to [Phase 3](Phase3_GroundedAnswers.md).
@@ -144,6 +146,7 @@ Pinned runtime dependencies: PyMuPDF **1.28.2**, langchain-core **1.6.10**, lang
 | 2026-10-14 | Resumed acceptance: 81 tests passed in 28.46s; dependency check and 22-chunk dry run passed. Real rebuild still failed on exhausted credits; retrieval refused the missing manifest. Updated this report and both READMEs; Task 2.5 remains pending. |
 | 2026-10-14 | Replaced OpenAI with the requested Claude backend and local multilingual E5 embeddings. Migrated environment/configuration, dependencies, and compatibility checks; 108 tests passed. Real build/reuse and offline fresh-process q01/q07/q08 quote coverage passed; completed Phase 2. Live Claude access awaits a key. |
 | 2026-10-14 | After OneDrive deletion confirmation, reverified the environment: 108 tests passed in 13.59s, dependencies and cached retrieval intact. The configured Claude key passed live Models and Messages API checks. Updated current status and Phase 3 handoff. |
+| 2026-10-19 | Reviewed against the completed portfolio; linked current status while retaining original phase measurements. Documentation only; separate dev-log unavailable. |
 
 ---
 
@@ -155,6 +158,8 @@ Pinned runtime dependencies: PyMuPDF **1.28.2**, langchain-core **1.6.10**, lang
 **상태**: ✅ 완료 — 실제 로컬 모델 생성·재사용 및 q01·q07·q08 검색 검증 통과, 자동 테스트 108개 통과.\
 **선행 조건**: [Phase 1](Phase1_Foundation.md) 검증 완료, 로컬 모델 최초 다운로드 후 캐시 사용. Phase 2에는 API 키가 필요 없다.\
 **기술 구성**: Python 3.12, FastEmbed, ONNX Runtime, langchain-chroma, Chroma, pytest. Phase 3용 Claude SDK 준비.
+
+**포트폴리오 점검 — 2026-10-19:** 이 문서의 구현 계약과 측정값은 해당 Phase 완료 당시 기록으로 보존한다. 합의한 포트폴리오 범위는 완료했으며, 이후 검색 옵션·답변 및 인용 개선·테스트 488개 통과·사용자의 Cloud 설정 완료 보고는 [최신 로드맵](DevelopmentStatusAndRoadmap.md)에 정리했다. 이번 문서 점검에서 기반·인덱싱 코드를 변경하지 않았다.
 
 ## 개요
 
@@ -293,3 +298,4 @@ Phase 1에서 검증한 청크 22개를 사용한다. 2026-10-14 사용자가 **
 | 2026-10-14 | 인수 검증 재개: 81개 테스트 28.46초 통과, 의존성 검사 및 청크 22개 Dry run 통과. 실제 재생성은 크레딧 소진으로 다시 실패했고 검색은 매니페스트 누락을 거부함. 보고서·영문·국문 README를 갱신하고 Task 2.5 대기를 유지함. |
 | 2026-10-14 | 요청한 Claude 호출 모듈과 로컬 다국어 E5로 OpenAI를 교체함. 환경 파일·설정·의존성·호환성 검사를 변경하고 테스트 108개 통과. 실제 생성·재사용·오프라인 새 프로세스 q01·q07·q08 발췌 확보를 검증해 Phase 2 완료. 실제 Claude 연결은 키 입력 대기. |
 | 2026-10-14 | OneDrive 삭제 확인 후 환경 재검증: 108개 테스트 13.59초 통과, 의존성·캐시 검색 정상. 설정된 Claude 키로 실제 Models·Messages API 검증 통과. 현재 상태 및 Phase 3 전달 사항 갱신. |
+| 2026-10-19 | 완료한 포트폴리오 기준으로 점검하고 최신 상태를 연결했다. 원래 Phase 측정값은 보존. 문서만 변경했으며 별도 dev-log 미설치로 여기에 기록. |

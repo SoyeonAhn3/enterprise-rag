@@ -7,6 +7,8 @@
 **Prerequisites**: Reviewed MVP plan, four sample PDFs, and ten evaluation questions.\
 **Technology**: Python 3.12, PyMuPDF, langchain-text-splitters, pytest.
 
+**Portfolio review — 2026-10-19:** This report preserves the implementation contract and measurements at this phase’s completion. The agreed portfolio scope is now complete; later retrieval options, answer/citation improvements, 488 passing tests, and the owner-reported Cloud setting are recorded in the [current roadmap](DevelopmentStatusAndRoadmap.md). No foundation or indexing change was needed for this documentation review.
+
 ## Overview
 
 This phase produces a reproducible, offline input pipeline for the fixed demonstration corpus. Each chunk must retain its actual filename and physical page number. Evaluation questions and answers remain outside ingestion.
@@ -99,6 +101,7 @@ Phase 1 handed off **22 validated chunks** to [Phase 2](Phase2_IndexingAndRetrie
 | 2026-10-13 | Created the phase plan and recorded existing initial code, installed dependencies, and unexecuted verification. Implementation was paused at the user's documentation-only request. |
 | 2026-10-13 | Completed tasks 1.1–1.5; corrected PDF whitespace comparison, passed 35 tests, reviewed page/chunk evidence and PDF layouts, and recorded the verified local results. |
 | 2026-10-13 | Updated handoff and CLI notes for Phase 2; retained the original Phase 1 measurements as historical verification. |
+| 2026-10-19 | Reviewed against the completed portfolio; linked current status while retaining original phase measurements. Documentation only; separate dev-log unavailable. |
 
 ---
 
@@ -110,6 +113,8 @@ Phase 1 handed off **22 validated chunks** to [Phase 2](Phase2_IndexingAndRetrie
 **상태**: ✅ 완료 — Task 5개와 필수 로컬 검증 통과.\
 **선행 조건**: 검토한 MVP 기획서, 샘플 PDF 4개, 평가 질문 10개.\
 **기술 구성**: Python 3.12, PyMuPDF, langchain-text-splitters, pytest.
+
+**포트폴리오 점검 — 2026-10-19:** 이 문서의 구현 계약과 측정값은 해당 Phase 완료 당시 기록으로 보존한다. 합의한 포트폴리오 범위는 완료했으며, 이후 검색 옵션·답변 및 인용 개선·테스트 488개 통과·사용자의 Cloud 설정 완료 보고는 [최신 로드맵](DevelopmentStatusAndRoadmap.md)에 정리했다. 이번 문서 점검에서 기반·인덱싱 코드를 변경하지 않았다.
 
 ## 개요
 
@@ -203,3 +208,4 @@ Dry run은 `data/chunks_preview.json`을 저장하고 문서·페이지·제외 
 | 2026-10-13 | Phase 계획을 신규 작성하고 기존 초기 코드, 의존성 설치, 미실행 검증 항목을 기록함. 문서 작성으로 범위를 조정한 사용자 요청에 따라 구현 작업을 멈춤. |
 | 2026-10-13 | Task 1.1~1.5 완료. PDF 공백 비교를 수정하고 테스트 35개 통과, 페이지·청크 근거와 PDF 화면 대조, 실제 로컬 검증 결과를 기록함. |
 | 2026-10-13 | Phase 2 진행에 맞게 전달 상태와 CLI 설명을 갱신하고 기존 Phase 1 측정값은 당시의 검증 기록으로 보존함. |
+| 2026-10-19 | 완료한 포트폴리오 기준으로 점검하고 최신 상태를 연결했다. 원래 Phase 측정값은 보존. 문서만 변경했으며 별도 dev-log 미설치로 여기에 기록. |

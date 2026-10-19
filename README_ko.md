@@ -267,13 +267,13 @@ Enterprise-rag/
 | [2 — 인덱싱·검색](Phase/Phase2_IndexingAndRetrieval.md) | ✅ 완료 | 로컬 E5 임베딩, Chroma 영구 인덱스, 재사용·명시적 재생성 |
 | [3 — 근거 기반 답변](Phase/Phase3_GroundedAnswers.md) | ✅ 완료 | 질문당 Claude 1회 호출, 인용문 검증, 답변 보류 |
 | [4 — Streamlit 화면](Phase/Phase4_StreamlitInterface.md) | ✅ 완료 (로컬) | 출처 표시 채팅, 예시 질문, 안전한 오류 처리, 세션별 제한 |
-| [5 — 평가·배포](Phase/Phase5_EvaluationAndDeployment.md) | 🔧 진행 중 | 10문항·60문항 평가, 2026-10-16 [공개 데모](https://enterprise-rag-demo-project.streamlit.app/) 배포, 로컬 실행 기준 LangSmith 원격 기록 대조 완료. 사람 검토와 폭넓은 Cloud 검사는 보류 |
-| [6 — 검색·답변 품질](Phase/Phase6_RetrievalAndAnswerQuality.md) | ✅ 합의한 로컬 개선·점검 완료 | 테스트 488개; 필수 항목 지침·모든 인용 표시·확인된 인용 누락 보완; 과거 최종 평가 수치는 보존 |
+| [5 — 평가·배포](Phase/Phase5_EvaluationAndDeployment.md) | ✅ 합의한 포트폴리오 범위 완료 | 평가·실패 분석 보존, [공개 데모](https://enterprise-rag-demo-project.streamlit.app/) 배포, 실제 로컬 실행의 LangSmith 원격 대조·사용자 데모 확인 기록. 독립 채점·폭넓은 Cloud 운영 검사는 보류 |
+| [6 — 검색·답변 품질](Phase/Phase6_RetrievalAndAnswerQuality.md) | ✅ 합의한 개선 게시 완료 | 테스트 488개; 필수 항목 지침·모든 인용 표시·확인된 인용 누락 보완; 과거 최종 평가 수치는 보존 |
 
 - 코드 기본값은 `chunks`, k=3입니다. 공개 데모는 소유자 보고 기준 Reboot 후 페이지 모드(pages, k=5, 6,000자)로 실행 중이며, 별도로 검증하지는 않았습니다.
 - 사용자가 시연 답변 5개를 직접 확인하고 별다른 문제가 없어 보인다고 보고했습니다. 전체 평가 답변과 인용문을 정식 채점한 결과는 아닙니다.
 - 이번 개정은 필수 항목 누락 방지 지침, 서로 다른 모든 주장 인용 표시, 인용의 조건·담당자·시점·예상 기간 단서 보존 지침을 포함합니다. 원문 일치 검증은 유지하며 의미적 완전성을 자동으로 보장하지는 않습니다.
-- 복합 답변이 기존 2,048토큰 한도에 도달해 기본 출력 상한을 4,096으로 올렸습니다. 기존 `.env`·Cloud Secrets 값은 별도로 맞춰야 합니다([배포 안내](DEPLOYMENT.md#인용문-출력-한도-2026-10-19)). 이번 개정에 완료한 개선을 포함하며, Cloud 반영과 실제 서버 설정은 확인해야 합니다.
+- 복합 답변이 기존 2,048토큰 한도에 도달해 기본 출력 상한을 4,096으로 올렸습니다. [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4) 게시 후 사용자가 Cloud `ANTHROPIC_MAX_TOKENS=4096` 설정 완료를 보고했습니다([배포 상태](DEPLOYMENT.md#인용문-출력-한도-2026-10-19)). 최신 게시본의 새 Cloud 질문 실행·재시작은 별도로 관측하지 않았습니다.
 
 ## 한계점
 
@@ -289,7 +289,7 @@ Enterprise-rag/
 
 현재 완료 범위이며, [개발 현황 및 로드맵](Phase/DevelopmentStatusAndRoadmap.md)에는 이전 평가 이력을 보존합니다.
 
-합의한 로컬 개발인 필수 항목 누락 방지, 모든 인용 표시, 관측한 인용 누락 보완을 완료했습니다. 이번 개정이 배포 앱에 반영되면 Cloud의 기존 `ANTHROPIC_MAX_TOKENS` 값을 `4096`으로 맞추고 수정한 세 사례를 확인합니다. 이 포트폴리오 범위를 종료하기 위해 새 평가셋이나 채점기를 추가할 필요는 없습니다. 이전 게시본은 [a8f2032](https://github.com/SoyeonAhn3/enterprise-rag/commit/a8f2032754a29c9765f39639cb370f7813f34128)입니다.
+합의한 포트폴리오 범위는 완료했습니다. 답변 필수 항목·모든 근거 인용 표시·관측한 인용 누락을 보완해 [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4)으로 게시했으며, 사용자가 마지막 Cloud 설정 변경 완료를 보고했습니다. 이 범위를 종료하기 위한 추가 개발·새 평가셋·채점기는 필요하지 않습니다. 복합 검색 개선·독립 채점·운영 서비스 검사는 별도 후속 과제로 다룰 수 있습니다.
 
 과거 미완료 채점 87건은 현재 선택 방식이 아닌 이전 답변을 대상으로 합니다. 소스와 채점 프롬프트가 모두 바뀌었으므로 새 계획뿐 아니라 원래 채점기·버전과의 호환도 필요합니다. 기존 계획과 결과는 보존했습니다.
 

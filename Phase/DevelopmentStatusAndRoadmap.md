@@ -1,10 +1,10 @@
 # Development Status and Roadmap
 
 **Reviewed**: 2026-10-19 (Asia/Seoul)\
-**Current milestone**: Bounded closeout recorded: 484 tests, six dev answers and one frozen final 20-question run. Codex source review: content 15/20, content with complete claim citations 13/20. Independent human review is pending. Demo replay/local restart passed; no further evaluator expansion is required for this scope. This source revision contains the closeout; 8686fff was the preceding published snapshot. Cloud rollout is not yet verified.\
+**Current milestone**: ✅ Agreed portfolio scope complete. Required-item, all-quotation display, and focused citation improvements were published as [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4); 488 software tests passed. The owner reports completing the Cloud 4096-token setting. No required development remains; independent human grading and broader Cloud operations checks stay deferred.\
 **Planning assumption**: The user clarified that this project demonstrates RAG understanding, implementation, precision, and measured accuracy. Concurrency testing is excluded from the current scope and Phase 7 usability remains deferred.
 
-**Latest bounded closeout — 2026-10-19:** [Report and owner review](../eval/results/v3_closeout_20261019/report.md), [verification](../eval/results/v3_closeout_20261019/verification.json). Final complete evidence 12/16, content 15/20, content/citations 13/20, unanswerable abstention 4/4; mean 5.193 seconds. Actual calls: 26 answers, zero AI judges. All 554 old files preserved. Safe API diagnostics added; no retrieval/prompt tuning after final outcomes. Agent-reviewed same-corpus results are not independent human or external validation.
+**Latest improvements — 2026-10-19:** [Phase 6 closure](Phase6_RetrievalAndAnswerQuality.md#final-portfolio-improvements--2026-10-19), [required-item review](../eval/results/completeness_display_20261019/review.json), [citation review](../eval/results/citation_completeness_20261019/review.json), and [software tests](../eval/results/citation_completeness_20261019/software_tests.json). The first two improvements used seven live answers; the citation follow-up used ten calls, retaining an output-limit failure and intermediate citation issues before four final cases passed Codex review. No judge calls or automatic retries. These known cases do not yield a new overall accuracy score.
 
 **Earlier split-grading checkpoint — 2026-10-19:** [Split grading and rule selection](Phase6_RetrievalAndAnswerQuality.md#separate-grading-and-complete-rule-selection--2026-10-19) separate reference-based correctness from retrieved-only support. Every item is required in the response schema; citations are constrained to existing claim evidence. Dev coverage improves **14/16→16/16** with known-v2 **48/48** retained. **483 tests** passed. Ten live review requests yielded six accepted stages, three validation rejections and one provider error; the comparison is incomplete and semantic judgment inconsistencies remain. No new answers or final questions were evaluated. All 522 protected files, including 515 historical evaluation files, remain unchanged. See [verification](../eval/results/v3_split_checks_20261019/verification.json).
 
@@ -13,6 +13,8 @@
 **Initial v3 dev evaluation — 2026-10-19:** Dataset tooling and v3 preparation passed **409 software tests**, then the unchanged implementation completed a live comparison on the **20 dev questions**. Original AI passes were **14/20 chunks versus 15/20 pages**; complete required-quote coverage was **10/16 versus 12/16**. Actual use was **40 answers + 39 reviews = 79 model calls**, with one page quote-validation failure and no provider/judge errors. Offline artifact verification and report reproduction passed; all 376 baseline files were preserved. Software tests were not rerun in that evaluation turn. See [results and analysis](Phase6_RetrievalAndAnswerQuality.md#v3-development-evaluation--2026-10-19), [report](../eval/results/v3_dev_20261019_1003/report.md) and [verification](../eval/results/v3_dev_20261019_1003/verification.json). Those baseline results remain intact. Historical review recovery was not run; future recovery requires both a new plan and compatibility with the original judge/version.
 
 The initial implementation in the [Phase 6 report](Phase6_RetrievalAndAnswerQuality.md) records 267 passing tests, development complete-evidence retrieval of 32/32 with optional pages/k=5, and six known live cases passing same-model AI review. Code was pushed as [b89ed76](https://github.com/SoyeonAhn3/enterprise-rag/commit/b89ed76b615a02c13c5e9ce80928a4ae9bcdadaa). The owner reported setting pages/5/6000 and rebooting Cloud; effective runtime behavior has not been independently checked. The original Phase 5 audit below is preserved as historical evidence.
+
+**Preserved final evaluation:** The earlier [frozen 20-question run](../eval/results/v3_closeout_20261019/report.md) remains complete evidence 12/16, content 15/20, content/citations 13/20, unanswerable abstention 4/4, mean 5.193 seconds. It used six dev plus twenty final answers and zero AI judges. Later focused fixes do not overwrite these scores. The dated checkpoints below and above describe historical states; their pending publication/evaluation tasks are superseded by the current completion record.
 
 ## Project objective and evidence priorities
 
@@ -78,18 +80,19 @@ The evidence supports three priorities:
 
 `RAG_TOP_K` is supported by `config.load_settings()` and the dynamic source schema; changing only k does not require rebuilding the index because k is outside `index_signature()`. Both example settings files now explicitly contain `RAG_TOP_K=3`. Phase 6 adds opt-in `RAG_RETRIEVAL_MODE=pages` and a context budget; its selected candidate is pages/k=5. Publishing that candidate is separate from the completed local implementation.
 
-## Development order
+## Completion and optional follow-up
 
-The owner approved bounded completion instead of further evaluator development. These priorities supersede the earlier proposals; historical scores and unfinished reviews remain intact.
+The owner approved bounded completion and the later improvements 1, 2, and 4. No mandatory development or new evaluation remains for this portfolio. The original failures and uncompleted reviews are retained.
 
 | State | Work | Result / boundary |
 | --- | --- | --- |
-| Recorded | 1. Review disputed dev cases | Codex source review; 5/6 met requirements, one malformed quote blocked. Human adjudication remains distinct. |
-| Recorded | 2. Freeze code/scoring and run final once | 20 validated outputs, content 15/20, content/citations 13/20; all failures retained and no tuning after final observation. |
-| Recorded | 3. Explain results and check the demo | Full review report, timings/tokens, saved-answer UI replay, two local server starts and 484 software tests. |
-| Owner review | Independent human confirmation | Review all 20 final items to claim human validation; f03/f05/f08 merit attention. No additional model calls needed. |
-| Optional | Fix recorded retrieval, answer omission and citation gaps | Use these observed final questions as regression cases. No automatic new development cycle. |
-| Deferred / separate | Evaluator expansion, old 87 reviews and 34-item human queue; publication and Cloud checks | Not required for this bounded technical closeout. New work remains local; Phase 7 deferred and concurrency excluded. |
+| Complete | RAG implementation, tracing, evaluation and demo | Phases 1–6, public URL, local-to-remote trace, frozen final report and owner observations recorded |
+| Complete | 1. Required answer items | Seven live answers checked; account-verification documents explicit in all three targeted bank cases |
+| Complete | 2. All supporting quotations | All distinct claim quotations displayed; compatibility retained; saved-answer UI checks passed |
+| Complete | 4. Observed citation gaps | Four final cases passed Codex source review; earlier failed attempts retained; latest software suite 488 passed |
+| Published / owner-reported | Release and Cloud setting | [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4) pushed; owner reports 4096-token setting complete. Fresh latest-release Cloud answers/restart were not independently observed |
+| Optional | 3. Complex retrieval and independent validation | Known retrieval gaps remain. Independent human grading is needed only to claim independently graded results; neither is a portfolio completion gate |
+| Deferred / separate | Evaluator expansion, 87 old reviews, 34-item human queue, Phase 7, CI and service operations | No new paid run planned. Concurrency remains outside scope |
 
 ## Earlier work sequence and decisions — 2026-10-16
 
@@ -97,7 +100,7 @@ The owner approved bounded completion instead of further evaluator development. 
 
 **Decision at the 2026-10-16 checkpoint:** defer recharging and the remaining 87 AI reviews. The owner subsequently funded credits on 2026-10-19 for the next evaluation step. Recovery preparation made no API calls; the [historical plan](../eval/results/phase6_review_recovery_selection_20261016/plan.json) targets failed reviews of saved successful answers. Later code and grading-prompt changes mean recovery needs a new plan and compatibility with the original judge/version. Those grades will assess old answers, not the new selector. Recovery stops at the first provider error and preserves earlier results.
 
-At that checkpoint, the follow-up was prepared for publication through the separate enterprise-rag checkout and the answer prompt was unchanged. The latest 2026-10-19 refinement changes context selection, generation and grading instructions, and evaluation tooling locally; it has not been published. Keep owner-reported Cloud pages/5/6000 settings/reboot separate from verified local execution. Use the latest Phase 6 evidence to explain the measured effects and remaining failures, retaining the human-review and final-evaluation limitations.
+At that checkpoint, the follow-up was prepared through the separate enterprise-rag checkout and the answer prompt was unchanged. Later 2026-10-19 work changed context selection, generation/grading instructions and evaluation tooling; the final agreed implementation is now published as [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4). Keep owner-reported Cloud settings separate from verified local execution, and retain the original final-evaluation and human-review limitations.
 
 ## Reproducible local checks
 
@@ -130,16 +133,17 @@ For future Cloud setup, select the repository, branch, entrypoint, Python versio
 | 2026-10-19 | Completed dev refinement and saved-answer comparison: 439 tests, 59 new model calls, evidence 12/16→14/16 and validated outputs 19/20→20/20; same-judge passes unchanged at 17/20. Preserved 434 files. Prioritized grading isolation, disputed-case review, approval-table retrieval and claim citations; final evaluation/publication pending. Dev-log unavailable; history recorded here. |
 | 2026-10-19 | Published 192 reviewed files as 8686fff, then implemented separate grading and rule-topic selection locally. 483 tests; dev evidence 14/16→16/16, known-v2 48/48 retained. Live review partial: 10 requests, 6 accepted stages, 3 validation rejections, 1 provider error. Preserved 522 files; new answers/final evaluation and independent adjudication pending. Dev-log unavailable; recorded here. |
 | 2026-10-19 | Bounded closeout: 484 tests, 26 answers/no judges; final content 15/20 and strict 13/20 by Codex. Demo replay/restart passed, 554 old files retained; human review/publication separate. Further evaluator work deferred; dev-log unavailable. |
+| 2026-10-19 | Reconciled all completed improvements, release 175bda7, 488-test evidence, and the owner’s Cloud setting report. Closed required portfolio work; kept optional retrieval/independent review and historical results explicit. Documentation only; dev-log unavailable. |
 
 ---
 
 # 개발 현황 및 향후 개발 계획
 
 **점검일**: 2026-10-19 (한국 시간)\
-**현재 단계**: 제한한 마무리 기록 완료. 테스트 484개, 개발 답변 6개·고정한 최종 20문항 1회 실행. Codex 원문 대조 기준 내용 15/20·주장 인용까지 13/20이며 독립 사람 검토는 미완료다. 시연 재생·로컬 재시작 통과, 이 범위에서 추가 평가기 확장은 필요하지 않다. 이번 소스 개정에 마무리 작업이 포함되며 이전 게시본은 8686fff다. Cloud 반영은 아직 미검증이다.\
+**현재 단계**: ✅ 합의한 포트폴리오 범위 완료. 필수 항목·모든 인용 표시·관측한 인용 보완을 [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4)으로 게시했고 소프트웨어 테스트 488개가 통과했다. 사용자가 Cloud 4096토큰 설정 완료를 보고했다. 남은 필수 개발은 없으며 독립 사람 채점·폭넓은 Cloud 운영 검사는 보류한다.\
 **계획 전제**: 사용자가 목표를 RAG 이해·구현·정교함·측정한 정확도를 보여주는 것으로 명확히 했다. 동시 접속 검사는 현재 범위에서 제외하며 Phase 7 사용성은 계속 보류한다.
 
-**최신 제한 점검 — 2026-10-19:** [보고서·사용자 검토표](../eval/results/v3_closeout_20261019/report.md), [검증](../eval/results/v3_closeout_20261019/verification.json). 최종 근거 12/16, 내용 15/20, 인용까지 13/20, 답변 불가 보류 4/4, 평균 5.193초다. 실제 호출은 답변 26회·별도 AI 채점 0회이며 과거 파일 554개를 보존했다. 안전한 API 진단만 보완했고 최종 결과 확인 후 검색·프롬프트를 조정하지 않았다. 동일 문서의 에이전트 검토 결과이며 독립 사람·외부 검증은 아니다.
+**최신 개선 — 2026-10-19:** [Phase 6 완료 기록](Phase6_RetrievalAndAnswerQuality.md#최종-포트폴리오-개선--2026-10-19), [필수 항목 검토](../eval/results/completeness_display_20261019/review.json), [인용 검토](../eval/results/citation_completeness_20261019/review.json), [소프트웨어 테스트](../eval/results/citation_completeness_20261019/software_tests.json). 앞의 두 개선은 실제 답변 7개, 인용 후속은 전체 10회 호출이다. 출력 한도 실패·중간 인용 문제를 보존하고 최종 4사례가 Codex 검토를 통과했다. 별도 채점·자동 재시도는 없다. 알려진 사례이므로 새 전체 정확도를 산출하지 않는다.
 
 **이전 채점 분리 점검 — 2026-10-19:** [채점 분리·규정 선택](Phase6_RetrievalAndAnswerQuality.md#채점-분리와-규정-선택-보완--2026-10-19)으로 참고 정답 기반 정확성과 검색 근거만의 근거성을 분리했다. 응답의 모든 항목을 필수화하고 인용은 기존 주장 근거에 한정한다. 개발용 근거 **14/16→16/16**, 알려진 v2 **48/48** 유지, **테스트 483개** 통과다. 실제 채점 10회 중 6개 단계를 채택하고 3개는 검증에서 거부했으며 1개는 제공업체 오류다. 비교는 미완료이고 의미 판정 불일치도 남았다. 새 답변·최종 문항은 평가하지 않았다. 과거 평가 515개를 포함한 보호 파일 522개를 보존했다. [검증](../eval/results/v3_split_checks_20261019/verification.json)을 참고한다.
 
@@ -148,6 +152,8 @@ For future Cloud setup, select the repository, branch, entrypoint, Python versio
 **최초 v3 개발용 평가 — 2026-10-19:** 평가 도구·v3 준비에서 **소프트웨어 테스트 409개**를 통과한 뒤 같은 구현으로 **개발용 20문항**의 실제 비교를 완료했다. 원본 AI 통과는 **청크 14/20·페이지 15/20**, 필수 인용 근거 전체 확보는 **10/16·12/16**이다. 실제 **답변 40회 + 채점 39회 = 모델 79회**를 호출했으며 페이지 인용 검증 실패 1건 외에 제공업체·채점 오류는 없었다. 오프라인 산출물 검사·보고서 재현을 통과했고 기준 파일 376개를 보존했다. 당시 평가에서는 소프트웨어 테스트를 반복하지 않았다. [결과·분석](Phase6_RetrievalAndAnswerQuality.md#v3-개발용-평가--2026-10-19), [보고서](../eval/results/v3_dev_20261019_1003/report.md), [검증](../eval/results/v3_dev_20261019_1003/verification.json)을 참고한다. 최초 결과는 그대로 보존했다. 과거 채점 복구는 실행하지 않았으며 이후 새 계획과 원래 채점기·버전의 호환을 함께 확인해야 한다.
 
 [Phase 6 보고서](Phase6_RetrievalAndAnswerQuality.md)의 최초 구현 결과에 테스트 267개 통과, 선택형 pages/k=5의 개발용 필수 근거 전체 확보 32/32, 알려진 실제 사례 6건의 같은 모델 AI 채점 통과를 기록했다. 코드는 [b89ed76](https://github.com/SoyeonAhn3/enterprise-rag/commit/b89ed76b615a02c13c5e9ce80928a4ae9bcdadaa)으로 푸시했다. 사용자는 Cloud에 pages/5/6000 설정을 적용하고 Reboot했다고 보고했으며 실제 실행 동작은 별도로 확인하지 않았다. 아래 기존 Phase 5 점검은 과거 증빙으로 보존한다.
+
+**보존한 최종 평가:** 이전 [고정 20문항 실행](../eval/results/v3_closeout_20261019/report.md)은 필수 근거 12/16·내용 15/20·인용까지 13/20·답변 불가 보류 4/4·평균 5.193초다. 개발 6개와 최종 20개의 답변을 생성했고 별도 AI 채점은 없다. 이후 집중 보완으로 이 점수를 덮어쓰지 않는다. 앞뒤 날짜별 기록은 당시 상태이며 게시·평가 대기라는 과거 작업은 현재 완료 기록으로 대체한다.
 
 ## 프로젝트 목표와 증빙 우선순위
 
@@ -213,18 +219,19 @@ PDF 추출·청크 분할·임베딩·검색·문맥 구성·근거 기반 생�
 
 `config.load_settings()`와 동적 출처 스키마는 `RAG_TOP_K`를 지원한다. k는 `index_signature()`에 포함되지 않아 k만 바꾸면 인덱스를 재생성할 필요가 없다. 현재 설정 예시 2개에는 `RAG_TOP_K=3`이 명시되어 있다. Phase 6에서 선택형 `RAG_RETRIEVAL_MODE=pages`와 문맥 한도를 추가했고 pages/k=5를 후보로 선택했다. 해당 후보의 게시는 완료된 로컬 구현과 별도다.
 
-## 앞으로 개발할 순서
+## 완료 상태와 선택적 후속
 
-사용자가 평가 도구를 더 개발하는 대신 제한한 마무리를 승인했다. 아래 순서는 이전 제안을 대체하며 과거 점수와 미완료 검토는 보존한다.
+사용자가 제한한 마무리와 이후 개선 1·2·4번을 승인했다. 이 포트폴리오에 필수로 남은 개발·새 평가는 없다. 원래 실패와 미완료 검토는 보존한다.
 
 | 상태 | 작업 | 결과 / 범위 |
 | --- | --- | --- |
-| 기록 완료 | 1. 개발 논쟁 사례 검토 | Codex 원문 대조 기준 5/6 충족, 잘못된 인용 1개 차단. 독립 사람 판정과 구분한다. |
-| 기록 완료 | 2. 코드·기준 고정 후 최종 1회 실행 | 출력 검증 20/20, 내용 15/20·인용까지 13/20. 실패를 보존하고 최종 결과로 재조정하지 않았다. |
-| 기록 완료 | 3. 결과 설명·시연 점검 | 전체 검토표, 시간·토큰, 저장 실답변 화면 재생, 로컬 시작·재시작 및 테스트 484개를 기록했다. |
-| 사용자 확인 | 독립 사람 검토 | 사람 검증으로 표시하려면 최종 20문항을 확인한다. f03·f05·f08을 우선 볼 만하다. 추가 모델 호출은 필요 없다. |
-| 선택적 후속 | 기록된 검색·답변 누락·인용 실패 보완 | 관측한 최종 문항은 회귀 사례로 다룬다. 자동으로 다음 개발을 시작하지 않는다. |
-| 보류 / 별도 | 평가기 확장·과거 채점 87건·검토 34건; 게시·Cloud 검사 | 제한한 기술적 마무리의 필수 요건에서 제외한다. 변경은 로컬이며 Phase 7 보류·동시 접속 제외를 유지한다. |
+| 완료 | RAG 구현·추적·평가·데모 | Phase 1~6, 공개 URL, 로컬 실행의 원격 Trace, 고정 최종 보고서, 사용자 확인 기록 |
+| 완료 | 1. 답변 필수 항목 | 실제 답변 7개 확인. 대상 계좌 관련 3개 답변에 계좌 확인 자료 명시 |
+| 완료 | 2. 모든 근거 인용 | 서로 다른 주장 인용 전체 표시, 호환 유지, 저장 답변 화면 검사 통과 |
+| 완료 | 4. 관측한 인용 누락 | 최종 4사례 Codex 원문 대조 통과. 이전 실패 보존, 최신 소프트웨어 테스트 488개 통과 |
+| 게시 / 사용자 보고 | 배포 코드와 Cloud 설정 | [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4) 푸시, 사용자 보고 기준 4096토큰 설정 완료. 최신 게시본의 새 Cloud 답변·재시작은 별도로 관측하지 않음 |
+| 선택 | 3. 복합 검색과 독립 검증 | 알려진 검색 누락은 남음. 독립 사람 채점을 했다고 주장하려면 해당 채점이 필요하나, 둘 다 포트폴리오 종료 조건은 아님 |
+| 보류 / 별도 | 평가기 확장·과거 채점 87건·검토 34건·Phase 7·CI·서비스 운영 | 새 유료 실행 계획 없음. 동시 접속은 범위 밖 |
 
 ## 이전 작업 순서와 결정 사항 — 2026-10-16
 
@@ -232,7 +239,7 @@ PDF 추출·청크 분할·임베딩·검색·문맥 구성·근거 기반 생�
 
 **2026-10-16 당시 결정:** 충전과 잔여 AI 채점 87건을 보류했다. 이후 사용자가 2026-10-19 충전하고 다음 평가 단계를 진행했다. 복구 준비에는 API를 호출하지 않았으며 [과거 계획](../eval/results/phase6_review_recovery_selection_20261016/plan.json)은 저장된 성공 답변의 채점 실패 건을 대상으로 한다. 이후 코드·채점 프롬프트가 바뀌어 새 계획과 원래 채점기·버전의 호환을 함께 확인해야 한다. 해당 채점은 새 선택 방식이 아닌 이전 답변을 평가한다. 복구 중 제공업체 오류가 발생하면 첫 오류에서 멈추고 기존 결과를 보존한다.
 
-당시 후속 변경은 별도 enterprise-rag 체크아웃을 통한 게시를 준비했고 답변 프롬프트는 유지했다. 최신 2026-10-19 개선은 문맥 선택·생성 및 채점 지시·평가 도구를 로컬에서 변경했으며 게시하지 않았다. 사용자가 보고한 Cloud pages/5/6000 설정·Reboot와 검증된 로컬 실행을 구분한다. 최신 Phase 6 증빙으로 측정한 효과와 실패를 설명하고 사람 검토·최종 평가의 한계를 유지한다.
+당시 후속은 별도 enterprise-rag 체크아웃에서 게시를 준비했고 답변 프롬프트를 유지했다. 이후 2026-10-19 문맥 선택·생성 및 채점 지시·평가 도구를 개선했으며 합의한 최종 구현은 현재 [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4)으로 게시했다. 사용자 보고 기준 Cloud 설정과 검증한 로컬 실행을 구분하고 원래 최종 평가·사람 검토의 한계를 유지한다.
 
 ## 로컬 검증 재현
 
@@ -265,3 +272,4 @@ Cloud 설정 시 저장소·브랜치·진입 파일·Python·서버 시크릿�
 | 2026-10-19 | 개발 개선·저장 답변 비교 완료. 테스트 439개, 새 모델 호출 59회, 근거 12/16→14/16·유효 출력 19/20→20/20이나 같은 기준 AI 통과는 17/20으로 동일. 파일 434개 보존. 채점 분리·논쟁 사례 검토·결재 표 검색·주장별 인용을 우선하고 최종 평가·게시 대기. dev-log 미설치로 여기에 기록. |
 | 2026-10-19 | 검토한 파일 192개를 8686fff로 게시한 뒤 채점 분리·규정 주제 선택을 로컬 구현했다. 테스트 483개, 개발용 근거 14/16→16/16·v2 48/48 유지. 실제 채점은 요청 10회·채택 6개 단계·검증 거부 3개·API 오류 1개로 부분 완료. 파일 522개 보존, 새 답변·최종 평가·독립 판정 대기. dev-log 미설치로 여기에 기록. |
 | 2026-10-19 | 제한한 마무리: 테스트 484개·생성 26회·별도 채점 없음, Codex 기준 최종 내용 15/20·인용까지 13/20. 시연 재생·재시작 통과, 원본 554개 보존. 사람 검토·게시 별도, 추가 평가기 개발 보류. dev-log 미설치. |
+| 2026-10-19 | 완료한 개선·게시본 175bda7·테스트 488개·사용자의 Cloud 설정 보고를 반영했다. 필수 포트폴리오 작업은 완료하고 선택적 검색·독립 검토와 과거 결과를 구분했다. 문서만 변경, dev-log 미설치. |

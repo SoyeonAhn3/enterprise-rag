@@ -6,7 +6,7 @@ Target repository: [SoyeonAhn3/enterprise-rag](https://github.com/SoyeonAhn3/ent
 
 The local environment is Python **3.12.10** with the pinned `requirements.txt`. Local browser checks passed for two answerable questions and one unanswerable question. Evidence: [home screen](docs/evidence/local-home.png), [answers and source excerpts](docs/evidence/local-chat.png). These are local screenshots, not proof of a public deployment.
 
-### Current deployment (2026-10-16)
+### Current deployment (2026-10-19)
 
 | Item | Status |
 | --- | --- |
@@ -14,8 +14,8 @@ The local environment is Python **3.12.10** with the pinned `requirements.txt`. 
 | Source | `SoyeonAhn3/enterprise-rag`, branch `main`, entrypoint `app.py`; repository made public on 2026-10-16 |
 | Server secrets | Entered by the owner from [.streamlit/secrets.toml.example](.streamlit/secrets.toml.example); values are not recorded here |
 | Checked | The owner opened the app in a private browser window and it worked; an anonymous request reached the app without sign-in |
-| Phase 6 operator update | Owner reported applying pages/5/6000 and rebooting on 2026-10-16; effective runtime behavior has not been independently checked |
-| Not yet recorded | Formal q01/q07/q09 acceptance and restart checks, startup time and memory, provider usage limits, and a real LangSmith trace; broad service checks are not current RAG demonstration criteria |
+| Phase 6 operator update | Owner reported pages/5/6000 and reboot on 2026-10-16, and now reports the `ANTHROPIC_MAX_TOKENS=4096` change complete after publication of [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4). Effective latest-release Cloud behavior has not been independently checked |
+| Verification boundary | Real local-to-remote LangSmith verification exists. Fresh latest-release Cloud questions/restart, Cloud tracing, startup time/memory and provider-wide usage controls are unverified; these broader service checks are outside the agreed portfolio completion gate |
 
 ### Precomputed index
 
@@ -65,7 +65,7 @@ Click **Save**, then use the app's **⋮ → Reboot** to reload settings and cac
 
 The citation-completeness update raises the default output limit to **4,096 tokens**. A recorded complex answer exhausted the former 2,048-token limit while including its supporting quotations. This remains one generation call with no automatic retries; the limit allows a longer response but does not require one.
 
-After publishing this revision, replace an existing top-level `ANTHROPIC_MAX_TOKENS` override in Cloud Secrets with `4096`, then save and reboot using the procedure above. Apply the same value to a local `.env` override when running locally. Existing overrides take precedence over the new code default; neither private settings file was changed by this development task. Keep pages/5/6000 for the recorded regression configuration. Cloud rollout and this setting change still require operator confirmation.
+The improvements were published as [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4), and the owner now reports completing the top-level Cloud `ANTHROPIC_MAX_TOKENS=4096` change. This records the operator’s setting action, not a newly observed Cloud restart or successful question run. For future configuration changes, explicit `.env`/Cloud overrides take precedence over the code default; use `4096`, save, and restart via the procedure above. Keep pages/5/6000 for the recorded regression configuration. This documentation update does not modify private settings or require another evaluation cycle.
 
 ### Optional LangSmith verification
 
@@ -90,7 +90,7 @@ The live check makes at most one Claude call, then verifies the remote hierarchy
 
 로컬은 Python **3.12.10**과 버전 고정한 `requirements.txt`로 검증했다. 실제 브라우저에서 답변 가능 2문항·불가능 1문항을 확인했다. 증빙: [초기 화면](docs/evidence/local-home.png), [답변 및 출처 발췌](docs/evidence/local-chat.png). 공개 배포 화면이 아닌 로컬 화면이다.
 
-### 현재 배포 상태 (2026-10-16)
+### 현재 배포 상태 (2026-10-19)
 
 | 항목 | 상태 |
 | --- | --- |
@@ -98,8 +98,8 @@ The live check makes at most one Claude call, then verifies the remote hierarchy
 | 소스 | `SoyeonAhn3/enterprise-rag`, 브랜치 `main`, 진입 파일 `app.py`. 2026-10-16 저장소 공개 전환 |
 | 서버 시크릿 | 사용자가 [.streamlit/secrets.toml.example](.streamlit/secrets.toml.example)을 기준으로 입력. 값은 기록하지 않음 |
 | 확인한 것 | 사용자가 시크릿 창에서 앱 동작 확인. 로그인 없는 요청으로 앱 접근 확인 |
-| Phase 6 운영자 보고 | 사용자가 2026-10-16 pages/5/6000 적용·Reboot 완료를 보고했다. 실제 실행 동작은 별도로 확인하지 않았다 |
-| 아직 기록하지 않은 것 | 정식 q01·q07·q09 인수·재시작 검사, 시작 시간·메모리, 제공업체 사용량 제한, 실제 LangSmith Trace. 폭넓은 서비스 검사는 현재 RAG 시연 완료 기준이 아니다 |
+| Phase 6 운영자 보고 | 2026-10-16 pages/5/6000 적용·Reboot에 이어, [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4) 게시 후 이번에 `ANTHROPIC_MAX_TOKENS=4096` 변경 완료를 보고했다. 최신 게시본의 실제 Cloud 동작은 별도 검증하지 않음 |
+| 검증 범위 | 실제 로컬 실행의 LangSmith 원격 대조 증빙은 있음. 최신 게시본의 새 Cloud 질문·재시작, Cloud 추적, 시작 시간·메모리·제공업체 전체 사용량 통제는 미검증이며 합의한 포트폴리오 종료의 필수 조건에서 제외 |
 
 ### 사전 생성 인덱스
 
@@ -149,7 +149,7 @@ RAG_CONTEXT_MAX_CHARS = 6000
 
 인용 완전성 보완으로 기본 출력 한도를 **4,096토큰**으로 올렸다. 복합 질문의 근거 인용을 포함하던 답변이 이전 2,048토큰 한도에 도달한 기록이 있다. 생성 호출은 여전히 1회이며 자동 재시도는 없다. 늘어난 값은 출력 상한이며 항상 그 길이로 답변한다는 뜻은 아니다.
 
-이번 개정을 게시한 뒤 Cloud Secrets의 기존 최상위 `ANTHROPIC_MAX_TOKENS` 값을 `4096`으로 바꾸고 위 절차에 따라 저장·재시작한다. 로컬에서 실행할 때 `.env`에 같은 키가 있으면 그 값도 맞춘다. 기존 설정은 새 코드 기본값보다 우선하며 이번 개발에서 실제 비공개 설정 파일은 수정하지 않았다. 기록한 회귀 점검과 같은 검색 설정은 pages/5/6000이다. 실제 Cloud 반영과 설정 적용은 운영자가 확인해야 한다.
+개선은 [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4)으로 게시했으며, 사용자가 이번에 Cloud 최상위 `ANTHROPIC_MAX_TOKENS=4096` 변경 완료를 보고했다. 이는 설정 작업 완료 기록이며 새로 관측한 Cloud 재시작·질문 성공 기록은 아니다. 이후 설정을 변경할 때에도 명시한 `.env`·Cloud 값이 코드 기본값보다 우선하므로 `4096`을 사용하고 위 절차로 저장·재시작한다. 기록한 회귀 설정은 pages/5/6000이다. 이번 문서 갱신은 비공개 설정을 수정하거나 추가 평가 주기를 요구하지 않는다.
 
 ### 선택적 LangSmith 검증
 

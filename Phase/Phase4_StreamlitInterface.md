@@ -27,7 +27,7 @@ Implemented files: [app.py](../app.py), [app_runtime.py](../app_runtime.py), [.s
 .\.venv\Scripts\python.exe -X utf8 -m streamlit run app.py
 ```
 
-Browser evidence: [home](../docs/evidence/local-home.png), [answers, excerpts, and abstention](../docs/evidence/local-chat.png). The three real requests took approximately 3.00, 3.82, and 1.43 seconds after RAG initialization. Public Cloud operation is a separate Phase 5 gate.
+Browser evidence: [home](../docs/evidence/local-home.png), [answers, excerpts, and abstention](../docs/evidence/local-chat.png). The three real requests took approximately 3.00, 3.82, and 1.43 seconds after RAG initialization. Later public deployment and owner checks are recorded in [Phase 5](Phase5_EvaluationAndDeployment.md).
 
 ### Source excerpt line wrapping — 2026-10-14
 
@@ -37,12 +37,18 @@ The security PDF itself splits `금액과` across two physical lines. `ingest.py
 
 The full suite passed **209 tests in 62.00 seconds**, including the actual PDF regression, existing-chat redisplay without generation, evidence preservation, boundaries, and escaped markup. Edge verified `금액과` stays on one line at viewport widths 320/375/768/1200 px and 19 additional excerpt widths. Screenshots of the saved answer: [desktop](../docs/evidence/source-excerpt-fixed-desktop.png), [mobile](../docs/evidence/source-excerpt-fixed-mobile.png).
 
+## All supporting quotations — 2026-10-19
+
+`source_excerpts(result, source)` now returns every distinct validated quotation for that source in claim order, removing whitespace-equivalent duplicates and keeping disjoint passages separate. `app.py` renders them in the source expander with numbered captions when needed. Saved results without claims retain the legacy excerpt fallback. HTML escaping, PDF-aware word wrapping, and the stored result schema are preserved; display adds no model calls.
+
+Four display regression tests were added. The [first saved-answer replay](../eval/results/completeness_display_20261019/display_check.json) checked seven answers, 11 source expanders, and 23 quotations. The [final citation replay](../eval/results/citation_completeness_20261019/display_check.json) checked four answers, nine expanders, and 16 quotations. The full software suite passed **488 tests**. These are local Streamlit AppTest checks; the dated browser screenshots above remain unchanged.
+
 ## Decisions and dependencies
 
 - `st.cache_resource` shares caller-owned resources, with idempotent shutdown cleanup. Existing indexes load normally; a fresh deployment imports the reviewed precomputed-vector bundle. It does not re-embed documents at startup.
 - Session history may display prior exchanges, but multi-turn memory and query rewriting remain outside scope.
 - A session counter is only a basic demo limit and can be bypassed through a new session. Configure provider-side usage controls before public sharing in Phase 5.
-- Local browser verification passed. Server/model setting changes require a resource restart. LangSmith, public URL, and Cloud restart verification remain tracked in [Phase 5](Phase5_EvaluationAndDeployment.md).
+- Local browser verification passed. Server/model setting changes require a resource restart. Real local-to-remote LangSmith verification, the public URL, and owner-reported Cloud settings are recorded in [Phase 5](Phase5_EvaluationAndDeployment.md); a fresh Cloud regression after the latest release was not independently observed.
 
 ## Change Log
 
@@ -51,6 +57,7 @@ The full suite passed **209 tests in 62.00 seconds**, including the actual PDF r
 | 2026-10-13 | Created the UI, resource reuse, settings, and usage-control outline; implementation is pending. |
 | 2026-10-14 | Implemented the missing local UI prerequisite during Phase 5 work; AppTest and three live browser questions passed, screenshots saved, bilingual documentation updated. Separate dev-log unavailable. |
 | 2026-10-14 | Fixed the reported PDF-split source word with conservative display formatting and Korean word wrapping. Original evidence preserved; 209 tests and browser layout checks passed. Separate dev-log unavailable. |
+| 2026-10-19 | Documented all-quotation display, compatibility, and saved-answer replay; synchronized deployment handoff with Phase 5. No new browser or Cloud run; dev-log unavailable. |
 
 ---
 
@@ -83,7 +90,7 @@ The full suite passed **209 tests in 62.00 seconds**, including the actual PDF r
 .\.venv\Scripts\python.exe -X utf8 -m streamlit run app.py
 ```
 
-브라우저 증빙: [초기 화면](../docs/evidence/local-home.png), [답변·발췌·보류](../docs/evidence/local-chat.png). 실제 3회 요청의 RAG 초기화 후 처리 시간은 약 3.00초·3.82초·1.43초였다. 공개 Cloud 동작은 별도의 Phase 5 완료 조건이다.
+브라우저 증빙: [초기 화면](../docs/evidence/local-home.png), [답변·발췌·보류](../docs/evidence/local-chat.png). 실제 3회 요청의 RAG 초기화 후 처리 시간은 약 3.00초·3.82초·1.43초였다. 이후 공개 배포와 사용자 확인은 [Phase 5](Phase5_EvaluationAndDeployment.md)에 기록했다.
 
 ### 출처 발췌 줄바꿈 수정 — 2026-10-14
 
@@ -93,12 +100,18 @@ The full suite passed **209 tests in 62.00 seconds**, including the actual PDF r
 
 실제 PDF 회귀 검사, 생성 없는 기존 대화 재표시, 원문 보존, 경계 유지, HTML 이스케이프를 포함해 전체 테스트 **209개가 62.00초에 통과**했다. Edge에서 화면 폭 320·375·768·1200 px와 발췌 영역 폭 19개를 추가 검사해 `금액과`가 한 줄에 유지됨을 확인했다. 저장된 답변의 수정 화면: [데스크톱](../docs/evidence/source-excerpt-fixed-desktop.png), [모바일](../docs/evidence/source-excerpt-fixed-mobile.png).
 
+## 모든 근거 인용 표시 — 2026-10-19
+
+`source_excerpts(result, source)`는 주장 순서에 따라 해당 출처의 검증된 인용을 모두 반환하고, 공백 차이만 있는 중복을 제거하며 떨어진 발췌를 분리한다. `app.py`는 출처 펼침 영역에서 이를 표시하고 여러 개면 번호를 붙인다. 주장 정보가 없는 과거 저장 답변은 기존 발췌를 표시한다. HTML 이스케이프·PDF 단어 줄바꿈 처리·저장 답변 형식은 유지하며 표시 때문에 모델을 추가 호출하지 않는다.
+
+표시 회귀 테스트 4개를 추가했다. [첫 저장 답변 재생](../eval/results/completeness_display_20261019/display_check.json)에서 답변 7개·출처 영역 11개·인용 23개, [최종 인용 재생](../eval/results/citation_completeness_20261019/display_check.json)에서 답변 4개·출처 영역 9개·인용 16개를 확인했다. 전체 소프트웨어 테스트는 **488개 통과**다. 로컬 Streamlit AppTest 결과이며 위의 과거 브라우저 스크린샷은 갱신하지 않았다.
+
 ## 결정 사항 및 의존성
 
 - `st.cache_resource`로 리소스를 공유하고 종료 시 중복 정리를 방지한다. 기존 인덱스를 로드하며 신규 배포는 검토한 사전 계산 벡터 번들을 가져온다. 시작 시 문서를 다시 임베딩하지 않는다.
 - 이전 대화를 화면에 표시하는 세션 기록은 선택 사항이다. 다중 턴 기억과 질문 재작성은 범위에서 제외한다.
 - 세션 횟수 제한은 새 세션으로 우회 가능한 간이 보호다. Phase 5에서 공개 공유 전에 제공업체 사용량 제어도 설정한다.
-- 로컬 브라우저 검증을 통과했다. 서버·모델 설정 변경 시 리소스를 재시작한다. 실제 LangSmith, 공개 URL, Cloud 재시작 검증은 [Phase 5](Phase5_EvaluationAndDeployment.md)에 남아 있다.
+- 로컬 브라우저 검증을 통과했다. 서버·모델 설정 변경 시 리소스를 재시작한다. 실제 로컬 실행의 LangSmith 원격 대조, 공개 URL, 사용자 보고 기준 Cloud 설정은 [Phase 5](Phase5_EvaluationAndDeployment.md)에 기록했다. 최신 게시본의 새 Cloud 회귀 실행은 별도로 관측하지 않았다.
 
 ## 변경 이력
 
@@ -107,3 +120,4 @@ The full suite passed **209 tests in 62.00 seconds**, including the actual PDF r
 | 2026-10-13 | 화면·리소스 재사용·설정·사용량 제한의 개요 신규 작성. 구현은 후속 진행 대상으로 기록함. |
 | 2026-10-14 | Phase 5 중 누락된 로컬 화면 선행 조건 구현. AppTest·실제 브라우저 3문항 통과, 스크린샷 보존, 영문·국문 문서 갱신. 별도 dev-log 미설치. |
 | 2026-10-14 | 제보된 출처 단어 끊김을 보수적인 표시 보정·한국어 단어 줄바꿈으로 수정. 원문 증빙 보존, 테스트 209개·브라우저 배치 검사 통과. 별도 dev-log 미설치. |
+| 2026-10-19 | 모든 인용 표시·호환성과 저장 답변 화면 재생을 기록하고 Phase 5 배포 전달 상태를 갱신했다. 새 브라우저·Cloud 실행은 하지 않았으며 별도 dev-log 미설치. |

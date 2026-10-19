@@ -1,16 +1,18 @@
-# Phase 6 — Retrieval and Answer Quality `✅ Local implementation · Final evaluation recorded`
+# Phase 6 — Retrieval and Answer Quality `✅ Agreed portfolio scope complete`
 
 > Improve complete evidence retrieval and condition-preserving answers with a bounded, auditable context.
 
 **Started**: 2026-10-16 (Asia/Seoul)\
-**Completed locally**: 2026-10-16\
-**Status**: Local implementation/tests and real remote tracing verified. The owner funded credits and resumed API evaluation on 2026-10-19; v3 dev evaluation is complete. The earlier 87 failed reviews remain a separate recovery task. Cloud settings/reboot remain owner-reported, not independently verified.\
+**Initial implementation completed**: 2026-10-16; final agreed improvements completed 2026-10-19\
+**Status**: ✅ Agreed improvements implemented, tested, and published as [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4). Latest software suite: 488 passed. The owner reports completing the Cloud 4096-token setting. Earlier evaluation failures and uncompleted independent review remain explicit; no required development remains in this portfolio scope.\
 **Prerequisites**: Phases 1–4 implemented; Phase 5 demo deployed. The user explicitly deferred remaining Phase 5 checks and authorized Phase 6 documentation, development, and tests.\
 **Technology**: Python 3.12, existing E5/Chroma/Claude stack, pytest.
 
-**Latest closeout (2026-10-19):** [Bounded final evaluation](#bounded-final-closeout--2026-10-19) is recorded: 484 software tests; final content 15/20 and content plus complete citations 13/20 by Codex source review. Six dev plus twenty final answers, no judge calls. Known failures and human review remain explicit. No publication or Cloud change.
+**Latest closeout (2026-10-19):** [Final portfolio improvements](#final-portfolio-improvements--2026-10-19) cover required answer items, all-quotation display, and observed citation gaps. Seven live answers checked the first two changes; the citation follow-up used ten calls across preserved attempts and ended with four accepted cases. No AI judges or automatic retries. The earlier frozen final scores remain content 15/20 and content/citations 13/20; no new overall score is inferred.
 
 **Earlier follow-up (2026-10-19):** [Separate grading and rule selection](#separate-grading-and-complete-rule-selection--2026-10-19) are implemented locally; **483 tests** pass. Offline dev evidence improves **14/16→16/16**, retaining known-v2 **48/48**. Live grading is partial: 10 requests, 6 accepted stages, 3 validation rejections and 1 provider error. No new answers or final questions were evaluated; the earlier complete answer comparison remains 17/20→17/20. The previous snapshot was published as `8686fff`; this follow-up is local.
+
+**Reading the history:** Dated checkpoints below retain their status and next steps at that time. Their references to local-only work or pending publication are historical; the latest status above and final improvements below supersede those plans.
 
 ## Earlier user decision — 2026-10-16
 
@@ -377,9 +379,27 @@ The owner limited the remaining work to disputed development cases, one final ev
 | Demo | Saved-answer AppTest: 3 answers, 1 abstention, 1 blocked output; local HTTP startup and restart passed |
 | Historical preservation | 554 files unchanged; code/scoring identical across dev and final |
 
-Final failures are retained: f01/f07/f09 lack required retrieved rules and abstain; f04 misses the contract-amendment rule and omits the amended contract; f08 omits account-verification documents from the answer text despite retrieving/citing them; f03/f05 omit a threshold or timing clause from claim citations. No tuning or rerunning followed final observation. These same-corpus questions are now known regression cases; the scores are not proof of general performance or directly comparable to earlier automated-judge scores.
+Final failures are retained: f01/f07/f09 lack required retrieved rules and abstain; f04 misses the contract-amendment rule and omits the amended contract; f08 omits account-verification documents from the answer text despite retrieving/citing them; f03/f05 omit a threshold or timing clause from claim citations. No tuning or rerunning occurred within that frozen final execution. Later fixes used observed cases as regressions, as documented below; the original scores remain unchanged. These same-corpus questions are now known regression cases; the scores are not proof of general performance or directly comparable to earlier automated-judge scores.
 
-See the [report and all 20 human-review items](../eval/results/v3_closeout_20261019/report.md), [summary](../eval/results/v3_closeout_20261019/summary.json), [verification](../eval/results/v3_closeout_20261019/verification.json), [test output](../eval/results/v3_closeout_20261019/pytest.txt) and [demo check](../eval/results/v3_closeout_20261019/demo_check.json). The one-off `run.py` preserves attempts and refuses existing output folders; it is an archived execution, not a command to rerun this final set. UI results replay saved live answers; HTTP readiness excludes model warmup and does not verify the remote Cloud app. Independent human review is pending, especially interpretation of f03/f05/f08. Bounded execution and documentation are complete with these limits; no further paid tests are scheduled. This work remains local. Separate dev-log is unavailable; history is recorded below.
+See the [report and all 20 human-review items](../eval/results/v3_closeout_20261019/report.md), [summary](../eval/results/v3_closeout_20261019/summary.json), [verification](../eval/results/v3_closeout_20261019/verification.json), [test output](../eval/results/v3_closeout_20261019/pytest.txt) and [demo check](../eval/results/v3_closeout_20261019/demo_check.json). The one-off `run.py` preserves attempts and refuses existing output folders; it is an archived execution, not a command to rerun this final set. UI results replay saved live answers; HTTP readiness excludes model warmup and does not verify the remote Cloud app. Independent human review is pending, especially interpretation of f03/f05/f08. This bounded execution and its documentation were completed with those limits. It was subsequently published, and the separately authorized focused improvements below followed; this archived 20-question run was not repeated. Independent grading is deferred, not a remaining portfolio completion gate. Separate dev-log is unavailable; history is recorded below.
+
+### Final portfolio improvements — 2026-10-19
+
+The owner approved improvements 1, 2, and 4 after checking five demo answers. Additional complex retrieval work (item 3) remains optional. The completed changes are:
+
+| Change | Behavior and evidence |
+| --- | --- |
+| 1. Required answer items | Generic instructions require basic and conditional documents explicitly in the answer. Seven live answers included six answerable cases and one correct abstention; all three bank-related answers named account-verification documents. [Review](../eval/results/completeness_display_20261019/review.json) |
+| 2. All supporting quotations | Each source shows all distinct claim quotations in order, preserves separate passages, and supports old saved answers. Four meaningful display tests added. The first AppTest replay checked seven answers / 11 source expanders / 23 quotations. [Replay](../eval/results/completeness_display_20261019/display_check.json) |
+| 4. Complete claim citations | Instructions retain each claim’s actors, thresholds, timing, exceptions and estimate qualifiers, including complete sentences and relevant table conditions. Final checks covered threshold, timing, explicit PO responsibility and abstention: four accepted cases, 11 claims, 16 claim quotations. [Review](../eval/results/citation_completeness_20261019/review.json) |
+
+The citation follow-up made **10 answer calls, zero judge calls, and zero automatic retries**. Its first two calls included a successful threshold answer and an incomplete response at the old 2,048-token cap; the other two planned cases were not executed in that round. Four explicit checks at 4,096 tokens produced valid responses but retained a timing-quotation/qualifier issue. After whole-sentence and qualifier instructions, the final four cases passed Codex source review. All attempts and earlier failures are retained. The first two improvements used a separate seven answer calls; neither result is an independent holdout or a new overall accuracy estimate.
+
+The output default is now **4,096 tokens**, with one retrieval, at most one generation call, a 30-second timeout, and no automatic retry unchanged. Existing explicit settings take precedence. The latest [software record](../eval/results/citation_completeness_20261019/software_tests.json) and [test log](../eval/results/citation_completeness_20261019/final/pytest.txt) report **488 passed in 72.75 seconds**. The final [Streamlit replay](../eval/results/citation_completeness_20261019/display_check.json) verified four saved answers, nine source expanders and 16 quotations without model calls. [Verification](../eval/results/citation_completeness_20261019/verification.json) preserves all 621 preexisting files from the citation-follow-up snapshot. Historical artifacts retain their execution-time publication/settings fields.
+
+The implementation was published as [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4). The owner now reports completing the Cloud `ANTHROPIC_MAX_TOKENS=4096` change; earlier pages/5/6000 and reboot were also owner-reported. No fresh latest-release Cloud question run, restart, or effective-setting inspection was independently observed. The owner’s earlier five-answer check is separate from the local final regression.
+
+The agreed portfolio scope is complete. Exact-source validation is unchanged; semantic completeness remains a generation instruction checked by Codex, not a universal automatic guarantee. Broad monitor-receipt retrieval still lacks settlement timing, other recorded retrieval failures remain, and independent human grading, the old 87 reviews/34-item queue, Phase 7, and production operations are deferred. The original 20-question scores are unchanged. No additional development or paid evaluation is required to close this scope.
 
 ## Change Log
 
@@ -396,22 +416,25 @@ See the [report and all 20 human-review items](../eval/results/v3_closeout_20261
 | 2026-10-19 | Implemented section-aware context refinement, quotation/inference guidance, revised judge instructions and a saved-answer comparison tool. 439 tests passed; 59 live calls. Coverage 12/16→14/16 and valid outputs 19/20→20/20, but same-judge passes 17/20→17/20. Preserved 434 files and documented remaining grading/retrieval issues. Final evaluation and publication pending; dev-log unavailable. |
 | 2026-10-19 | Published 192 reviewed files as 8686fff, then implemented separate grading and rule-topic selection locally. 483 tests; dev evidence 14/16→16/16, known-v2 48/48 retained. Live review partial: 10 requests, 6 accepted stages, 3 validation rejections, 1 provider error. Preserved 522 files; new answers/final evaluation and independent adjudication pending. Dev-log unavailable; recorded here. |
 | 2026-10-19 | Bounded closeout: safe provider diagnostics, 484 tests, 6 dev + 20 final answers and no judges. Final content 15/20, content/citations 13/20 by Codex; 554 original files preserved. Demo replay/restart passed; human review and publication pending. Further evaluator work deferred; dev-log unavailable. |
+| 2026-10-19 | Recorded completed improvements 1/2/4, 488 tests, seven required-item checks and ten citation-follow-up calls ending in four accepted cases; preserved failures and old scores. Linked publication 175bda7 and owner-reported 4096-token setting; closed the agreed scope. Documentation only this turn; dev-log unavailable. |
 
 ---
 
-# Phase 6 — 검색·답변 품질 개선 `✅ 로컬 구현 · 최종 평가 기록`
+# Phase 6 — 검색·답변 품질 개선 `✅ 합의한 포트폴리오 범위 완료`
 
 > 길이를 제한하고 근거를 추적할 수 있는 문맥으로 필수 근거 검색과 조건을 보존하는 답변을 개선한다.
 
 **시작일**: 2026-10-16 (한국 시간)\
-**로컬 완료일**: 2026-10-16\
-**상태**: 로컬 구현·테스트 및 실제 원격 추적 검증 완료. 사용자가 2026-10-19 충전 후 API 평가를 재개했고 v3 개발용 평가를 완료했다. 과거 AI 채점 실패 87건은 별도 복구 과제로 남아 있다. Cloud 설정·Reboot는 사용자 보고 기준이며 실제 동작은 별도 검증하지 않았다.\
+**최초 구현 완료일**: 2026-10-16; 합의한 최종 개선 완료일 2026-10-19\
+**상태**: ✅ 합의한 개선을 구현·테스트하고 [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4)으로 게시했다. 최신 소프트웨어 테스트 488개 통과. 사용자가 Cloud 4096토큰 설정 완료를 보고했다. 과거 평가 실패·독립 검토 미완료는 명시하며 이 포트폴리오 범위의 필수 잔여 개발은 없다.\
 **선행 조건**: Phase 1~4 구현, Phase 5 데모 배포. 사용자가 남은 Phase 5 검증을 보류하고 Phase 6 문서·개발·테스트를 명시적으로 요청했다.\
 **기술 구성**: Python 3.12, 기존 E5/Chroma/Claude, pytest.
 
-**최신 마무리(2026-10-19):** [제한한 최종 평가](#제한한-최종-점검--2026-10-19)를 기록했다. 소프트웨어 테스트 484개, Codex 원문 대조 기준 최종 내용 15/20·인용까지 13/20이다. 개발 6개와 최종 20개의 답변만 생성했고 별도 AI 채점은 없다. 실패 사례와 사람 검토 미완료를 명시하며 게시·Cloud 변경은 하지 않았다.
+**최신 마무리(2026-10-19):** [최종 포트폴리오 개선](#최종-포트폴리오-개선--2026-10-19)은 답변 필수 항목·모든 인용 표시·관측한 인용 누락 보완이다. 앞의 두 개선은 실제 답변 7개, 인용 후속은 실패를 보존한 전체 10회 호출 뒤 최종 4사례 통과를 기록했다. 별도 AI 채점·자동 재시도는 없다. 이전 고정 최종 점수는 내용 15/20·인용까지 13/20으로 보존하며 새 전체 성능 점수를 추정하지 않는다.
 
 **이전 후속(2026-10-19):** [채점 분리·규정 선택](#채점-분리와-규정-선택-보완--2026-10-19)을 로컬 구현했고 **테스트 483개**가 통과했다. 오프라인 개발용 근거는 **14/16→16/16**, 알려진 v2는 **48/48**을 유지했다. 실제 채점은 부분 완료로, 요청 10회 중 6개 단계를 채택하고 3개는 검증에서 거부했으며 1개는 제공업체 오류다. 새 답변·최종 문항은 평가하지 않았고 이전 전체 답변 비교는 17/20→17/20으로 유지한다. 이전 변경은 `8686fff`로 게시했으며 이번 후속은 로컬 상태다.
+
+**이력 읽기:** 아래 날짜별 기록의 상태와 다음 단계는 당시 기준이다. 로컬 변경·게시 대기라는 과거 표현은 현재 잔여 작업을 뜻하지 않으며 위 최신 상태와 아래 최종 개선 기록이 이전 계획을 대체한다.
 
 ## 이전 사용자 결정 — 2026-10-16
 
@@ -778,9 +801,27 @@ API 평가를 명시적으로 재개한 뒤에만 `python -m eval.quality run --
 | 시연 | 실답변 저장본 AppTest 재생: 답변 3개·보류 1개·차단 1개; 로컬 HTTP 시작·재시작 통과 |
 | 원본 보존 | 기존 파일 554개 동일; 개발·최종 실행의 코드·판정 기준 동일 |
 
-최종 실패를 보존했다. f01·f07·f09는 필수 규정 검색 누락 후 보류, f04는 계약 변경 규정 검색 누락으로 변경 계약서 작성을 빠뜨렸다. f08은 검색·인용에는 있는 계좌 확인 자료를 답변 본문에 명시하지 않았고 f03·f05는 주장 인용에서 금액 기준·검토 시점이 빠졌다. 최종 결과를 본 뒤 조정·재실행하지 않았다. 같은 문서를 공유하는 이 질문들은 이제 관측한 회귀 사례이며, 일반 성능의 증명이나 이전 자동 채점 점수와의 직접 비교 자료가 아니다.
+최종 실패를 보존했다. f01·f07·f09는 필수 규정 검색 누락 후 보류, f04는 계약 변경 규정 검색 누락으로 변경 계약서 작성을 빠뜨렸다. f08은 검색·인용에는 있는 계좌 확인 자료를 답변 본문에 명시하지 않았고 f03·f05는 주장 인용에서 금액 기준·검토 시점이 빠졌다. 해당 고정 최종 실행 안에서는 결과를 본 뒤 조정·재실행하지 않았다. 이후에는 아래와 같이 관측한 사례를 회귀 검사로 사용해 보완했으며 원래 점수는 변경하지 않는다. 같은 문서를 공유하는 이 질문들은 이제 관측한 회귀 사례이며, 일반 성능의 증명이나 이전 자동 채점 점수와의 직접 비교 자료가 아니다.
 
-[보고서와 사람 검토용 20문항](../eval/results/v3_closeout_20261019/report.md), [요약](../eval/results/v3_closeout_20261019/summary.json), [검증](../eval/results/v3_closeout_20261019/verification.json), [테스트 출력](../eval/results/v3_closeout_20261019/pytest.txt), [시연 검사](../eval/results/v3_closeout_20261019/demo_check.json)를 보존한다. 일회용 `run.py`는 시도를 보존하고 기존 출력 폴더를 거부하며, 완료한 최종 평가를 반복 실행하는 안내가 아니다. 화면 검사는 실제 답변 저장본 재생이며 HTTP 준비 시간은 모델 초기화나 원격 Cloud 검증과 구분한다. 독립 사람 검토, 특히 f03·f05·f08의 판정 기준 확인은 남아 있다. 제한한 실행·기록은 이 한계를 포함해 완료했고 추가 유료 검사를 예정하지 않는다. 이번 변경은 로컬 상태다. dev-log가 없어 아래 변경 이력에 기록한다.
+[보고서와 사람 검토용 20문항](../eval/results/v3_closeout_20261019/report.md), [요약](../eval/results/v3_closeout_20261019/summary.json), [검증](../eval/results/v3_closeout_20261019/verification.json), [테스트 출력](../eval/results/v3_closeout_20261019/pytest.txt), [시연 검사](../eval/results/v3_closeout_20261019/demo_check.json)를 보존한다. 일회용 `run.py`는 시도를 보존하고 기존 출력 폴더를 거부하며, 완료한 최종 평가를 반복 실행하는 안내가 아니다. 화면 검사는 실제 답변 저장본 재생이며 HTTP 준비 시간은 모델 초기화나 원격 Cloud 검증과 구분한다. 독립 사람 검토, 특히 f03·f05·f08의 판정 기준 확인은 남아 있다. 제한한 실행·기록은 이 한계를 포함해 완료하고 이후 게시했다. 별도로 승인받은 아래 집중 개선을 이어서 진행했으며 보존한 최종 20문항 실행을 반복하지 않았다. 독립 채점은 보류 사항이며 포트폴리오 종료의 잔여 필수 조건은 아니다. dev-log가 없어 아래 변경 이력에 기록한다.
+
+### 최종 포트폴리오 개선 — 2026-10-19
+
+사용자는 데모 답변 5개를 확인한 뒤 개선 1·2·4번을 승인했다. 복합 검색 추가 개선(3번)은 선택 사항으로 남긴다. 완료한 변경은 다음과 같다.
+
+| 변경 | 동작과 증빙 |
+| --- | --- |
+| 1. 답변 필수 항목 | 기본·조건부 필수 서류를 본문에 명시하도록 공통 지시를 보완했다. 실제 답변 7개는 답변 가능 6개·올바른 보류 1개이며, 계좌 관련 3개 답변 모두 계좌 확인 자료를 명시했다. [검토](../eval/results/completeness_display_20261019/review.json) |
+| 2. 모든 근거 인용 | 출처별 서로 다른 주장 인용을 순서대로 표시하고 떨어진 발췌·과거 저장 답변 호환을 유지한다. 의미 있는 표시 테스트 4개를 추가했다. 첫 AppTest 재생은 답변 7개·출처 영역 11개·인용 23개다. [재생](../eval/results/completeness_display_20261019/display_check.json) |
+| 4. 주장별 인용 완전성 | 담당자·금액 기준·시점·예외·예상 기간 단서와 문장 전체·표의 조건을 인용에 보존하도록 지시했다. 최종 금액 경계·검토 시점·명시적 PO 담당자·보류 4사례 통과, 주장 11개·주장 인용 16개를 대조했다. [검토](../eval/results/citation_completeness_20261019/review.json) |
+
+인용 후속은 **답변 호출 10회·별도 채점 0회·자동 재시도 0회**다. 처음 2회는 금액 경계 답변 성공과 기존 2,048토큰 한도의 미완성 응답이며, 그 회차의 나머지 예정 2개는 실행하지 않았다. 4,096토큰에서 명시적으로 검사한 4개는 유효 응답이지만 시점 인용·단서 문제가 남았다. 문장 전체·단서 지시 보완 후 최종 4개는 Codex 원문 대조를 통과했다. 모든 시도와 이전 실패를 보존한다. 앞의 두 개선은 별도의 답변 7회를 사용했으며 두 결과 모두 독립 평가셋이나 새 전체 정확도 측정은 아니다.
+
+기본 출력 상한은 **4,096토큰**이며 검색 1회·최대 생성 1회·30초 제한·자동 재시도 없음은 유지한다. 기존 명시적 설정이 기본값보다 우선한다. 최신 [소프트웨어 기록](../eval/results/citation_completeness_20261019/software_tests.json)과 [테스트 로그](../eval/results/citation_completeness_20261019/final/pytest.txt)는 **488개·72.75초 통과**다. 최종 [Streamlit 재생](../eval/results/citation_completeness_20261019/display_check.json)은 모델 호출 없이 저장 답변 4개·출처 영역 9개·인용 16개를 확인했다. [검증](../eval/results/citation_completeness_20261019/verification.json)은 인용 후속 시작 시점의 기존 파일 621개 보존을 기록한다. 과거 산출물의 게시·설정 필드는 해당 실행 당시 상태로 유지한다.
+
+구현은 [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4)으로 게시했다. 사용자는 이번에 Cloud `ANTHROPIC_MAX_TOKENS=4096` 변경 완료를 보고했으며 이전 pages/5/6000 적용·Reboot도 사용자 보고 기준이다. 최신 게시본에서 새 질문 실행·재시작·실제 설정 조회를 별도로 관측하지 않았다. 사용자의 이전 답변 5개 확인과 로컬 최종 회귀 검사는 구분한다.
+
+합의한 포트폴리오 범위는 완료했다. 원문 일치 검증은 유지하며 의미적 완전성은 생성 지시와 Codex 확인으로 다룬다. 모든 답변에 대한 자동 보장은 아니다. 넓은 모니터 수령 질문의 정산 시점과 다른 기록된 검색 누락은 남아 있고, 독립 사람 채점·과거 채점 87건 및 검토 34건·Phase 7·운영 서비스 검사는 보류한다. 원래 최종 20문항 점수는 유지한다. 이 범위를 종료하기 위한 추가 개발·유료 평가는 필요하지 않다.
 
 ## 변경 이력
 
@@ -797,3 +838,4 @@ API 평가를 명시적으로 재개한 뒤에만 `python -m eval.quality run --
 | 2026-10-19 | 절 제목 기반 문맥 선택, 인용·추론 지시, 채점 지시, 저장 답변 비교 도구 구현. 테스트 439개·실제 호출 59회. 근거 12/16→14/16, 유효 출력 19/20→20/20이나 동일 기준 AI 통과는 17/20→17/20. 파일 434개를 보존하고 채점·검색 한계를 기록했다. 최종 평가·게시 대기, dev-log 미설치로 여기에 기록. |
 | 2026-10-19 | 검토한 파일 192개를 8686fff로 게시한 뒤 채점 분리·규정 주제 선택을 로컬 구현했다. 테스트 483개, 개발용 근거 14/16→16/16·v2 48/48 유지. 실제 채점은 요청 10회·채택 6개 단계·검증 거부 3개·API 오류 1개로 부분 완료. 파일 522개 보존, 새 답변·최종 평가·독립 판정 대기. dev-log 미설치로 여기에 기록. |
 | 2026-10-19 | 제한한 마무리: 안전한 API 진단, 테스트 484개, 개발 6개+최종 20개 생성·별도 채점 없음. Codex 기준 최종 내용 15/20·인용까지 13/20, 원본 554개 보존. 시연 재생·재시작 통과, 사람 검토·게시 미완료. 추가 평가기 개발 보류, dev-log 미설치. |
+| 2026-10-19 | 개선 1·2·4 완료, 테스트 488개, 필수 항목 확인 7회, 인용 후속 전체 10회·최종 4사례 통과를 기록했다. 실패·과거 점수 보존. 게시본 175bda7·사용자 보고 4096토큰 설정을 반영하고 합의 범위를 완료로 정리했다. 이번에는 문서만 변경, dev-log 미설치. |

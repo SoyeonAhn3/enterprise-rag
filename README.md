@@ -267,13 +267,13 @@ Credentials, the local Chroma database, model downloads, private trace files, ge
 | [2 — Indexing and retrieval](Phase/Phase2_IndexingAndRetrieval.md) | ✅ Done | Local E5 embeddings, persistent Chroma index, reuse and explicit rebuild |
 | [3 — Grounded answers](Phase/Phase3_GroundedAnswers.md) | ✅ Done | One Claude call per question, quote-validated citations, abstention |
 | [4 — Streamlit interface](Phase/Phase4_StreamlitInterface.md) | ✅ Done (local) | Chat with sources, example questions, safe errors, per-session limit |
-| [5 — Evaluation and deployment](Phase/Phase5_EvaluationAndDeployment.md) | 🔧 In progress | 10- and 60-question evaluations; [public demo](https://enterprise-rag-demo-project.streamlit.app/) deployed 2026-10-16; LangSmith trace verified against remote records for local execution. Human review and broader Cloud checks are deferred |
-| [6 — Retrieval and answer quality](Phase/Phase6_RetrievalAndAnswerQuality.md) | ✅ Agreed local improvements and checks complete | 488 tests; required-item instructions, all-excerpt display and focused citation fixes; historical final scores remain unchanged |
+| [5 — Evaluation and deployment](Phase/Phase5_EvaluationAndDeployment.md) | ✅ Agreed portfolio scope complete | Evaluations and failure analysis preserved; [public demo](https://enterprise-rag-demo-project.streamlit.app/) deployed; real local-to-remote LangSmith trace and owner demo observations recorded. Independent grading and broader Cloud operations checks deferred |
+| [6 — Retrieval and answer quality](Phase/Phase6_RetrievalAndAnswerQuality.md) | ✅ Agreed improvements published | 488 tests; required-item instructions, all-excerpt display and focused citation fixes; historical final scores remain unchanged |
 
 - The code default is `chunks` with k=3. The owner reports that the live demo runs page mode (pages, k=5, 6,000 chars) after a reboot; this has not been independently verified.
 - The owner manually checked five demo answers and reported no apparent issues; this was not a formal review of all benchmark answers and their quotations.
 - This revision adds required-item instructions, displays every distinct claim quotation, and instructs generation to retain conditions, actors, timing and estimate qualifiers in citations. Exact-source validation remains unchanged; semantic completeness is not automatically guaranteed.
-- The default output cap is now 4,096 tokens because a complex answer reached the old 2,048 limit. Existing `.env` or Cloud Secrets overrides must be updated separately; see [deployment instructions](DEPLOYMENT.md#citation-output-allowance-2026-10-19). This revision contains the completed improvements; Cloud rollout and the effective server settings still need confirmation.
+- The default output cap is 4,096 tokens after a complex answer reached the old 2,048 limit. Following publication of [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4), the owner reported completing the Cloud `ANTHROPIC_MAX_TOKENS=4096` setting. See [deployment status](DEPLOYMENT.md#citation-output-allowance-2026-10-19). A fresh latest-release Cloud question run or restart has not been independently observed.
 
 ## Limitations
 
@@ -289,7 +289,7 @@ Credentials, the local Chroma database, model downloads, private trace files, ge
 
 Current completion scope; the [development status and roadmap](Phase/DevelopmentStatusAndRoadmap.md) retains the earlier evaluation history:
 
-The agreed local development is complete: prevent required-item omissions, show all citations, and fix the observed citation gaps. After this revision reaches the deployed app, set an existing Cloud `ANTHROPIC_MAX_TOKENS` override to `4096` and check the three corrected examples. No new evaluation set or grader is required to close this portfolio scope. The preceding published snapshot is [a8f2032](https://github.com/SoyeonAhn3/enterprise-rag/commit/a8f2032754a29c9765f39639cb370f7813f34128).
+The agreed portfolio scope is complete: required answer items, all supporting quotations, and the observed citation gaps were addressed and published as [175bda7](https://github.com/SoyeonAhn3/enterprise-rag/commit/175bda7d923b445c72125bac82ee6820ff9a7dc4). The owner reports the final Cloud setting change complete. No additional development, evaluation set, or grader is required to close this scope. Complex retrieval improvements, independent grading, and production operations can be separate follow-up work.
 
 The 87-review historical backlog concerns old answers, not the current selector. Both source and judge prompts changed: recovery needs a compatible original judge/version, not just a new plan. Earlier plans and results remain intact.
 
