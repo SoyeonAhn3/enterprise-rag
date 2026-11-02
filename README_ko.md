@@ -261,14 +261,17 @@ Enterprise-rag/
 
 ## 현재 상태
 
+<!-- phase-status:start -->
 | Phase | Status | Deliverable |
 | --- | --- | --- |
-| [1 — 기반 구축](Phase/Phase1_Foundation.md) | ✅ 완료 | PDF 4개를 페이지 단위로 추출해 출처 메타데이터가 있는 청크 22개 생성 |
-| [2 — 인덱싱·검색](Phase/Phase2_IndexingAndRetrieval.md) | ✅ 완료 | 로컬 E5 임베딩, Chroma 영구 인덱스, 재사용·명시적 재생성 |
-| [3 — 근거 기반 답변](Phase/Phase3_GroundedAnswers.md) | ✅ 완료 | 질문당 Claude 1회 호출, 인용문 검증, 답변 보류 |
-| [4 — Streamlit 화면](Phase/Phase4_StreamlitInterface.md) | ✅ 완료 (로컬) | 출처 표시 채팅, 예시 질문, 안전한 오류 처리, 세션별 제한 |
-| [5 — 평가·배포](Phase/Phase5_EvaluationAndDeployment.md) | ✅ 합의한 포트폴리오 범위 완료 | 평가·실패 분석 보존, [공개 데모](https://enterprise-rag-demo-project.streamlit.app/) 배포, 실제 로컬 실행의 LangSmith 원격 대조·사용자 데모 확인 기록. 독립 채점·폭넓은 Cloud 운영 검사는 보류 |
-| [6 — 검색·답변 품질](Phase/Phase6_RetrievalAndAnswerQuality.md) | ✅ 합의한 개선 게시 완료 | 테스트 488개; 필수 항목 지침·모든 인용 표시·확인된 인용 누락 보완; 과거 최종 평가 수치는 보존 |
+| [Phase 1 — 기반 구축](Phase/Phase1_Foundation.md) | ✅ 완료 | PDF 4개를 페이지 단위로 추출해 출처 메타데이터가 있는 청크 22개 생성 |
+| [Phase 2 — 인덱싱·검색](Phase/Phase2_IndexingAndRetrieval.md) | ✅ 완료 | 로컬 E5 임베딩, Chroma 영구 인덱스, 재사용·명시적 재생성 |
+| [Phase 3 — 근거 기반 답변](Phase/Phase3_GroundedAnswers.md) | ✅ 완료 | 질문당 Claude 1회 호출, 인용문 검증, 답변 보류 |
+| [Phase 4 — Streamlit 화면](Phase/Phase4_StreamlitInterface.md) | ✅ 완료 | 출처 표시 채팅, 예시 질문, 안전한 오류 처리, 세션별 제한 (로컬에서 확인) |
+| [Phase 5 — 평가·배포](Phase/Phase5_EvaluationAndDeployment.md) | ✅ 완료 | 합의한 포트폴리오 범위: 평가·실패 분석 보존, [공개 데모](https://enterprise-rag-demo-project.streamlit.app/) 배포, 실제 로컬 실행의 LangSmith 원격 대조·사용자 데모 확인 기록. 독립 채점·폭넓은 Cloud 운영 검사는 보류 |
+| [Phase 6 — 검색·답변 품질](Phase/Phase6_RetrievalAndAnswerQuality.md) | ✅ 완료 | 합의한 개선 게시: 테스트 488개; 필수 항목 지침·모든 인용 표시·확인된 인용 누락 보완; 과거 최종 평가 수치는 보존 |
+| Phase 7 — 사용성 | 📋 예정 | 보류; 사용성·동시 접속 검사는 합의한 범위 밖 |
+<!-- phase-status:end -->
 
 - 코드 기본값은 `chunks`, k=3입니다. 공개 데모는 소유자 보고 기준 Reboot 후 페이지 모드(pages, k=5, 6,000자)로 실행 중이며, 별도로 검증하지는 않았습니다.
 - 사용자가 시연 답변 5개를 직접 확인하고 별다른 문제가 없어 보인다고 보고했습니다. 전체 평가 답변과 인용문을 정식 채점한 결과는 아닙니다.

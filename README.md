@@ -261,14 +261,17 @@ Credentials, the local Chroma database, model downloads, private trace files, ge
 
 ## Current Status
 
+<!-- phase-status:start -->
 | Phase | Status | Deliverable |
 | --- | --- | --- |
-| [1 — Foundation](Phase/Phase1_Foundation.md) | ✅ Done | Page-level extraction of 4 PDFs into 22 chunks with source metadata |
-| [2 — Indexing and retrieval](Phase/Phase2_IndexingAndRetrieval.md) | ✅ Done | Local E5 embeddings, persistent Chroma index, reuse and explicit rebuild |
-| [3 — Grounded answers](Phase/Phase3_GroundedAnswers.md) | ✅ Done | One Claude call per question, quote-validated citations, abstention |
-| [4 — Streamlit interface](Phase/Phase4_StreamlitInterface.md) | ✅ Done (local) | Chat with sources, example questions, safe errors, per-session limit |
-| [5 — Evaluation and deployment](Phase/Phase5_EvaluationAndDeployment.md) | ✅ Agreed portfolio scope complete | Evaluations and failure analysis preserved; [public demo](https://enterprise-rag-demo-project.streamlit.app/) deployed; real local-to-remote LangSmith trace and owner demo observations recorded. Independent grading and broader Cloud operations checks deferred |
-| [6 — Retrieval and answer quality](Phase/Phase6_RetrievalAndAnswerQuality.md) | ✅ Agreed improvements published | 488 tests; required-item instructions, all-excerpt display and focused citation fixes; historical final scores remain unchanged |
+| [Phase 1 — Foundation](Phase/Phase1_Foundation.md) | ✅ Done | Page-level extraction of 4 PDFs into 22 chunks with source metadata |
+| [Phase 2 — Indexing and retrieval](Phase/Phase2_IndexingAndRetrieval.md) | ✅ Done | Local E5 embeddings, persistent Chroma index, reuse and explicit rebuild |
+| [Phase 3 — Grounded answers](Phase/Phase3_GroundedAnswers.md) | ✅ Done | One Claude call per question, quote-validated citations, abstention |
+| [Phase 4 — Streamlit interface](Phase/Phase4_StreamlitInterface.md) | ✅ Done | Chat with sources, example questions, safe errors, per-session limit (verified locally) |
+| [Phase 5 — Evaluation and deployment](Phase/Phase5_EvaluationAndDeployment.md) | ✅ Done | Agreed portfolio scope: evaluations and failure analysis preserved; [public demo](https://enterprise-rag-demo-project.streamlit.app/) deployed; real local-to-remote LangSmith trace and owner demo observations recorded. Independent grading and broader Cloud operations checks deferred |
+| [Phase 6 — Retrieval and answer quality](Phase/Phase6_RetrievalAndAnswerQuality.md) | ✅ Done | Agreed improvements published: 488 tests; required-item instructions, all-excerpt display and focused citation fixes; historical final scores remain unchanged |
+| Phase 7 — Usability | 📋 Planned | Deferred; usability and concurrency testing are outside the agreed scope |
+<!-- phase-status:end -->
 
 - The code default is `chunks` with k=3. The owner reports that the live demo runs page mode (pages, k=5, 6,000 chars) after a reboot; this has not been independently verified.
 - The owner manually checked five demo answers and reported no apparent issues; this was not a formal review of all benchmark answers and their quotations.
