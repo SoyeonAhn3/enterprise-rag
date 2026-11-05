@@ -14,6 +14,8 @@
 > 🚀 **Try it now:** **[enterprise-rag-demo-project.streamlit.app](https://enterprise-rag-demo-project.streamlit.app/)** — no sign-up or API key needed.
 > If the app is asleep, click **"Yes, get this app back up!"** and wait about a minute.
 
+https://github.com/user-attachments/assets/e98aef77-2614-4f02-a77f-6d771bd785f6
+
 ## Overview
 
 **Problem.** Policy questions such as *"If a purchase is exactly ₩1,000,000 excluding VAT, who gives final approval?"* often depend on exact thresholds and conditions spread across several documents. An LLM answering from memory can invent rules or drop conditions.
@@ -28,8 +30,6 @@
 | [Approval authority and budget controls](rag_mvp_sample_documents/02_approval_budget.pdf) | 3 | Approval thresholds, budget reviews, split-purchase rules |
 | [IT assets and SaaS security reviews](rag_mvp_sample_documents/03_it_security.pdf) | 3 | Prior security reviews, free trials, asset registration |
 | [Contracts, acceptance, and settlement](rag_mvp_sample_documents/04_contract_settlement.pdf) | 4 | Legal reviews, delivery acceptance, payment schedules |
-
-![Local Streamlit home screen](docs/evidence/local-home.png)
 
 ## Table of Contents
 

@@ -14,6 +14,8 @@
 > 🚀 **바로 사용해 보기:** **[enterprise-rag-demo-project.streamlit.app](https://enterprise-rag-demo-project.streamlit.app/)** — 회원가입·API 키 없이 바로 질문할 수 있습니다.
 > 앱이 잠들어 있으면 **"Yes, get this app back up!"** 버튼을 누르고 1분 정도 기다려 주세요.
 
+https://github.com/user-attachments/assets/e98aef77-2614-4f02-a77f-6d771bd785f6
+
 ## 개요
 
 **해결하려는 문제.** *"부가세 제외 구매 금액이 정확히 100만원이면 최종 결재권자는 누구인가?"* 같은 규정 질문은 여러 문서에 흩어진 금액 기준과 조건을 정확히 알아야 답할 수 있습니다. LLM이 기억에 의존해 답하면 없는 규정을 만들거나 조건을 빠뜨릴 수 있습니다.
@@ -28,8 +30,6 @@
 | [결재권한 및 예산통제 규정](rag_mvp_sample_documents/02_approval_budget.pdf) | 3 | 금액별 결재권자, 예산 검토, 구매 분할 금지 |
 | [IT 자산 및 SaaS 보안검토 지침](rag_mvp_sample_documents/03_it_security.pdf) | 3 | 사전 보안검토, 무료 체험, 자산 등록 |
 | [계약 검토·검수·정산 업무가이드](rag_mvp_sample_documents/04_contract_settlement.pdf) | 4 | 법무 검토, 검수, 지급 일정 |
-
-![로컬 Streamlit 첫 화면](docs/evidence/local-home.png)
 
 ## 목차
 
