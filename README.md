@@ -49,19 +49,12 @@ https://github.com/user-attachments/assets/e98aef77-2614-4f02-a77f-6d771bd785f6
 
 The pipeline is **2-step RAG**: one retrieval step, then one answer-generation call.
 
-```text
-[Before deployment]  4 PDFs
-        ↓  ingest.py: extract text per page (PyMuPDF), split into ~800-char chunks with 120-char overlap
-     22 chunks, each tagged with source_file · page · chunk_id
-        ↓  embed with a local multilingual E5 model, store in Chroma (shipped as a precomputed bundle)
+![Overview](docs/architecture/overview.svg)
 
-[Per question]  User question in the Streamlit chat
-        ↓  rag.py: embed the question and retrieve the top-k chunks
-        ↓  (optional page mode: up to 5 distinct whole pages within a 6,000-char budget)
-        ↓  grounding.py + llm.py: one Claude call returns JSON claims, each with a quote and source ID
-        ↓  Validation: each quote must match the retrieved text; file names and pages come from stored metadata
-     Korean answer + sources (document · page · excerpt), or the abstention message
-```
+- **Before deployment**: 4 PDFs → 22 chunks (~800 chars, 120-char overlap) → local E5 embeddings → Chroma index shipped as a precomputed bundle
+- **Per question**: retrieve the top-k chunks (optional page mode: up to 5 distinct pages within 6,000 chars) → one Claude call → quote validation → Korean answer + sources, or the abstention message
+
+Details: [Architecture](docs/architecture/ARCHITECTURE.md) (workflow · citation check flow · data flow)
 
 ## Evaluation Results
 
